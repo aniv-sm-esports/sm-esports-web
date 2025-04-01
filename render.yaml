@@ -18,3 +18,10 @@ services:
     buildCommand: npm install --force               # Problem with package dependencies
     startCommand: npm start
     autoDeploy: true  # Disable automatic deploys
+
+scaling:
+  minInstances: 1          # Required
+  maxInstances: 1          # Required
+  targetMemoryPercent: 100 # Optional if targetCPUPercent is set (valid: 1-90)
+  targetCPUPercent: 100     # Optional if targetMemory is set (valid: 1-90)    
+    
