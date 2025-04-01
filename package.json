@@ -2,7 +2,9 @@
   "name": "sm-esports-web",
   "version": "0.0.0",
   "engines": {
-    "node": "^18.18.0"
+    "node": "^18.18.0",
+    "npm": "10.9.2",
+    "ng": "19.2.5"
   },
   "scripts": {
     "ng": "ng",
