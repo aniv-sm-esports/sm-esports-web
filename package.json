@@ -6,7 +6,7 @@
     "npm": "10.9.2",
     "ng": "19.2.5"
   },
-  "scripts": { 
+  "scripts": {  
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
