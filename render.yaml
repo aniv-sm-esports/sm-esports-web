@@ -14,5 +14,6 @@ services:
     region: oregon    # Default: oregon
     plan: free        # Default: starter
     branch: main      # Default: master
+    buildCommand: npm install
     startCommand: npm start
     autoDeploy: true  # Disable automatic deploys
