@@ -7,7 +7,8 @@
     "ng": "19.2.5"
   },
   "scripts": {
-    "ng-global": "npm install @angular/cli --global",
+    "ng-global": "npm install -g @angular/cli",
+    "ng-link": "npm link @angular/cli",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
