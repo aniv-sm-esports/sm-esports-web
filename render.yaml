@@ -15,6 +15,6 @@ services:
     region: oregon    # Default: oregon
     plan: free        # Default: starter
     branch: main      # Default: master
-    buildCommand: npm install
+    buildCommand: npm install --force               # Problem with package dependencies
     startCommand: npm start
     autoDeploy: true  # Disable automatic deploys
