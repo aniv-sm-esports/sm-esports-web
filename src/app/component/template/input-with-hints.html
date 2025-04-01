@@ -1,0 +1,19 @@
+<style>
+  .form {
+    width: 100%;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+</style>
+
+<form class="form">
+  <mat-form-field class="example-full-width">
+    <mat-label>{{label}}</mat-label>
+    <!--input matInput #message maxlength={{maxLength}} placeholder="{{placeholder}}"-->
+    <input #message matInput maxlength="50" [(ngModel)]="value" (change)="onValueChanged()" name="inputWithHints" placeholder="{{placeholder}}" />
+    <mat-hint align="start"><strong>{{warning}}</strong> </mat-hint>
+    <mat-hint align="end">{{value.length}} / 50</mat-hint>
+  </mat-form-field>
+</form>

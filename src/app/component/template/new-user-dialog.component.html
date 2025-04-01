@@ -1,0 +1,32 @@
+<style>
+  h2 {
+    text-align: center;
+  }
+  button {
+    margin-right: 8px;
+  }
+  .container input,
+  .container mat-form-field {
+    width: 100%;
+  }
+
+  .container mat-error {
+    color: red;
+  }
+</style>
+
+<div class="container">
+  <h2 mat-dialog-title>Welcome to SM Esports!</h2>
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>User Name</mat-label>
+      <input matInput [(ngModel)]="userInput" (change)="update()" required placeholder="Please Enter User Name..." />
+      @if (!userInput) {
+        <mat-error>{{getErrorMessage()}}</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close [disabled]="!userInput">Create User</button>
+  </mat-dialog-actions>
+</div>

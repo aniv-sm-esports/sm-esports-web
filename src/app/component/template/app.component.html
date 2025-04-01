@@ -1,0 +1,184 @@
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
+<!-- * * * * * * * to get started with your project! * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+
+<style>
+  :host {
+    --gray-900: oklch(19.37% 0.006 300.98);
+    --gray-700: oklch(36.98% 0.014 302.71);
+    --gray-400: oklch(70.9% 0.015 304.04);
+  }
+
+  h1 {
+    font-size: 2.0em;
+    color: white;
+  }
+
+  h5 {
+    color: darkgray;
+  }
+
+
+  main {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+
+  .banner {
+    flex: auto;
+
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    text-align: right;
+    color: #FFFFFF;
+    background-image: radial-gradient(circle, #B5B5B5 0%, #FFFFFF 100%);
+  }
+
+  .banner a.banner-item {
+    background-color: transparent;
+    color: rgba(100, 100, 100, 1);
+    font-size: 1.5em;
+    text-decoration: none;
+    align-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .banner a.banner-item:hover {
+    background-color: #FFFFFF;
+    color: rgba(100, 100, 255, 1);
+    transition: background-color 0.3s ease-out;
+  }
+  .banner a.banner-item.active {
+    text-decoration: none;
+    background-color: #FFFFFF;
+    color: rgba(100, 100, 255, 1);
+  }
+
+  @keyframes fadein {
+    from { opacity: 0}
+    to   { opacity: 1}
+  }
+
+  .app-body {
+    flex: max-content;
+    flex-direction: column;
+    margin: 30px;
+    background-color: rgba(0,0,0,0.70);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+
+    color: #EEEEEE;
+
+    opacity: 1;
+    animation: fadein 2s;
+  }
+
+  .modal-container h2 {
+    text-align: center;
+  }
+  .modal-container button {
+    margin-right: 8px;
+  }
+  .modal-container  input,
+  .modal-container  mat-form-field {
+    width: 100%;
+  }
+
+  .primary-user {
+    color: lightgray;
+    text-align: left;
+    align-content: center;
+    padding-right: 10px;
+  }
+
+  .primary-user > input {
+    font-size: 1.0em;
+    color: dimgray;
+    margin: 5px;
+    padding:8px;
+    border:2px solid #eee;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+  }
+  .primary-user > input:focus {
+    border:2px solid #eee;
+  }
+
+  .logo {
+    flex: max-content;
+  }
+
+  .logo h1 {
+      color: rgba(134, 134, 255, 0.5);
+      font-size: 2.5em;
+      margin: 10px;
+      background: linear-gradient(45deg, rgba(134, 134, 255, 0.5) 45%, #ffffff 50%, rgba(134, 134, 255, 0.5) 55%);
+      background-repeat: no-repeat;
+      overflow: hidden;
+      animation: animate 3s linear 10s infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: rgba(134, 134, 255, 0.5);
+  }
+
+  @keyframes animate {
+    0% {
+      background-position: -500%;
+    }
+    100% {
+      background-position: 500%;
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+    .banner .logo > h1 {
+      font-size: 1.5em;
+    }
+    .banner a.banner-item {
+      font-size: 0.80em;
+    }
+  }
+
+</style>
+
+<main class="main">
+
+  <div class="banner">
+
+    <div class="primary-user">
+      <input [(ngModel)]="primaryUser.name" type="text" required />
+      <button mat-raised-button [disabled]="primaryUser.loggedOn">Log On</button>
+    </div>
+
+    <a class="banner-item russo-one-regular" routerLink="/home" routerLinkActive="active">Home</a>
+    <a class="banner-item russo-one-regular" routerLink="/news" routerLinkActive="active">News</a>
+    <a class="banner-item russo-one-regular" routerLink="/people" routerLinkActive="active">People</a>
+    <a class="banner-item russo-one-regular" routerLink="/chat" routerLinkActive="active">Chat</a>
+
+    <div class="logo">
+      <h1 class="russo-one-regular animate">Super Metroid Esports</h1>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <router-outlet />
+  </div>
+</main>
+
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
+<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+
+
+

@@ -1,0 +1,124 @@
+<style>
+  :host {
+    --gray-900: oklch(19.37% 0.006 300.98);
+    --gray-700: oklch(36.98% 0.014 302.71);
+    --gray-400: oklch(70.9% 0.015 304.04);
+  }
+
+  h1 {
+    font-size: 2.0em;
+    color: white;
+  }
+
+  h2 {
+    font-size: 1.0em;
+    color: white;
+  }
+
+  h4 {
+    font-size: 0.75em;
+    color: purple;
+  }
+
+  h5 {
+    color: darkgray;
+  }
+
+  main {
+    display: block;
+  }
+
+  .green {
+    color: lawngreen;
+  }
+
+  .banner {
+    width:100%;
+    text-align: right;
+  }
+
+  .banner > h1 {
+    float: right;
+    margin: 10px;
+  }
+
+  .banner > img {
+    height: 50px;
+    float: right;
+    margin: 10px;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .content > .container {
+    margin-left: 20px;
+  }
+
+  .bullet-list {
+    width: 300px;
+  }
+
+  .bullet-list > h4{
+    margin-left: 40px;
+  }
+
+  chatbox {
+    position: absolute;
+    top: calc(50% - (/* height */400px / 2));
+    left: calc(50% - (/* width */350px / 2));
+    height: 400px;
+    width: 350px;
+  }
+
+  .content > .container > img {
+    display: block;
+    height:700px;
+  }
+
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 20px;
+  }
+
+  .social-links path {
+    transition: fill 0.3s ease;
+    fill: var(--gray-400);
+  }
+
+  .social-links a:hover svg path {
+    fill: var(--gray-900);
+  }
+
+  @media screen and (max-width: 650px) {
+    .content {
+      flex-direction: column;
+      width: max-content;
+    }
+
+  }
+</style>
+
+
+<div class="container">
+  <div class="header">
+    <h5>SM Runner Chat</h5>
+  </div>
+
+  <div class="body">
+    <h5>Runner 1:  I love speed running!</h5>
+    <h5>Runner 2:  Me to man! How're you?</h5>
+    <h5>Runner 1:  Good! We should get people working together!</h5>
+    <h5>Runner 2:  Yeah, it's better if we show mutual support.</h5>
+    <h5>Runner 1:  I think we could do well as a community.</h5>
+    <h5>Runner 2:  Let's help people, and see how things go.</h5>
+    <h5>Runner 1:  One day at a time.</h5>
+  </div>
+
+  <div class="input-container">
+
+  </div>
+</div>

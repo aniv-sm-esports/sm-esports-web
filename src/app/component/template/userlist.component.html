@@ -1,0 +1,15 @@
+<style>
+  .user {
+    color:white;
+  }
+  h2 {
+    color: white;
+  }
+</style>
+
+<h2>Current Users:</h2>
+<div class="user"
+     *ngFor="let user of users; index as i;"
+     [ngClass]=" { 'selected': user.selected }">
+  User: {{user.name}} Id: {{user.id}}
+</div>

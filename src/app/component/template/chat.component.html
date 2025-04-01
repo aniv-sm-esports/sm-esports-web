@@ -1,0 +1,71 @@
+<style>
+
+  .tab-header {
+    flex: 200px;
+  }
+
+  .tab-header-item {
+    color:lightgray;
+    background-color: black;
+    border: 1px solid darkgray;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .tab-header-item.selected {
+    background-color: rgba(50, 50, 50, 100);
+  }
+
+  .tab-header-item.not-selected {
+    background-color: transparent;
+  }
+
+  .tab-header-item:hover {
+    transition: background-color 0.3s ease;
+    background-color: rgba(50, 50, 50, 100);
+  }
+
+  .tab-control {
+    display: flex;
+  }
+
+  .tab-content {
+    color: white;
+    border: 1px solid lightgray;
+    flex: 100%;
+  }
+
+  .tab-item {
+
+  }
+
+  .tab-item > .tab-item-content {
+  }
+
+</style>
+
+<div class="container">
+  <div class="tab-control">
+    <div class="tab-header">
+      <div class="tab-header-item"
+           *ngFor="let tab of chatTabs; index as i;"
+           [ngClass]=" { 'selected': selectedChatTab.index == tab.index, 'not-selected': selectedChatTab.index != tab.index }"
+           (click)="selectedChatTab = tab;">
+        {{tab.name}}
+      </div>
+    </div>
+
+    <div class="tab-content">
+      <div class="tab-item"
+           *ngFor="let tab of chatTabs; index as i;">
+        <div class="tab-item-content"
+             *ngIf="selectedChatTab.index == i">
+          <chatbox />
+        </div>
+      </div>
+    </div>
+
+    <div class="clear-fix"></div>
+
+  </div>
+</div>

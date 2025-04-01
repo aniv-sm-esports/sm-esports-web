@@ -1,0 +1,25 @@
+<style>
+  .container mat-form-field + mat-form-field {
+    margin-left: 8px;
+    width:100%;
+  }
+
+  .container mat-form-field {
+    width:100%;
+  }
+</style>
+<div class="container">
+  <mat-form-field>
+    <mat-label>Enter your email</mat-label>
+    <input
+      matInput
+      placeholder="pat@example.com"
+      [formControl]="email"
+      (blur)="updateErrorMessage()"
+      required
+    />
+    @if (email.invalid) {
+      <mat-error>{{errorMessage()}}</mat-error>
+    }
+  </mat-form-field>
+</div>
