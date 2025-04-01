@@ -1,19 +1,15 @@
 ---
-title: sm-esports-web
-description: Development site for sm-esports-web
-definitions:
-  runtime: node
-  serverService:
-    type: node
-    properties:
-      type: node
-      name: sm-esports-web
-      runtime: node
-      repo: http://github.com/aniv-sm-esports/sm-esports-web
-      startCommand: npm start
-      autoDeploy: true
-      maxShutdownDelaySeconds:
-        type: integer
-        minimum: 1
-        maximum: 300
-  serviceType: web
+services:
+    - type: node
+      properties:
+        - type: node
+          name: sm-esports-web
+          runtime: node
+          repo: http://github.com/aniv-sm-esports/sm-esports-web
+          startCommand: npm start
+          autoDeploy: true
+          maxShutdownDelaySeconds:
+            type: integer
+            minimum: 1
+            maximum: 300
+      serviceType: web
