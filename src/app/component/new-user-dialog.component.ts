@@ -1,7 +1,6 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, EventEmitter, inject, Output} from '@angular/core';
 import {FormsModule, FormControl, FormBuilder, FormControlOptions, ReactiveFormsModule, Validators} from '@angular/forms';
 import {UserService} from '../service/user.service';
-import {ModalModule, ModalReference} from '@developer-partners/ngx-modal-dialog';
 import {InputWithHintsComponent} from './input-with-hints';
 import {User} from '../model/user.model';
 import {MatButton} from '@angular/material/button';
@@ -15,7 +14,7 @@ import {NgForOf} from '@angular/common';
 @Component({
   selector: 'new-user-dialog',
   templateUrl: './template/new-user-dialog.component.html',
-  imports: [ModalModule, FormsModule, InputWithHintsComponent, MatButton, MatDialogTitle, MatDialogContent, MatFormField, MatLabel, MatError, MatDialogActions, MatDialogClose, MatInput, ReactiveFormsModule, NgForOf],
+  imports: [FormsModule, InputWithHintsComponent, MatButton, MatDialogTitle, MatDialogContent, MatFormField, MatLabel, MatError, MatDialogActions, MatDialogClose, MatInput, ReactiveFormsModule, NgForOf],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewUserDialogComponent {

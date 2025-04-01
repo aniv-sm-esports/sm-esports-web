@@ -2,8 +2,6 @@ import {afterNextRender, Component} from '@angular/core';
 import {Tab} from '../model/tab.model';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
-import {ModalService} from '@developer-partners/ngx-modal-dialog';
-import {ModalSize} from '@developer-partners/ngx-modal-dialog';
 import {NewUserDialogComponent} from './new-user-dialog.component';
 
 @Component({
