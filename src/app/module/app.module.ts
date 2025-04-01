@@ -5,8 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from '../component/app.component';
 import {MainTabComponent} from '../component/maintab.component';
 import {ChatTabComponent} from '../component/chattab.component';
-import {UserTabComponent} from '../component/usertab.component';
-import {SocialLinksComponent} from '../component/sociallinks.component';
 import {NgOptimizedImage} from '@angular/common';
 import {ModalModule, ModalReference, ModalService} from '@developer-partners/ngx-modal-dialog';
 import {FormsModule} from '@angular/forms';
@@ -26,10 +24,6 @@ import {MatButton, MatButtonModule} from '@angular/material/button';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    MainTabComponent,
-    ChatTabComponent,
-    UserTabComponent,
-    SocialLinksComponent,
     NgOptimizedImage,
     MatError,
     MatFormField,
