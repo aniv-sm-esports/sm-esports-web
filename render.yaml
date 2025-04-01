@@ -1,6 +1,4 @@
 ---
-"$schema": https://json-schema.org/draft/2020-12/schema
-"$id": https://render.com/schema/render.yaml.json
 title: sm-esports-web
 description: Development site for sm-esports-web
 definitions:
