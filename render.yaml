@@ -6,7 +6,8 @@
 # List all services *except* PostgreSQL databases here
 services:
   # A web service on the Ruby native runtime
-  - type: web
+  - name: sm-esports-web
+    type: web
     runtime: node
     name: sm-esports-web
     repo: https://github.com/aniv-sm-esports/sm-esports-web # Default: Repo containing render.yaml
