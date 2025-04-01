@@ -35,9 +35,7 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "npm install --force"
-            ],
+            "scripts": [],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -59,17 +57,13 @@
                 }
               ],
               "outputHashing": "all",
-              "scripts": [
-                "npm install --force"
-              ]
+              "scripts": []
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "scripts": [
-                "npm install --force"
-              ]
+              "scripts": []
             }
           },
           "defaultConfiguration": "production"
