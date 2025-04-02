@@ -31,15 +31,45 @@
   .news-article-header > h4 {
     float: right;
     margin-right: 10px;
+    color: silver;
   }
 
-  .news-article .news-article-banner-link-container {
-    text-align: center;
+  .news-article-content {
+    padding: 20px;
   }
 
-  .news-article .news-article-body,
-  .news-article .news-article-description {
-    margin: 10px;
+  .news-article-content > .news-article-description {
+  }
+
+  .news-article-content > .news-article-description > h4 {
+    margin: 0px;
+  }
+  .news-article-content .news-article-body {
+    margin-top: 10px;
+    color: #DDD;
+  }
+
+  .news-article-content-flex {
+    display: flex;
+    padding: 20px;
+  }
+
+  .news-article-content-flex .news-article-left {
+    flex: 50%;
+  }
+
+  .news-article-content-flex .news-article-right {
+    flex: 50%;
+
+    margin-left: 20px;
+  }
+
+  .news-article-content-flex .news-article-description > h4 {
+    margin: 0px;
+  }
+
+  .news-article-content-flex .news-article-body {
+    color: #DDD;
   }
 
   .highlight {
@@ -60,29 +90,61 @@
 
   <div class="news-article"
        *ngFor="let news of newsList;index as i">
+
     <div class="news-article-header">
       <h3 class="russo-one-regular">{{news.title}}</h3>
       <h4>{{news.date.toDateString()}}</h4>
 
       <div class="clear-fix"></div>
     </div>
-    <div class="news-article-banner-link-container">
-      <iframe *ngIf="news.bannerLinkUsed"
-              width="640"
-              height="360"
-              src="https://www.youtube.com/embed/ckKkywPtHAQ"
-              title="Super Metroid by Andy, Oatsngoats, imyt and Eddie in 1:19:50 - Awesome Games Done Quick 2025"
-              frameborder="0"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen></iframe>
+
+    <!-- Article (Plain) -->
+    <div class="news-article-content" *ngIf="news.bannerLinkType == BannerLinkType.None">
+
+        <div class="news-article-description">
+          <h4>{{news.description}}</h4>
+        </div>
+
+        <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+
     </div>
-    <div class="news-article-description">
-      <p>{{news.description}}</p>
+
+    <!-- Article + Img -->
+    <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.Img">
+
+      <div class="news-article-left">
+        <img />
+      </div>
+
+      <div class="news-article-right">
+        <div class="news-article-description">
+          <h4>{{news.description}}</h4>
+        </div>
+        <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+      </div>
+
+      <div class="clear-fix"></div>
     </div>
-    <div class="news-article-body">
-      <p>{{news.bodyHtml}}</p>
+
+    <!-- Article + Youtube Video -->
+    <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.YoutubeVideo">
+
+      <div class="news-article-left">
+        <youtube-player [videoId]="news.bannerLinkYoutubeSourceId"
+                        [width]="videoSizeBase.width * this.sizeMultiplier"
+                        [height]="videoSizeBase.height * this.sizeMultiplier">
+        </youtube-player>
+      </div>
+
+      <div class="news-article-right">
+        <div class="news-article-description">
+          <h4>{{news.description}}</h4>
+        </div>
+        <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+      </div>
+
+      <div class="clear-fix"></div>
     </div>
+
   </div>
-
-
 </div>

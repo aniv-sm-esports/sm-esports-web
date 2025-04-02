@@ -116,7 +116,7 @@ app.get('/news/:id', async (req, res) => {
   // Success
   let success = !!news;
 
-  res.send(new NewsResponse([news|| News.default()], success, ''));
+  res.send(new NewsResponse([news|| new News()], success, ''));
 
 });
 
@@ -144,12 +144,19 @@ app.post('/news/create', async (req, res) => {
       return value.id == req.body.id;
     });
 
-    res.send(new NewsResponse([existingNews || News.default()], false, `News Creation Failed:  Duplicate entry already exists`));
+    res.send(new NewsResponse([existingNews || new News()], false, `News Creation Failed:  Duplicate entry already exists`));
     return;
   }
 
   // Add News to in memory database
-  let newEntry = new News(serverDb.news.length, req.body.title, req.body.description, req.body.bodyHtml, req.body.date);
+  let newEntry = new News();
+
+  newEntry.id = serverDb.news.length;
+  newEntry.title = req.body.title;
+  newEntry.description = req.body.description;
+  newEntry.bodyHtml = req.body.bodyHtml;
+  newEntry.date = req.body.date;
+  
   serverDb.news.push(newEntry);
 
   res.send(new NewsResponse([newEntry], true, `News Created ${serverDb.news[serverDb.news.length - 1]}`));

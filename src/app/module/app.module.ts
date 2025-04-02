@@ -13,6 +13,7 @@ import {MatButton, MatButtonModule} from '@angular/material/button';
 import {NewsService} from '../service/news.service';
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 import {DbService} from '../../server/server.database';
+import {AppService} from '../service/app.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {DbService} from '../../server/server.database';
     provideClientHydration(withEventReplay()),
     HttpClient,
     UserService,
-    NewsService
+    NewsService,
+    AppService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,8 +1,12 @@
-import {afterNextRender, Component} from '@angular/core';
+import {afterNextRender, Component, HostListener} from '@angular/core';
 import {Tab} from '../model/tab.model';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
 import {NewUserDialogComponent} from './new-user-dialog.component';
+import {BehaviorSubject, Observable, Observer, Subscriber} from 'rxjs';
+import {Size} from '../model/app.model';
+import {NewsComponent} from './news.component';
+import {AppService} from '../service/app.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +15,7 @@ import {NewUserDialogComponent} from './new-user-dialog.component';
 })
 export class AppComponent {
 
+  private readonly appService: AppService;
   //private readonly modalService: ModalService;
   private readonly userService: UserService;
   //private readonly newUserDialog: NewUserDialogComponent;
@@ -27,8 +32,9 @@ export class AppComponent {
   tabs = [new Tab('Community Meta', 'main', 0), new Tab('Chat', 'chat', 1), new Tab('Users', 'users', 2)];
   selectedTab: Tab;
 
-  constructor(userService: UserService) {
+  constructor(appService: AppService, userService: UserService) {
 
+    this.appService = appService;
     //this.newUserDialog = new NewUserDialogComponent(userService);
     this.primaryUser = new User(-1, 'Not Logged In');
     this.userService = userService;
@@ -66,6 +72,16 @@ export class AppComponent {
       });
     });
     */
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+
+    if (!this.appService)
+      return;
+
+    // AppService -> Observable / BehaviorSubscriber -> ...
+    this.appService.updateClientSize(new Size((event.target as Window).innerWidth, (event.target as Window).innerHeight));
   }
 
   logOn(){
