@@ -12,12 +12,10 @@ const routes: Routes = [
   { path:"news",  component: NewsComponent },
   { path:"people",  component: PeopleComponent },
   { path:"chat",  component: ChatComponent },
-  {
-    path: 'users/getAll', component: HomeComponent
-  },
-  {
-    path: 'users/create/:userName', component: HomeComponent
-  },
+  { path: 'users/getAll', component: HomeComponent },
+  { path: 'users/create/:userName', component: HomeComponent },
+  { path: 'news/getAll', component: NewsComponent },
+  { path: 'news/create', component: NewsComponent },
   {
     path: '**', redirectTo: 'home'
   }

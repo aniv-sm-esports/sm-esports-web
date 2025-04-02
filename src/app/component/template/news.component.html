@@ -1,1 +1,88 @@
-<h1>NEWS</h1>
+<style>
+  h1 {
+    margin: 10px;
+    color: #EEEEEE;
+    font-size: 2.5em;
+  }
+
+  .container {
+  }
+
+  .container .header-container {
+    width: 100%;
+    background: #CCCCCCCC;
+  }
+
+  .container .header-container:first-child > h1 {
+    color: rgba(134,134,255,1);
+  }
+
+  .news-article {
+  }
+
+  .news-article > .news-article-header {
+    background-image: linear-gradient(90deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 100%);
+    margin-bottom: 10px;
+  }
+  .news-article-header > h3 {
+    float: left;
+    margin-left: 10px;
+  }
+  .news-article-header > h4 {
+    float: right;
+    margin-right: 10px;
+  }
+
+  .news-article .news-article-banner-link-container {
+    text-align: center;
+  }
+
+  .news-article .news-article-body,
+  .news-article .news-article-description {
+    margin: 10px;
+  }
+
+  .highlight {
+    color: deeppink;
+  }
+
+  .link {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+</style>
+
+<div class="container">
+
+  <div class="header-container">
+    <h1 class="russo-one-regular">News</h1>
+  </div>
+
+  <div class="news-article"
+       *ngFor="let news of newsList;index as i">
+    <div class="news-article-header">
+      <h3 class="russo-one-regular">{{news.title}}</h3>
+      <h4>{{news.date.toDateString()}}</h4>
+
+      <div class="clear-fix"></div>
+    </div>
+    <div class="news-article-banner-link-container">
+      <iframe *ngIf="news.bannerLinkUsed"
+              width="640"
+              height="360"
+              src="https://www.youtube.com/embed/ckKkywPtHAQ"
+              title="Super Metroid by Andy, Oatsngoats, imyt and Eddie in 1:19:50 - Awesome Games Done Quick 2025"
+              frameborder="0"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen></iframe>
+    </div>
+    <div class="news-article-description">
+      <p>{{news.description}}</p>
+    </div>
+    <div class="news-article-body">
+      <p>{{news.bodyHtml}}</p>
+    </div>
+  </div>
+
+
+</div>
