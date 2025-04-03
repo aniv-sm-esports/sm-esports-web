@@ -7,7 +7,7 @@
     "ng": "19.2.5"
   },
   "scripts": {
-    "npm": "init",
+    "npm": "install -g @angular/cli",
     "ng": "ng",
     "start": "ng serve --configuration development",
     "build": "ng build --configuration development",
