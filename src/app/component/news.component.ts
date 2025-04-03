@@ -1,9 +1,8 @@
-import {Component, inject} from '@angular/core';
+import {afterNextRender, Component, inject} from '@angular/core';
 import {BannerLinkType, News} from '../model/news.model';
 import {NewsService} from '../service/news.service';
-import {DOCUMENT, NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {DomSanitizer} from '@angular/platform-browser';
 import {AppService} from '../service/app.service';
 import {Size} from '../model/app.model';
 import {YouTubePlayer} from '@angular/youtube-player';
@@ -22,8 +21,6 @@ export class NewsComponent {
 
   private readonly appService: AppService;
   private readonly newsService: NewsService;
-  private readonly sanitizer: DomSanitizer;
-  private readonly document: Document =  inject(DOCUMENT);
   public newsList:News[];
 
   // BASED ON AN ASPECT RATIO OF 2:1 (can also test 16:9)
@@ -31,36 +28,45 @@ export class NewsComponent {
   public readonly videoSizeBase: Size = new Size(640, 320);
   public sizeMultiplier: number = 1;
 
-  constructor(appService: AppService, newsService:NewsService, sanitizer:DomSanitizer) {
+  constructor(appService: AppService, newsService:NewsService) {
     this.appService = appService;
-    this.sanitizer = sanitizer;
     this.newsService = newsService;
     this.newsList = [];
+
+    // TODO: Figure out function generics
+    //@ts-ignore
+    this.appService.subscribeClientSize(value => {
+
+      // NOTE: The AppService also caches this value, so we can use our common function
+      this.updateSize();
+    });
+
+
   }
 
   ngOnInit() {
 
     // Get news data from server
     this.load();
-
-    // CORS:  Sanitize the iframe links
-    //this.newsList.forEach((news) => {
-    //  news.bannerLinkSanitized = this.sanitizer.bypassSecurityTrustResourceUrl(news.bannerLink);
-    //});
-
-    // TODO: Figure out function generics
-    //@ts-ignore
-    this.appService.subscribeClientSize(value => {
-
-      let size = value as Size;
-      this.sizeMultiplier = size.width / this.clientSizeBase.width;
-    });
   }
 
   ngAfterViewInit() {
-
-
+    this.refreshYoutube();
   }
+
+  refreshYoutube(){
+    this.updateSize();
+  }
+
+  updateSize(){
+
+    // Get last cached size
+    let size = this.appService.getSize();
+
+    if (size)
+      this.sizeMultiplier = size.width / this.clientSizeBase.width;
+  }
+
 
   load() {
     this.newsService
