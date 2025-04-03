@@ -31,21 +31,25 @@ export class DataModel {
     let chatPolitics = ChatRoom.from(0,
       'Politics',
       'Chat freely about politics! As, it is your first ammendment right!',
+      'politics',
       'Please be respectful to others. How would you want to be treated?');
 
     let chatPeople = ChatRoom.from(1,
       'People',
       'Come and engage with us, about people and public outreach!',
+      'people',
       'Please be respectful to others. How would you want to be treated?');
 
     let chatSpeedRunning = ChatRoom.from(1,
       'SM Speed Running',
       'This chat room is dedicated to the topic of SM Speed Running',
+      'speed-running',
       'Please be respectful to others. How would you want to be treated?');
 
     let chatGeneral = ChatRoom.from(1,
       'General',
       'This chat room is for general chatting. Come share with us!',
+      'general',
       'Please be respectful to others. How would you want to be treated?');
 
     this.chatRooms.set(0, chatPolitics);

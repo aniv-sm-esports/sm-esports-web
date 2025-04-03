@@ -24,13 +24,20 @@ export class AppComponent {
   //                      would then be the "user's service"
   public primaryUser: User;
 
+  // The size of the body will be dynamically set during resize / load events
+  //
+  public clientSize: Size;
+  public bodySize: Size;
+  public bodyMargin: number = 20;
+  public bannerHeightSmall: number = 48.6;
+  public bannerHeightLarge: number = 68;
+  public bannerHeight: number = this.bannerHeightSmall;     // Responsive setting
+  public mediaLarge: number = 1400;
+
   // Logon Dialog
   //public userNameInput: string;
 
   title = 'sm-esports-web';
-
-  tabs = [new Tab('Community Meta', 'main', 0), new Tab('Chat', 'chat', 1), new Tab('Users', 'users', 2)];
-  selectedTab: Tab;
 
   constructor(appService: AppService, userService: UserService) {
 
@@ -38,10 +45,9 @@ export class AppComponent {
     //this.newUserDialog = new NewUserDialogComponent(userService);
     this.primaryUser = new User(-1, 'Not Logged In');
     this.userService = userService;
+    this.clientSize = new Size(0,0);
+    this.bodySize = new Size(0,0);
     //this.userNameInput = '';
-
-    // Initialize tabs
-    this.selectedTab = this.tabs[0];
 
     // TODO: Find a way to prevent the dialog from destroying its data!
     //this.newUserDialog.userValue.subscribe( userName => {
@@ -76,20 +82,44 @@ export class AppComponent {
 
   @HostListener('window:load', ['$event'])
   onLoad(event: Event) {
-    if (!this.appService)
+    if (!this.appService || !event || !event.currentTarget)
       return;
 
+    // Window + Body Size (NOTE: event.target != event.currentTarget)
+    //
+    this.clientSize.width = (event.currentTarget as Window).innerWidth;
+    this.clientSize.height = (event.currentTarget as Window).innerHeight;
+
+    // Responsive Banner Height
+    //
+    if (this.clientSize.width > this.mediaLarge)
+      this.bannerHeight = this.bannerHeightLarge;
+    else
+      this.bannerHeight = this.bannerHeightSmall;
+
     // AppService -> Observable / BehaviorSubscriber -> ...
-    this.appService.updateClientSize(new Size((event.currentTarget as Window).innerWidth, (event.currentTarget as Window).innerHeight));
+    this.appService.updateClientSize(this.clientSize);
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    if (!this.appService)
+    if (!this.appService || !event || !event.currentTarget)
       return;
 
+    // Window + Body Size (NOTE: event.target != event.currentTarget)
+    //
+    this.clientSize.width = (event.target as Window).innerWidth;
+    this.clientSize.height = (event.target as Window).innerHeight;
+
+    // Responsive Banner Height
+    //
+    if (this.clientSize.width > this.mediaLarge)
+      this.bannerHeight = this.bannerHeightLarge;
+    else
+      this.bannerHeight = this.bannerHeightSmall;
+
     // AppService -> Observable / BehaviorSubscriber -> ...
-    this.appService.updateClientSize(new Size((event.target as Window).innerWidth, (event.target as Window).innerHeight));
+    this.appService.updateClientSize(this.clientSize);
   }
 
   logOn(){

@@ -12,12 +12,12 @@
     cursor: pointer;
   }
 
-  .tab-header-item.selected {
-    background-color: rgba(50, 50, 50, 100);
+  .tab-header-item {
+    background-color: transparent;
   }
 
-  .tab-header-item.not-selected {
-    background-color: transparent;
+  .tab-header-item .route-active {
+    background-color: rgba(50, 50, 50, 100);
   }
 
   .tab-header-item:hover {
@@ -35,13 +35,6 @@
     flex: 100%;
   }
 
-  .tab-item {
-
-  }
-
-  .tab-item > .tab-item-content {
-  }
-
 </style>
 
 <div class="container">
@@ -49,21 +42,25 @@
     <div class="tab-header">
       <div class="tab-header-item"
            *ngFor="let tab of chatTabs; index as i;"
-           [ngClass]=" { 'selected': selectedChatTab.index == tab.index, 'not-selected': selectedChatTab.index != tab.index }"
-           (click)="selectedChatTab = tab;">
+           [routerLink]="tab.route"
+           [routerLinkActive]="'route-active'">
         {{tab.name}}
       </div>
     </div>
 
     <div class="tab-content">
+      <router-outlet />
+    </div>
+
+    <!--div class="tab-content">
       <div class="tab-item"
            *ngFor="let tab of chatTabs; index as i;">
         <div class="tab-item-content"
-             *ngIf="selectedChatTab.index == i">
-          <chatbox />
+             *ngIf="selectedChatTab?.index == i">
+          <router-outlet />
         </div>
       </div>
-    </div>
+    </div-->
 
     <div class="clear-fix"></div>
 

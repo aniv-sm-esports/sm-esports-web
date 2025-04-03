@@ -25,15 +25,9 @@
 
 
   main {
-    display: flex;
-    flex-direction: column;
   }
 
-
-
   .banner {
-    flex: auto;
-
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -68,9 +62,6 @@
   }
 
   .app-body {
-    flex: max-content;
-    flex-direction: column;
-    margin: 30px;
     background-color: rgba(0,0,0,0.70);
     -webkit-border-radius: 10px;
     border-radius: 10px;
@@ -79,6 +70,8 @@
 
     opacity: 1;
     animation: fadein 2s;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .modal-container h2 {
@@ -167,7 +160,10 @@
     </div>
   </div>
 
-  <div class="app-body">
+  <div class="app-body"
+       [ngStyle]="{'width': (this.clientSize.width - (2 * this.bodyMargin)) + 'px',
+                   'height': (this.clientSize.height - this.bannerHeight - (2 * this.bodyMargin)) + 'px',
+                   'margin': this.bodyMargin + 'px'}">
     <router-outlet />
   </div>
 </main>

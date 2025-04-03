@@ -1,29 +1,44 @@
 import {Component} from '@angular/core';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {Tab} from '../model/tab.model';
-import {ChatBoxComponent} from './chatbox.component';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {ChatService} from '../service/chat.service';
 
 @Component({
   selector: 'chat',
   imports: [
     NgForOf,
-    NgClass,
-    NgIf,
-    ChatBoxComponent
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './template/chat.component.html'
 })
 export class ChatComponent {
-  chatTabs = [
-    new Tab('Politics', 'politics', 0),
-    new Tab('Project Development', 'project-development', 1),
-    new Tab('SM Speed Running', 'sm-speed-running', 2),
-    new Tab('Engagement', 'engagement', 3),
-    new Tab('General', 'general', 4),];
 
-  selectedChatTab: Tab;
+  private readonly chatService: ChatService;
+  private readonly baseRoute:string = 'chat';
 
-  constructor() {
-    this.selectedChatTab = this.chatTabs[0];
+  public chatTabs: Tab[];
+  public selectedChatTab: Tab | undefined;
+
+  constructor(chatService: ChatService) {
+    this.chatService = chatService;
+    this.chatTabs = [];
+  }
+
+  ngOnInit() {
+    this.chatService
+        .getChatRooms()
+        .subscribe(response =>{
+
+          // Clear tabs
+          this.chatTabs = [];
+
+          // Add tabs from response
+          response.data?.forEach(room => {
+            this.chatTabs.push(new Tab(room.name, this.baseRoute + '/' + room.urlRoute));
+          });
+        });
   }
 }

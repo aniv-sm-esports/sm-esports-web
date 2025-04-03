@@ -13,6 +13,7 @@ import {UserController} from './server/controller/user.controller';
 import {NewsController} from './server/controller/news.controller';
 import {DataModel} from './server/model/server.datamodel';
 import {News} from './app/model/news.model';
+import {ChatController} from './server/controller/chat.controller';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -28,6 +29,7 @@ const serverDb = new DataModel();
 // -> Controllers
 const userController = new UserController(serverDb);
 const newsController = new NewsController(serverDb);
+const chatController = new ChatController(serverDb);
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -105,6 +107,21 @@ app.get('/api/news/getAll', (req, res) => {
 // API: News -> Create
 app.post('/api/news/create', async (req, res) => {
   newsController.create(req, res);
+});
+
+// API: Chat -> GetChatRooms
+app.get('/api/chat/getRooms', async (req, res) => {
+  chatController.getChatRooms(req, res);
+});
+
+// API: Chat -> GetChats
+app.get('/api/chat/getChats/:chatRoomId', async (req, res) => {
+  chatController.getChats(req, res);
+});
+
+// API: Chat -> PostChat
+app.post('/api/chat/postChat/:chatRoomId', async (req, res) => {
+  chatController.postChat(req, res);
 });
 
 /**
