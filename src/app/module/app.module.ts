@@ -11,8 +11,6 @@ import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/inpu
 import {MatButtonToggle} from '@angular/material/button-toggle';
 import {MatButton, MatButtonModule} from '@angular/material/button';
 import {NewsService} from '../service/news.service';
-import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
-import {DbService} from '../../server/server.database';
 import {AppService} from '../service/app.service';
 
 @NgModule({

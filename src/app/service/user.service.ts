@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {GetUsersResponse, IGetUsersResponse, IUser, IUserResponse, User, UserResponse} from '../model/user.model';
+import {User} from '../model/user.model';
 import {firstValueFrom, Observable} from 'rxjs';
+import {ApiResponse} from '../model/app.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +12,32 @@ export class UserService {
   private readonly http: HttpClient;
 
   // Users -> Post -> Create User
-  urlGet = "/users/:userName";
-  urlCreate = "/users/create";
-  urlGetAll = "/users/getAll";
-  urlHasDuplicate = "/users/hasDuplicate";
+  urlGet = "/api/users/get/:userName";
+  urlExists = "/api/users/exists/:userName";
+  urlCreate = "/api/users/create";
 
   constructor(private httpClient: HttpClient) {
     this.http = httpClient;
   }
 
-  async getUser(userName: string) {
+  getUser(userName: string) {
 
     let httpHeaders = new HttpHeaders();
 
     httpHeaders.append('content-type', 'application/json');
-    httpHeaders.append('accept', '*');
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    return this.http.get<ApiResponse<User>>(this.urlGet.replace(':userName', userName), options);
+  }
+
+  userExists(userName: string) {
+
+    let httpHeaders = new HttpHeaders();
+
+    httpHeaders.append('content-type', 'application/json');
 
     let options = {
       headers: httpHeaders,
@@ -37,82 +49,19 @@ export class UserService {
       }
     };
 
-    return await firstValueFrom<User>(this.http.get<User>(this.urlGet + '/' + userName, options));
+    return this.http.get<ApiResponse<User>>(this.urlExists.replace(':userName', userName), options);
   }
 
-  async hasDuplicateUser(userName: string) {
-
-    let httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('content-type', 'application/json');
-    httpHeaders.append('accept', '*');
-    httpHeaders.append('Access-Control-Allow-Origin', '*');
-
-    let options = {
-      headers: httpHeaders,
-      withCredentials: true,
-      transferCache: {
-        includeHeaders: ['content-type', 'accept', '*'],
-        includePostRequests: true,
-        includeRequestsWithAuthHeaders: true
-      }
-    };
-
-    return await firstValueFrom<boolean>(this.http.get<boolean>(this.urlHasDuplicate + '/' + userName, options));
-
-    /*
-    return await fetch(this.urlHasDuplicate + '/' + userName, {
-      method: 'GET',
-      headers: {
-        'conetnt-type': 'application/json',
-        'accept': '*'
-      }
-    });
-    */
-  }
-
-  createUser(user: User) : Observable<UserResponse> {
+  createUser(user: User) : Observable<ApiResponse<User>> {
 
     let httpHeaders = new HttpHeaders();
 
     httpHeaders.append('Content-Type', 'application/json');
-    httpHeaders.append('Accept', '*');
-    httpHeaders.append('Access-Control-Allow-Origin', '*');
 
     let options = {
-      headers: httpHeaders,
-      params: {
-        userName: 'ATestUser'
-      },
-      withCredentials: true,
-      transferCache: {
-        includeHeaders: ['content-type', 'accept', '*'],
-        includePostRequests: true,
-        includeRequestsWithAuthHeaders: true
-      }
+      headers: httpHeaders
     };
 
-    return this.http.get<UserResponse>(this.urlCreate + '/' + user.name, options);
-  }
-
-  getAllUsers(): Observable<GetUsersResponse> {
-
-     let httpHeaders = new HttpHeaders();
-
-     httpHeaders.append('content-type', 'application/json');
-     httpHeaders.append('accept', '*');
-     httpHeaders.append('Access-Control-Allow-Origin', '*');
-
-     let options = {
-       headers: httpHeaders,
-       withCredentials: true,
-       transferCache: {
-         includeHeaders: ['content-type', 'accept', '*'],
-         includePostRequests: true,
-         includeRequestsWithAuthHeaders: true
-       }
-     };
-
-    return this.http.get<GetUsersResponse>(this.urlGetAll, options);
+    return this.http.post<ApiResponse<User>>(this.urlCreate, user, options);
   }
 }

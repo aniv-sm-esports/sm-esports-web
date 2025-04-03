@@ -40,8 +40,6 @@ export class NewsComponent {
       // NOTE: The AppService also caches this value, so we can use our common function
       this.updateSize();
     });
-
-
   }
 
   ngOnInit() {
@@ -77,7 +75,7 @@ export class NewsComponent {
         console.log("News Fetched From Server: ", result);
 
         this.clearNews();
-        this.loadNews(result.news);
+        this.loadNews(result.data || []);
     });
   }
 
@@ -88,32 +86,13 @@ export class NewsComponent {
   }
 
   loadNews(news: News[]) {
-    //news.forEach(item => {
-    //  this.newsList.push(item);
-    //});
+    news.forEach(item => {
 
-    // TODO: Mock News - Data service not serializing
-    let mock1 = new News();
-    mock1.bannerLinkType = BannerLinkType.None;
-    mock1.description = 'There\'s lots to see in the community today!';
-    mock1.title = 'Welcome to Super Metroid Esports!';
-    mock1.bodyHtml = this.fillerText();
+      // TODO: Date being serialized as a string
+      item.date = new Date(item.date);
 
-    let mock2 = new News();
-
-    mock2.id = 1;
-    mock2.bannerLinkYoutubeSourceId = "ckKkywPtHAQ";
-    mock2.bannerLinkType = BannerLinkType.YoutubeVideo;
-    mock2.description = 'From Left to Right:  Eddie, Imyt, Andy, and Oatsngoats giving it their all at GDQ! Save the Animals!';
-    mock2.title = 'Super Metroid by Andy, Oatsngoats, imyt and Eddie in 1:19:50';
-    mock2.bodyHtml = this.fillerText();
-
-    this.newsList.push(mock1);
-    this.newsList.push(mock2);
-  }
-
-  fillerText() {
-    return "<p>Lorem ipsum dolor sit amet consectetur <span class='link highlight'>adipiscing</span> elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>"
+      this.newsList.push(item);
+    });
   }
 
   protected readonly BannerLinkType = BannerLinkType;

@@ -131,8 +131,8 @@
 
       <div class="news-article-left">
         <youtube-player [videoId]="news.bannerLinkYoutubeSourceId"
-                        [width]="videoSizeBase.width * this.sizeMultiplier"
-                        [height]="videoSizeBase.height * this.sizeMultiplier"
+                        [width]="(videoSizeBase.width * this.sizeMultiplier) || videoSizeBase.width"
+                        [height]="(videoSizeBase.height * this.sizeMultiplier) || videoSizeBase.height"
                         (ready)="refreshYoutube()">
         </youtube-player>
       </div>

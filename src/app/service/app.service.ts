@@ -20,18 +20,17 @@ export class AppService {
     return this.lastSize;
   }
 
-
   subscribeClientSize(callback: Function) {
     this.clientSize$.subscribe(size => {
-
-      // Cache the size here
-      this.lastSize = size;
-
       callback(size);
     });
   }
 
   updateClientSize(size: Size) {
+
+    // Cache the size here
+    this.lastSize = size;
+
     this.clientSizeSubject.next(size);
   }
 }

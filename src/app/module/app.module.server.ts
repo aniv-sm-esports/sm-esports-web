@@ -4,10 +4,13 @@ import { provideServerRouting } from '@angular/ssr';
 import { AppComponent } from '../component/app.component';
 import { AppModule } from './app.module';
 import { serverRoutes } from '../app.routes.server';
+import {UserController} from '../../server/controller/user.controller';
+import {NewsController} from '../../server/controller/news.controller';
+import {DataModel} from '../../server/model/server.datamodel';
 
 @NgModule({
   imports: [AppModule, ServerModule],
-  providers: [provideServerRouting(serverRoutes)],
+  providers: [provideServerRouting(serverRoutes),DataModel, UserController, NewsController],
   bootstrap: [AppComponent],
 })
 export class AppServerModule {}

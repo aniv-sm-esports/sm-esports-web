@@ -4,21 +4,30 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
+
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DataModel } from './server/model/server.datamodel';
-import {GetUsersResponse, User, UserResponse} from './app/model/user.model';
-import {News, NewsResponse} from './app/model/news.model';
+import {inject} from '@angular/core';
+import {UserController} from './server/controller/user.controller';
+import {NewsController} from './server/controller/news.controller';
+import {DataModel} from './server/model/server.datamodel';
+import {News} from './app/model/news.model';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
+// Application Instances
+//
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-// TODO: Create the In Memory Database using angular's component model
-const serverDb: DataModel = new DataModel();
+// -> Data
+const serverDb = new DataModel();
+
+// -> Controllers
+const userController = new UserController(serverDb);
+const newsController = new NewsController(serverDb);
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -32,6 +41,26 @@ const serverDb: DataModel = new DataModel();
  * ```
  */
 
+
+/*
+    Server Workflow:
+      - Pre-work Logging of Request (beginning of middleware function)
+      - Work (body of middleware function)
+      - Post-work Logging of Response (end of middleware function)
+
+    Server API:
+      - /api/users
+      - /api/news
+      - /api/people
+      - /api/chat
+
+    Server Static:
+      - Initial index.html server function / "get fallback" method (**)
+        which isn't actually static.
+*/
+
+
+
 /**
  * Serve static files from /browser
  */
@@ -44,122 +73,38 @@ app.use(
 );
 
 // API: Users -> Get
-app.get('/users/:userName', async (req, res) => {
-
-  console.log(`Server Request:  /users/${req.params.userName}`);
-
-  let user = serverDb.users.find((value: User, index: number, userArray: User[])=> {
-    return value.name == req.params.userName;
-  });
-
-  res.send(user);
-
+app.get('/api/users/get/:userId', async (req, res) => {
+  userController.get(req, res);
 });
 
 // API: Users -> GetAll
-app.get('/users/getAll', async (req, res) => {
-
-  console.log('Server Request:  /users/getAll');
-
-  res.send(new GetUsersResponse(serverDb.users));
+app.get('/api/users/getAll', async (req, res) => {
+  userController.getAll(req, res);
 });
 
-// API: Users -> HasDuplicate
-app.get('/users/hasDuplicate/:userName', async (req, res) => {
-
-  console.log(`Server Request:  /users/hasDuplicate/${req.params.userName}`);
-
-  // Check for duplicate users
-  return serverDb.users.some(value => {
-    return value.name == req.params.userName;
-  });
+// API: Users -> Exists
+app.get('/api/users/exists/:userName', async (req, res) => {
+  userController.exists(req, res);
 });
 
 // API: Users -> Create
-app.get('/users/create/:userName', async (req, res) => {
-
-  console.log("Server Request:  /users/create/" + req.params.userName);
-
-  // Check for duplicate users
-  if (serverDb.users.some((value) =>{
-    return value.name == req.params.userName;
-  }))
-  {
-    // Existing User
-    let existingUser = serverDb.users.find((value: User, index: number, userArray: User[])=> {
-      return value.name == req.params.userName;
-    });
-
-    res.send(new UserResponse(existingUser || User.default(), true, `User Creation Failed:  Duplicate user already exists`));
-    return;
-  }
-
-  // Add User to in memory database
-  serverDb.users.push(new User(serverDb.users.length, req.params.userName));
-
-  // User Created
-  let newUser = serverDb.users[serverDb.users.length-1];
-
-  res.send(new UserResponse(newUser, true, `User Created ${serverDb.users[serverDb.users.length - 1]}`));
+app.get('/api/users/create/:userName', async (req, res) => {
+  userController.create(req, res);
 });
 
 // API: News -> Get
-app.get('/news/:id', async (req, res) => {
-
-  console.log(`Server Request:  /news/${req.params.id}`);
-
-  // Existing News
-  let news = serverDb.news.find((value: News, index: number, userArray: News[])=> {
-    return value.id.toString() == req.params.id;
-  });
-
-  // Success
-  let success = !!news;
-
-  res.send(new NewsResponse([news|| new News()], success, ''));
-
+app.get('/api/news/get/:newsId', async (req, res) => {
+  newsController.get(req, res);
 });
 
 // API: News -> GetAll
-app.get('/news/getAll', (req, res) => {
-
-  console.log('Server Request:  /news/getAll');
-
-  res.send(new NewsResponse(serverDb.news, true, "This is a message"));
+app.get('/api/news/getAll', (req, res) => {
+  newsController.getAll(req, res);
 });
 
 // API: News -> Create
-app.post('/news/create', async (req, res) => {
-
-  console.log("Server Request:  /news/create");
-  console.log(req.body);
-
-  // Check for duplicate users
-  if (serverDb.news.some((value:News) =>{
-    return value.id == req.body.id;
-  }))
-  {
-    // Existing Article (id)
-    let existingNews = serverDb.news.find((value: News, index: number, userArray: News[])=> {
-      return value.id == req.body.id;
-    });
-
-    res.send(new NewsResponse([existingNews || new News()], false, `News Creation Failed:  Duplicate entry already exists`));
-    return;
-  }
-
-  // Add News to in memory database
-  let newEntry = new News();
-
-  newEntry.id = serverDb.news.length;
-  newEntry.title = req.body.title;
-  newEntry.description = req.body.description;
-  newEntry.bodyHtml = req.body.bodyHtml;
-  newEntry.date = req.body.date;
-
-  serverDb.news.push(newEntry);
-
-  res.send(new NewsResponse([newEntry], true, `News Created ${serverDb.news[serverDb.news.length - 1]}`));
+app.post('/api/news/create', async (req, res) => {
+  newsController.create(req, res);
 });
 
 /**

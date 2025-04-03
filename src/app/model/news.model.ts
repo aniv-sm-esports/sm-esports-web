@@ -62,14 +62,3 @@ export class News {
     return result;
   }
 }
-export class NewsResponse{
-  public news: News[];
-  public success: boolean = false;
-  public message: string = "";
-
-  public constructor(news: News[], success: boolean, message: string) {
-    this.news = news;
-    this.success = success;
-    this.message = message;
-  }
-}

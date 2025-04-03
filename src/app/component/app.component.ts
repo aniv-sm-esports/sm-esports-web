@@ -74,9 +74,17 @@ export class AppComponent {
     */
   }
 
+  @HostListener('window:load', ['$event'])
+  onLoad(event: Event) {
+    if (!this.appService)
+      return;
+
+    // AppService -> Observable / BehaviorSubscriber -> ...
+    this.appService.updateClientSize(new Size((event.currentTarget as Window).innerWidth, (event.currentTarget as Window).innerHeight));
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-
     if (!this.appService)
       return;
 
