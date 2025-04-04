@@ -24,6 +24,10 @@ export class ChatBoxComponent {
   private readonly chatService: ChatService;
   private readonly chatRoomRoute: string;
 
+  // DOM (template) USAGE
+  protected readonly formatDate = formatDate;
+  protected readonly noop = noop;
+
   // Chat Room
   public chatRoom:ChatRoom;
 
@@ -109,7 +113,4 @@ export class ChatBoxComponent {
           });
         });
   }
-
-  protected readonly formatDate = formatDate;
-  protected readonly noop = noop;
 }

@@ -27,15 +27,36 @@
     background-color: rgba(134, 134, 255, 0.5);
   }
 
+  .tab-header > button {
+    background-color: #CCCCCC;
+    border: none;
+    border-radius: 20px;
+    box-shadow: none;
+    color: #555555;
+    cursor: pointer;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .tab-header > button:hover {
+    background-color: #EEEEEE;
+    color: #555555;
+  }
+
+  .tab-header > button.route-active {
+    background: white;
+    color: rgba(100, 100, 255, 1);
+  }
+
 </style>
 
 <div class="container">
   <div class="tab-control">
     <div class="tab-header">
-      <button mat-raised-button
-             *ngFor="let tab of chatTabs; index as i;"
-             [routerLink]="tab.route"
-             [routerLinkActive]="'route-active'">
+      <button *ngFor="let tab of chatTabs; index as i;"
+              class="russo-one-regular"
+              [routerLink]="tab.route"
+              [routerLinkActive]="'route-active'">
         {{tab.name}}
       </button>
     </div>

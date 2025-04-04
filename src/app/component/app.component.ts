@@ -1,10 +1,7 @@
 import {afterNextRender, Component, HostListener} from '@angular/core';
-import {Tab} from '../model/tab.model';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
-import {NewUserDialogComponent} from './new-user-dialog.component';
 import {Size} from '../model/app.model';
-import {NewsComponent} from './news.component';
 import {AppService} from '../service/app.service';
 
 @Component({
@@ -15,9 +12,7 @@ import {AppService} from '../service/app.service';
 export class AppComponent {
 
   private readonly appService: AppService;
-  //private readonly modalService: ModalService;
   private readonly userService: UserService;
-  //private readonly newUserDialog: NewUserDialogComponent;
 
   // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
   //                      would then be the "user's service"
@@ -32,6 +27,8 @@ export class AppComponent {
   public bannerHeightLarge: number = 68;
   public bannerHeight: number = this.bannerHeightSmall;     // Responsive setting
   public mediaLarge: number = 1400;
+  public showSideNav: boolean = false;
+  public showChatNavTree: boolean = false;
 
   // Logon Dialog
   //public userNameInput: string;
@@ -41,42 +38,11 @@ export class AppComponent {
   constructor(appService: AppService, userService: UserService) {
 
     this.appService = appService;
-    //this.newUserDialog = new NewUserDialogComponent(userService);
     this.primaryUser = new User(-1, 'Not Logged In');
     this.userService = userService;
     this.clientSize = new Size(0,0);
     this.bodySize = new Size(0,0);
-    //this.userNameInput = '';
 
-    // TODO: Find a way to prevent the dialog from destroying its data!
-    //this.newUserDialog.userValue.subscribe( userName => {
-    //  this.userNameInput = userName;
-    //});
-
-    /*
-    // TODO: Look for active route <-> tab
-    for (let tab of this.tabs){
-      if (tab.route == activeRoute.toString())
-        this.selectedTab = tab;
-    }
-    */
-
-    // IMPORTANT: Defer this until after SSR completes
-    /*
-    afterNextRender(() => {
-
-      // Show Dialog -> Create User
-      this.newUserDialog
-        .showDialog()
-        .beforeClosed()
-        .subscribe(() => {
-
-          console.log(this.newUserDialog.userInput);
-
-
-      });
-    });
-    */
   }
 
   @HostListener('window:load', ['$event'])
@@ -119,6 +85,10 @@ export class AppComponent {
 
     // AppService -> Observable / BehaviorSubscriber -> ...
     this.appService.updateClientSize(this.clientSize);
+  }
+
+  onSideNavOffClick(event: Event) {
+    this.showSideNav = false;
   }
 
   logOn(){

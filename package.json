@@ -29,6 +29,8 @@
     "@angular/youtube-player": "^19.2.8",
     "angular-in-memory-web-api": "^0.19.0",
     "express": "^4.18.2",
+    "moment": "^2.30.1",
+    "ng-click-outside": "^9.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

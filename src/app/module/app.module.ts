@@ -12,6 +12,8 @@ import {MatButtonToggle} from '@angular/material/button-toggle';
 import {MatButton, MatButtonModule} from '@angular/material/button';
 import {NewsService} from '../service/news.service';
 import {AppService} from '../service/app.service';
+import {MatSidenav, MatSidenavContainer, MatSidenavModule} from "@angular/material/sidenav";
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,11 @@ import {AppService} from '../service/app.service';
     MatFormField,
     MatButton,
     MatButtonToggle,
-    MatButtonModule
+    MatButtonModule,
+    MatSidenavContainer,
+    MatSidenav,
+    MatSidenavModule,
+    ClickOutsideModule
   ],
   providers: [
     provideClientHydration(withEventReplay()),

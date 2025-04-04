@@ -27,6 +27,64 @@
   main {
   }
 
+  .sidenav-container {
+    position: absolute;
+    top: 0;
+    bottom:0;
+    left: -260px;
+    width: 260px;
+    background: rgba(255,255,255, 1);
+  }
+
+  .sidenav-container.expand {
+    transition: left 0.35s ease-in-out;
+    left: 0;
+  }
+  .sidenav-container.collapse {
+    transition: left 0.35s ease-in-out;
+    left: -260px;
+  }
+
+  .sidenav-container > div.logo {
+    background-image: url("../../../../public/metroid-inactive.png");
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position-x: 222px;
+    background-position-y: 5px;
+  }
+  .sidenav-container > div.logo > h4 {
+    margin: 0px;
+    padding: 10px;
+  }
+
+  .sidenav-content a {
+    display: block;
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 10px;
+    color: #B5B5B5;
+  }
+
+  .sidenav-content a:hover,
+  .sidenav-content .sidenav-tree-header:hover {
+    color: #888888 !important;
+    background-color: rgba(134,134,255,0.3);
+  }
+
+  .sidenav-content .sidenav-tree .sidenav-tree-header {
+    cursor: pointer;
+  }
+
+  .sidenav-content .sidenav-tree .sidenav-tree-item {
+    padding-left: 20px;
+  }
+
+  .sidenav-content .sidenav-tree .sidenav-tree-expander {
+    font-size: 1.1em;
+  }
+  .sidenav-content .sidenav-tree .sidenav-tree-expander.expand:after {
+  }
+
   .banner {
     display: flex;
     flex-direction: row;
@@ -109,7 +167,8 @@
     flex: max-content;
   }
 
-  .logo h1 {
+  .logo h1,
+  .logo h4{
       color: rgba(134, 134, 255, 0.5);
       font-size: 2.5em;
       margin: 10px;
@@ -119,6 +178,9 @@
       animation: animate 3s linear 10s infinite;
       -webkit-background-clip: text;
       -webkit-text-fill-color: rgba(134, 134, 255, 0.5);
+  }
+  .logo h4 {
+    font-size: 1.2em !important;
   }
 
   @keyframes animate {
@@ -137,17 +199,91 @@
     .banner a.banner-item {
       font-size: 0.80em;
     }
+
+    .primary-user > button {
+      width: 40px;
+      height: 40px;
+      margin: 5px 0px 5px 10px;
+      border: none;
+      border-radius: 25px;
+      background-image: url("../../../../public/metroid-inactive.png");
+      background-color: rgba(0, 0, 0, 0.1);
+      background-size: 30px 30px;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+    }
+
+    .primary-user > button:hover {
+      background-color: rgba(134, 134, 255, 0.4);
+    }
+
+    .primary-user > button:active {
+      background-color: rgba(0, 0, 0, 0.3);
+      background-image: url("../../../../public/metroid.png");
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .primary-user > button {
+      width: 52px;
+      height: 52px;
+      margin: 5px 0px 5px 10px;
+      border: none;
+      border-radius: 25px;
+      background-image: url("../../../../public/metroid-inactive.png");
+      background-color: rgba(0, 0, 0, 0.1);
+      background-size: 42px 42px;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+    }
+
+    .primary-user > button:hover {
+      background-color: rgba(134, 134, 255, 0.4);
+    }
+
+    .primary-user > button:active {
+      background-color: rgba(0, 0, 0, 0.3);
+      background-image: url("../../../../public/metroid.png");
+    }
   }
 
 </style>
 
 <main class="main">
 
+  <div class="sidenav-container"
+       [ngClass]="{'expand': this.showSideNav, 'collapse': !this.showSideNav}"
+       (clickOutside)="onSideNavOffClick($event)"
+       [attachOutsideOnClick]="true"
+       [emitOnBlur]="true">
+    <div class="logo">
+      <h4>Super Metroid Esports</h4>
+    </div>
+    <div class="sidenav-content">
+      <a class="russo-one-regular" (click)="this.showSideNav = false" routerLink="/home" routerLinkActive="active">Home</a>
+      <a class="russo-one-regular" (click)="this.showSideNav = false" routerLink="/news" routerLinkActive="active">News</a>
+      <a class="russo-one-regular" (click)="this.showSideNav = false" routerLink="/people" routerLinkActive="active">People</a>
+      <div class="sidenav-tree">
+        <div class="sidenav-tree-header" (click)="this.showChatNavTree = !this.showChatNavTree">
+          <a class="russo-one-regular">Chat <span class="sidenav-tree-expander"
+                                                  [textContent]="!this.showChatNavTree ? '+' : '-'"></span></a>
+        </div>
+        <div class="sidenav-tree-body" *ngIf="this.showChatNavTree">
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/politics" routerLinkActive="active">Politics</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/people" routerLinkActive="active">People</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/speed-running" routerLinkActive="active">SM Speed Running</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/general" routerLinkActive="active">General</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="banner">
 
     <div class="primary-user">
-      <input [(ngModel)]="primaryUser.name" type="text" required />
-      <button mat-raised-button [disabled]="primaryUser.loggedOn">Log On</button>
+      <button (click)="showSideNav=true"></button>
     </div>
 
     <a class="banner-item russo-one-regular" routerLink="/home" routerLinkActive="active">Home</a>
