@@ -37,6 +37,8 @@ export class ChatBoxComponent {
 
   constructor(chatService: ChatService, activatedRoute: ActivatedRoute) {
 
+    console.log(activatedRoute);
+
     // Must retrieve data from server
     this.chatRoom = new ChatRoom();
 
@@ -47,7 +49,7 @@ export class ChatBoxComponent {
 
     // Parse Chat Room Id (from URL) (Handling default as 'politics', should be reroute)
     //
-    this.chatRoomRoute = activatedRoute.snapshot.paramMap.get('chatRoomRoute') || 'politics';
+    this.chatRoomRoute = activatedRoute.snapshot.routeConfig?.path || 'politics';
   }
 
   ngOnInit() {
