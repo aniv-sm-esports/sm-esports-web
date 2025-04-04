@@ -3,10 +3,14 @@
   .container {
   }
 
+  .container.loading {
+  }
+
   .container > .header {
     width: 100%;
     background-color: rgba(255, 255, 255, 0.4);
     padding: 5px;
+    height: 40px;
   }
 
   .container > .body {
@@ -51,6 +55,8 @@
     padding: 10px;
     border-radius: 10px;
     -webkit-border-radius: 10px;
+
+    display:flex;
   }
 
   .container > .header > h2 {
@@ -70,10 +76,14 @@
   .container > .input-container > input:focus {
     border:1px solid #ccc;
   }
+  .container > .input-container > sm-esports-button {
+    align-content: center;
+    width:50px;
+  }
 </style>
 
 
-<div class="container">
+<div class="container" [ngClass]="{'loading': this.loading}">
 
   <div class="header">
     <h2>{{chatRoom?.name}}</h2>
@@ -94,7 +104,6 @@
            (keyup.enter)="!!chatInput? submitChat() : noop()"
            type="text"
            required />
-    <button mat-raised-button [disabled]="!chatInput"
-            (click)="submitChat()">Chat</button>
+    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (click)="submitChat()" />
   </div>
 </div>

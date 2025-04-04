@@ -3,7 +3,7 @@ import {NgForOf} from '@angular/common';
 import {Tab} from '../model/tab.model';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {ChatService} from '../service/chat.service';
-import {MatButton, MatButtonModule} from '@angular/material/button';
+import {BasicButtonComponent} from './button.component';
 
 @Component({
   selector: 'chat',
@@ -12,7 +12,7 @@ import {MatButton, MatButtonModule} from '@angular/material/button';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    MatButton
+    BasicButtonComponent
   ],
   templateUrl: './template/chat.component.html'
 })

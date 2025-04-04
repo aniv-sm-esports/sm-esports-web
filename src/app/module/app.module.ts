@@ -7,12 +7,8 @@ import {NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {UserService} from '../service/user.service';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
-import {MatButtonToggle} from '@angular/material/button-toggle';
-import {MatButton, MatButtonModule} from '@angular/material/button';
 import {NewsService} from '../service/news.service';
 import {AppService} from '../service/app.service';
-import {MatSidenav, MatSidenavContainer, MatSidenavModule} from "@angular/material/sidenav";
 import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
@@ -25,17 +21,6 @@ import {ClickOutsideModule} from 'ng-click-outside';
     HttpClientModule,
     FormsModule,
     NgOptimizedImage,
-    MatError,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatFormField,
-    MatButton,
-    MatButtonToggle,
-    MatButtonModule,
-    MatSidenavContainer,
-    MatSidenav,
-    MatSidenavModule,
     ClickOutsideModule
   ],
   providers: [

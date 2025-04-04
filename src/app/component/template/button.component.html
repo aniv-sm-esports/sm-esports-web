@@ -1,0 +1,35 @@
+<style>
+  .container > button {
+  }
+
+  .container >  button {
+    width:100%;
+    background-color: #CCCCCC;
+    border: none;
+    border-radius: 20px;
+    box-shadow: none;
+    color: #555555;
+    cursor: pointer;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .container > button:hover {
+    background-color: #EEEEEE;
+    color: #555555;
+  }
+
+  .container > button.route-active {
+    background: white;
+    color: rgba(100, 100, 255, 1);
+  }
+</style>
+
+<div class="container">
+  <button class="russo-one-regular"
+          [disabled]="disabled"
+          [routerLink]="route"
+          [routerLinkActive]="'route-active'">
+    {{text}}
+  </button>
+</div>

@@ -3,18 +3,19 @@ import {ChatService} from '../service/chat.service';
 import {ActivatedRoute} from '@angular/router';
 import {ChatRoom} from '../model/chat-room.model';
 import {FormsModule} from '@angular/forms';
-import {MatButton} from '@angular/material/button';
 import {User} from '../model/user.model';
-import {formatDate, NgForOf} from '@angular/common';
+import {formatDate, NgClass, NgForOf} from '@angular/common';
 import {Chat} from '../model/chat.model';
 import {noop} from 'rxjs';
+import {BasicButtonComponent} from './button.component';
 
 @Component({
   selector: 'chatbox',
   imports: [
     FormsModule,
-    MatButton,
-    NgForOf
+    NgForOf,
+    NgClass,
+    BasicButtonComponent
   ],
   templateUrl: './template/chatbox.component.html'
 })
@@ -23,6 +24,8 @@ export class ChatBoxComponent {
   // Services
   private readonly chatService: ChatService;
   private readonly chatRoomRoute: string;
+
+  protected loading: boolean = true;
 
   // DOM (template) USAGE
   protected readonly formatDate = formatDate;
@@ -61,6 +64,7 @@ export class ChatBoxComponent {
           this.chatRoom.update(response.data as ChatRoom);
 
           this.refreshChats();
+          this.loading = false;
         }
       });
   }
