@@ -14,9 +14,19 @@ import {NewsController} from './server/controller/news.controller';
 import {DataModel} from './server/model/server.datamodel';
 import {News} from './app/model/news.model';
 import {ChatController} from './server/controller/chat.controller';
+import {Request, Response} from 'express-serve-static-core';
+import {Chat} from './app/model/chat.model';
+import {ParsedQs} from 'qs';
+import {ApiResponse} from './app/model/app.model';
 
+// Possibly old methods for NodeJS
+import cors from 'cors';
+import bodyParser from 'body-parser';
+
+// Some server constants
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
+
 
 // Application Instances
 //
@@ -61,7 +71,22 @@ const chatController = new ChatController(serverDb);
         which isn't actually static.
 */
 
+/**
+ * CORS
+ */
+app.use(cors());
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", req.get('origin'));
+  res.header('Access-Control-Allow-Credentials', '*');
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
+});
+
+// POST methods were having trouble receiving JSON data from the client
+//
+app.use(bodyParser.json());
 
 /**
  * Serve static files from /browser
@@ -114,14 +139,19 @@ app.get('/api/chat/getRooms', async (req, res) => {
   chatController.getChatRooms(req, res);
 });
 
+// API: Chat -> GetChatRoom
+app.get('/api/chat/getRoom/:chatRoomRoute', async (req, res) => {
+  chatController.getChatRoom(req, res);
+});
+
 // API: Chat -> GetChats
 app.get('/api/chat/getChats/:chatRoomId', async (req, res) => {
   chatController.getChats(req, res);
 });
 
 // API: Chat -> PostChat
-app.post('/api/chat/postChat/:chatRoomId', async (req, res) => {
-  chatController.postChat(req, res);
+app.post('/api/chat/postChat/:chatRoomId', async (request, response) => {
+  chatController.postChat(request, response);
 });
 
 /**
@@ -130,8 +160,15 @@ app.post('/api/chat/postChat/:chatRoomId', async (req, res) => {
 app.use('/**', (req, res, next) => {
 
   // CORS:  Must apply headers
-  req.headers["Access-Control-Allow-Origin"] = "*";
-  req.headers["Access-Control-Allow-Headers"] = "*";
+  //req.headers["Access-Control-Allow-Origin"] = "*";
+  //req.headers["Access-Control-Allow-Headers"] = "*";
+  //req.headers["Access-Control-Allow-Methods"] = "GET,POST";
+  /*
+  res.header("Access-Control-Allow-Origin", req.get('origin'));
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  */
 
   angularApp
     .handle(req)

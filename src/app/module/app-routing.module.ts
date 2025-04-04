@@ -10,7 +10,7 @@ const routes: Routes = [
   { path:"home",  component: HomeComponent },
   { path:"news",  component: NewsComponent },
   { path:"people",  component: PeopleComponent },
-  { path:"chat",  component: ChatComponent, children: [
+  { path:"chat", component: ChatComponent, children: [
       { path:"politics", component: ChatBoxComponent },
       { path:"people", component: ChatBoxComponent },
       { path:"speed-running", component: ChatBoxComponent },

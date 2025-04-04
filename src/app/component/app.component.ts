@@ -3,7 +3,6 @@ import {Tab} from '../model/tab.model';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
 import {NewUserDialogComponent} from './new-user-dialog.component';
-import {BehaviorSubject, Observable, Observer, Subscriber} from 'rxjs';
 import {Size} from '../model/app.model';
 import {NewsComponent} from './news.component';
 import {AppService} from '../service/app.service';

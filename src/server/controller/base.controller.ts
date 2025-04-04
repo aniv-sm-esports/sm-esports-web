@@ -28,7 +28,7 @@ export class BaseController {
       return;
     }
 
-    console.log(`Server Response (Success!)`);
+    console.log(`Server Response (Success!): ${response?.req.url}`);
     //console.log(response);
     response.send(ApiResponse.success<T>(data));
   }
@@ -40,7 +40,7 @@ export class BaseController {
       return;
     }
 
-    console.log(`Server Response (Failure!)`);
+    console.log(`Server Response (Failure!): ${response?.req.url}`);
     console.log(message);
     response.send(ApiResponse.fail<T>(message));
   }

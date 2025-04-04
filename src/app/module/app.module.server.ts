@@ -10,7 +10,7 @@ import {DataModel} from '../../server/model/server.datamodel';
 
 @NgModule({
   imports: [AppModule, ServerModule],
-  providers: [provideServerRouting(serverRoutes),DataModel, UserController, NewsController],
+  providers: [provideServerRouting(serverRoutes)],
   bootstrap: [AppComponent],
 })
 export class AppServerModule {}

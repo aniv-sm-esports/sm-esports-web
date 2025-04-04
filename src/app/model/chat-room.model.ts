@@ -18,6 +18,25 @@ export class ChatRoom {
     this.chats = [];
   }
 
+  public containsChat(id: number) {
+    return this.chats.some((chat: Chat) => {
+      return chat.id == id;
+    });
+  }
+
+  public getChat(id: number) {
+    return this.chats.find((chat) => chat.id == id);
+  }
+
+  public update(room: ChatRoom) {
+    this.id = room.id;
+    this.name = room.name;
+    this.description = room.description;
+    this.urlRoute = room.urlRoute;
+    this.chatRulesHtml = room.chatRulesHtml;
+    this.chats = room.chats;
+  }
+
   public static from(id: number, name: string, description:string, urlRoute:string, chatRulesHtml:string): ChatRoom {
     let result = new ChatRoom();
 

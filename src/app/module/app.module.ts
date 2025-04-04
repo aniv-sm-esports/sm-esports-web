@@ -28,6 +28,7 @@ import {AppService} from '../service/app.service';
     MatInput,
     MatLabel,
     MatFormField,
+    MatButton,
     MatButtonToggle,
     MatButtonModule
   ],

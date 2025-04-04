@@ -1,38 +1,30 @@
 <style>
 
+  .container {
+    height: 100%;
+  }
+
   .tab-header {
     flex: 200px;
+    margin: 5px;
   }
 
-  .tab-header-item {
-    color:lightgray;
-    background-color: black;
-    border: 1px solid darkgray;
-    padding: 10px;
-    cursor: pointer;
-  }
-
-  .tab-header-item {
-    background-color: transparent;
-  }
-
-  .tab-header-item .route-active {
-    background-color: rgba(50, 50, 50, 100);
-  }
-
-  .tab-header-item:hover {
-    transition: background-color 0.3s ease;
-    background-color: rgba(50, 50, 50, 100);
+  .tab-header > button {
+    width:100%;
+    margin-bottom:5px;
   }
 
   .tab-control {
     display: flex;
+    height: 100%;
   }
 
   .tab-content {
-    color: white;
-    border: 1px solid lightgray;
+    border: 2px solid lightgray;
     flex: 100%;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    background-color: rgba(134, 134, 255, 0.5);
   }
 
 </style>
@@ -40,12 +32,12 @@
 <div class="container">
   <div class="tab-control">
     <div class="tab-header">
-      <div class="tab-header-item"
-           *ngFor="let tab of chatTabs; index as i;"
-           [routerLink]="tab.route"
-           [routerLinkActive]="'route-active'">
+      <button mat-raised-button
+             *ngFor="let tab of chatTabs; index as i;"
+             [routerLink]="tab.route"
+             [routerLinkActive]="'route-active'">
         {{tab.name}}
-      </div>
+      </button>
     </div>
 
     <div class="tab-content">

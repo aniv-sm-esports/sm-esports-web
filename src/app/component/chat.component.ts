@@ -3,6 +3,7 @@ import {NgForOf} from '@angular/common';
 import {Tab} from '../model/tab.model';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {ChatService} from '../service/chat.service';
+import {MatButton, MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'chat',
@@ -10,14 +11,15 @@ import {ChatService} from '../service/chat.service';
     NgForOf,
     RouterOutlet,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    MatButton
   ],
   templateUrl: './template/chat.component.html'
 })
 export class ChatComponent {
 
   private readonly chatService: ChatService;
-  private readonly baseRoute:string = 'chat';
+  private readonly baseRoute:string = '/chat';
 
   public chatTabs: Tab[];
   public selectedChatTab: Tab | undefined;
