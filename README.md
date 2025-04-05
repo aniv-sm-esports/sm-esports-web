@@ -16,4 +16,16 @@ to use to collaborate about the Super Metroid Esport; and DOES NOT have any affi
 # Chat (Development Preview)
 ![screenshot](public/chat-preview.png)
 
+# People 1 (Development Preview)
+![screenshot](public/screenshot-people-1.png)
+
+# People 2 (Development Preview)
+![screenshot](public/screenshot-people-2.png)
+
+# People 3 (Development Preview)
+![screenshot](public/screenshot-people-3.png)
+
+# People Aniv (Development Preview)
+![screenshot](public/screenshot-people-aniv.png)
+
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

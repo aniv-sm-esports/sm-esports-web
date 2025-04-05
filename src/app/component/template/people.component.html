@@ -1,1 +1,148 @@
-<h1>PEOPLE</h1>
+<style>
+  h1 {
+    padding:0px;
+    color: #EEEEEE;
+    font-size: 2.5em;
+  }
+
+  .people-container {
+    padding: 0px;
+    margin: 0px !important;
+  }
+
+  .people-container .header-container {
+    background: #CCCCCCCC;
+  }
+
+  .people-container .header-container > h1 {
+    color: rgba(134,134,255,1);
+    margin: 0px;
+    padding: 5px 10px 5px 10px;
+  }
+
+  .people-container > .body-container {
+    overflow-y: auto !important;
+  }
+
+  .people-container > .body-container table {
+    width: 100%;
+  }
+
+  .people-container > .body-container > .user-container {
+    margin: 20px;
+  }
+
+  .people-container > .body-container .user-container .user-info {
+    width: 200px !important;
+  }
+
+  .people-container > .body-container .user-container .user-info:nth-child(2n + 1) {
+    width: 200px !important;
+    text-align: right;
+  }
+
+  .people-container > .body-container .user-container .user-info h5 {
+    font-size: 0.9em;
+    margin: 0px;
+  }
+
+  .people-container > .body-container .user-container .user-info .user-email {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 5px;
+  }
+
+  .people-container > .body-container .user-container .user-descr-long {
+    vertical-align: top;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .people-container > .body-container .user-container .user-descr-long > p {
+    margin: 0px;
+  }
+
+  .people-container .body-container .user-container > .user-banner {
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+
+  .people-container .body-container .user-container > .user-banner > h3 {
+    padding: 10px;
+  }
+
+  .people-container .body-container .user-container .user-info .person-role {
+    color: #DDD;
+    margin-top: 10px;
+  }
+
+</style>
+
+<div class="people-container">
+
+  <div class="header-container">
+    <h1 class="russo-one-regular">People</h1>
+  </div>
+
+  <div class="body-container"
+       [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',
+                   'height': ((this.appService.getSize()?.height || 0) - this.appService.bannerHeight - (2 * this.appService.bodyMargin)) + 'px'}">
+    <div class="user-container"
+         *ngFor="let user of userList;index as i">
+
+      @if (i % 2 == 0) {
+
+        <div class="user-banner">
+          <h3>
+            <span class="user-descr-short" [ngStyle]="{'float': 'right', 'padding': '5px 5px 5px 10px'}">{{user.shortDescription}}</span>
+            <img [ngStyle]="{'float': 'left'}"
+                 src="metroid-angle-right.png"
+                 alt="metroid-angle-right.png"
+                 width="36" height="36" />
+            <span class="user-name" [ngStyle]="{'float': 'left', 'padding': '5px 5px 5px 15px'}">{{user.name}}</span>
+            <div class="clear-fix"></div>
+          </h3>
+        </div>
+
+        <td class="user-info">
+          <img width="150"
+               height="200"
+               [ngSrc]="user.pictureUrl" />
+          <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
+          <h5 class="user-email">{{user.email}}</h5>
+        </td>
+        <td class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
+          <p>{{user.longDescription}}</p>
+        </td>
+      }
+      @else {
+
+        <div class="user-banner">
+          <h3>
+            <img [ngStyle]="{'float': 'right', 'padding': '5px 5px 5px 5px'}"
+                 src="metroid-angle-left.png"
+                 alt="metroid-angle-left.png"
+                 width="36" height="36" />
+            <span class="user-name" [ngStyle]="{'float': 'right', 'padding': '10px'}">{{user.name}}</span>
+            <span class="user-descr-short" [ngStyle]="{'float': 'left', 'padding': '10px'}">{{user.shortDescription}}</span>
+            <div class="clear-fix"></div>
+          </h3>
+        </div>
+
+        <td class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
+          <p>{{user.longDescription}}</p>
+        </td>
+        <td class="user-info">
+          <img width="150"
+               height="200"
+               [ngSrc]="user.pictureUrl" />
+          <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
+          <h5 class="user-email">{{user.email}}</h5>
+        </td>
+      }
+
+    </div>
+  </div>
+
+</div>

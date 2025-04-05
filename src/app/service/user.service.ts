@@ -13,10 +13,11 @@ export class UserService {
 
   // Users -> Post -> Create User
   urlGet = "/api/users/get/:userName";
+  urlGetAll = "/api/users/getAll";
   urlExists = "/api/users/exists/:userName";
   urlCreate = "/api/users/create";
 
-  constructor(private httpClient: HttpClient) {
+  constructor(httpClient: HttpClient) {
     this.http = httpClient;
   }
 
@@ -31,6 +32,18 @@ export class UserService {
     };
 
     return this.http.get<ApiResponse<User>>(this.urlGet.replace(':userName', userName), options);
+  }
+
+  getAll() {
+    let httpHeaders = new HttpHeaders();
+
+    httpHeaders.append('content-type', 'application/json');
+
+    let options = {
+      headers: httpHeaders
+    };
+
+    return this.http.get<ApiResponse<User[]>>(this.urlGetAll, options);
   }
 
   userExists(userName: string) {

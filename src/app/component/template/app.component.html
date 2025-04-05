@@ -128,8 +128,7 @@
 
     opacity: 1;
     animation: fadein 2s;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
   }
 
   .modal-container h2 {
@@ -297,9 +296,9 @@
   </div>
 
   <div class="app-body"
-       [ngStyle]="{'width': (this.clientSize.width - (2 * this.bodyMargin)) + 'px',
-                   'height': (this.clientSize.height - this.bannerHeight - (2 * this.bodyMargin)) + 'px',
-                   'margin': this.bodyMargin + 'px'}">
+       [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',
+                   'height': ((this.appService.getSize()?.height || 0) - this.appService.bannerHeight - (2 * this.appService.bodyMargin)) + 'px',
+                   'margin': this.appService.bodyMargin + 'px'}">
     <router-outlet />
   </div>
 </main>

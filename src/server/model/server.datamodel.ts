@@ -1,4 +1,4 @@
-import {User} from '../../app/model/user.model';
+import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/user.model';
 import {BannerLinkType, News} from '../../app/model/news.model';
 import {ChatRoom} from '../../app/model/chat-room.model';
 import {Chat} from '../../app/model/chat.model';
@@ -26,7 +26,63 @@ export class DataModel {
     // Server Application Defaults
 
     // Users
-    this.users.set(0, new User(0, 'aniv-sm-esports'));
+    let zoasty = new User(0, 'zoasty');
+    let zeni = new User(1, 'ShinyZeni');
+    let oatsngoats = new User(2, 'Oatsngoats');
+    let eddie = new User(3, 'Eddie');
+    let nevdi = new User(4, 'Nevdi');
+    let arealcutie = new User(5, 'ARealCutie');
+
+    zoasty.shortDescription = 'A Short Description of Zoasty';
+    zeni.shortDescription = 'A Short Description of ShinyZeni';
+    oatsngoats.shortDescription = 'A Short Description of Oatsngoats';
+    eddie.shortDescription = 'A Short Description of Eddie';
+    nevdi.shortDescription = 'A Short Description of Nevdi';
+    arealcutie.shortDescription = 'A Short Description of ARealCutie';
+
+    zoasty.longDescription = this.fillText(100, 150);
+    zeni.longDescription = this.fillText(100, 150);
+    oatsngoats.longDescription = this.fillText(100, 150);
+    eddie.longDescription = this.fillText(100, 150);
+    nevdi.longDescription = this.fillText(100, 150);
+    arealcutie.longDescription = this.fillText(100, 150);
+
+    zoasty.email = 'zoasty@nomail.com';
+    zeni.email = 'zeni@nomail.com';
+    oatsngoats.email = 'oatsngoats@nomail.com';
+    eddie.email = 'eddie@nomail.com';
+    nevdi.email = 'nevdi@nomail.com';
+    arealcutie.email = 'arealcutie@nomail.com';
+
+    zoasty.pictureUrl = 'zoasty.png';
+    zeni.pictureUrl = 'shinyzeni.png';
+    oatsngoats.pictureUrl = 'oatsngoats.png';
+    eddie.pictureUrl = 'eddie.png';
+    nevdi.pictureUrl = 'nevdi.png';
+    arealcutie.pictureUrl = 'arealcutie.png';
+
+    zoasty.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+    zeni.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+    oatsngoats.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+    eddie.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+    nevdi.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+    arealcutie.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+
+    let aniv = new User(6, 'aniv-sm-esports');
+
+    aniv.email = 'aniv-sm-esports@gmail.com';
+    aniv.pictureUrl = 'aniv.png';
+    aniv.shortDescription = 'i am aniv!';
+    aniv.longDescription = 'Hey Evenyone! I am aniv! #freeaniv! Thanks for joining me at this celebratory inaugural test-edition of Super Metroid Esports!';
+    aniv.roleInfo = UserRole.from(UserRoleType.Admin, PersonRoleType.GeneralUser);
+
+    this.users.set(0, zoasty);
+    this.users.set(1, zeni);
+    this.users.set(2, oatsngoats);
+    this.users.set(3, eddie);
+    this.users.set(4, nevdi);
+    this.users.set(5, arealcutie);
+    this.users.set(6, aniv);
 
     // Chat Rooms
     let chatPolitics = ChatRoom.from(0,
@@ -83,12 +139,12 @@ export class DataModel {
 
     // MOCK CHAT DATA
     for (let i = 0; i < 50; i++) {
-      this.chatRooms.get(0)?.chats.push(Chat.from(i, 0, 'aniv-sm-esports', this.fillText()));
+      this.chatRooms.get(0)?.chats.push(Chat.from(i, 0, 'aniv-sm-esports', this.fillText(30, 50)));
     }
   }
 
-  fillText() {
-    return this.fillWords(randomInt(5, 30));
+  fillText(from:number, to:number) {
+    return this.fillWords(randomInt(from, to));
   }
 
   fillWords(wordNumber: number) {
