@@ -40,8 +40,6 @@ export class ChatBoxComponent {
 
   constructor(chatService: ChatService, activatedRoute: ActivatedRoute) {
 
-    console.log(activatedRoute);
-
     // Must retrieve data from server
     this.chatRoom = new ChatRoom();
 
@@ -94,6 +92,9 @@ export class ChatBoxComponent {
   }
 
   refreshChats() {
+
+    // TODO: Don't reset chat array here; but figure out a smooth way transitionally
+    this.chatRoom.clearChats();
 
     let chatRoomId = this.chatRoom?.id || 0;
 

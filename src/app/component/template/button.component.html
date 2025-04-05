@@ -26,10 +26,9 @@
 </style>
 
 <div class="container">
-  <button class="russo-one-regular"
+  <button [ngClass]="{'russo-one-regular': true, 'route-active': this.routeActive()}"
           [disabled]="disabled"
-          [routerLink]="route"
-          [routerLinkActive]="'route-active'">
+          (click)="onClick()">
     {{text}}
   </button>
 </div>

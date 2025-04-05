@@ -104,6 +104,6 @@
            (keyup.enter)="!!chatInput? submitChat() : noop()"
            type="text"
            required />
-    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (click)="submitChat()" />
+    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (clicked)="submitChat()" />
   </div>
 </div>

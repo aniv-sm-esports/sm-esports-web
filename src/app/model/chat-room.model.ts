@@ -37,6 +37,12 @@ export class ChatRoom {
     this.chats = room.chats;
   }
 
+  public clearChats() {
+    while (this.chats.length > 0) {
+      this.chats.pop();
+    }
+  }
+
   public static from(id: number, name: string, description:string, urlRoute:string, chatRulesHtml:string): ChatRoom {
     let result = new ChatRoom();
 

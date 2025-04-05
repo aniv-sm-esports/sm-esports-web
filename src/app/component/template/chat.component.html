@@ -35,6 +35,7 @@
     <div class="tab-header">
       <sm-esports-button *ngFor="let tab of chatTabs; index as i;"
                          class="russo-one-regular"
+                         (clicked)="navigateRoute($event)"
                          [text]="tab.name"
                          [route]="tab.route" />
     </div>

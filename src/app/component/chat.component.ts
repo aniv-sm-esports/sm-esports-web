@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {NgForOf} from '@angular/common';
 import {Tab} from '../model/tab.model';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {ChatService} from '../service/chat.service';
 import {BasicButtonComponent} from './button.component';
 
@@ -18,13 +18,15 @@ import {BasicButtonComponent} from './button.component';
 })
 export class ChatComponent {
 
+  private readonly router:Router;
   private readonly chatService: ChatService;
   private readonly baseRoute:string = '/chat';
 
   public chatTabs: Tab[];
   public selectedChatTab: Tab | undefined;
 
-  constructor(chatService: ChatService) {
+  constructor(router:Router, chatService: ChatService) {
+    this.router = router;
     this.chatService = chatService;
     this.chatTabs = [];
   }
@@ -39,8 +41,12 @@ export class ChatComponent {
 
           // Add tabs from response
           response.data?.forEach(room => {
-            this.chatTabs.push(new Tab(room.name, this.baseRoute + '/' + room.urlRoute));
+            this.chatTabs.push(new Tab(room.name, room.urlRoute));
           });
         });
+  }
+
+  navigateRoute(route: string) {
+    this.router.navigate([this.baseRoute + '/' + route]);``
   }
 }
