@@ -12,7 +12,7 @@ import {inject} from '@angular/core';
 import {UserController} from './server/controller/user.controller';
 import {NewsController} from './server/controller/news.controller';
 import {DataModel} from './server/model/server.datamodel';
-import {News} from './app/model/news.model';
+import {Article} from './app/model/article.model';
 import {ChatController} from './server/controller/chat.controller';
 import {Request, Response} from 'express-serve-static-core';
 import {Chat} from './app/model/chat.model';

@@ -32,49 +32,68 @@
     margin: 20px;
   }
 
-  .people-container > .body-container .user-container .user-info {
-    width: 200px !important;
-  }
+  /* People Entry */
 
-  .people-container > .body-container .user-container .user-info:nth-child(2n + 1) {
-    width: 200px !important;
-    text-align: right;
-  }
-
-  .people-container > .body-container .user-container .user-info h5 {
-    font-size: 0.9em;
-    margin: 0px;
-  }
-
-  .people-container > .body-container .user-container .user-info .user-email {
-    font-size: 0.85em;
-    color: #888;
-    margin-top: 5px;
-  }
-
-  .people-container > .body-container .user-container .user-descr-long {
-    vertical-align: top;
-    margin: 0px;
-    padding: 0px;
-  }
-
-  .people-container > .body-container .user-container .user-descr-long > p {
-    margin: 0px;
-  }
-
+  /* People Entry Banner */
   .people-container .body-container .user-container > .user-banner {
     background-color: rgba(255, 255, 255, 0.3);
     margin-left: -20px;
     margin-right: -20px;
   }
-
   .people-container .body-container .user-container > .user-banner > h3 {
     padding: 10px;
   }
 
-  .people-container .body-container .user-container .user-info .person-role {
+  /* People Entry Content */
+  .people-container .user-container .user-content {
+    list-style: none;
+    display: flex;
+    padding: 0px;
+  }
+  .people-container .user-container .user-info {
+    width: 200px;
+  }
+
+  /* People Entry Content -> User Info */
+  .people-container .user-container .user-info h5 {
+    font-size: 0.9em;
+    margin: 0px;
+  }
+  .people-container .user-container .user-info .person-role {
     color: #DDD;
     margin-top: 10px;
+  }
+  .people-container .user-container .user-info .user-email {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 5px;
+  }
+
+  /* People Entry Content -> Long Description */
+  .people-container .user-container .user-descr-long {
+    vertical-align: top;
+    margin: 0px;
+    padding: 0px;
+  }
+  .people-container .user-container .user-descr-long > p {
+    margin: 0px;
+  }
+
+
+  /* People Entry Odd */
+  .people-container .user-container:nth-child(2n+1) .user-content .user-info {
+    text-align: left;
+  }
+  .people-container .user-container:nth-child(2n+1) .user-content .user-descr-long {
+    margin-left: 20px;
+  }
+
+  /* People Entry Even */
+  .people-container .user-container:nth-child(2n) .user-content .user-info {
+    text-align: right;
+  }
+  .people-container .user-container:nth-child(2n) .user-content .user-descr-long {
+    margin-right: 20px;
   }
 
 </style>
@@ -91,7 +110,7 @@
     <div class="user-container"
          *ngFor="let user of userList;index as i">
 
-      @if (i % 2 == 0) {
+      @if (i % 2 === 0) {
 
         <div class="user-banner">
           <h3>
@@ -105,16 +124,18 @@
           </h3>
         </div>
 
-        <td class="user-info">
-          <img width="150"
-               height="200"
-               [ngSrc]="user.pictureUrl" />
-          <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
-          <h5 class="user-email">{{user.email}}</h5>
-        </td>
-        <td class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
-          <p>{{user.longDescription}}</p>
-        </td>
+        <ul class="user-content">
+          <li class="user-info">
+            <img width="150"
+                 height="200"
+                 [ngSrc]="user.pictureUrl" />
+            <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
+            <h5 class="user-email">{{user.email}}</h5>
+          </li>
+          <li class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
+            <p>{{user.longDescription}}</p>
+          </li>
+        </ul>
       }
       @else {
 
@@ -130,16 +151,18 @@
           </h3>
         </div>
 
-        <td class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
-          <p>{{user.longDescription}}</p>
-        </td>
-        <td class="user-info">
-          <img width="150"
-               height="200"
-               [ngSrc]="user.pictureUrl" />
-          <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
-          <h5 class="user-email">{{user.email}}</h5>
-        </td>
+        <ul class="user-content">
+          <li class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
+            <p>{{user.longDescription}}</p>
+          </li>
+          <li class="user-info">
+            <img width="150"
+                 height="200"
+                 [ngSrc]="user.pictureUrl" />
+            <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
+            <h5 class="user-email">{{user.email}}</h5>
+          </li>
+        </ul>
       }
 
     </div>

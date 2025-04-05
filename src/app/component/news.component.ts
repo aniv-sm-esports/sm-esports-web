@@ -1,5 +1,5 @@
 import {afterNextRender, Component, inject} from '@angular/core';
-import {BannerLinkType, News} from '../model/news.model';
+import {BannerLinkType, Article} from '../model/article.model';
 import {NewsService} from '../service/news.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -21,7 +21,7 @@ export class NewsComponent {
 
   private readonly appService: AppService;
   private readonly newsService: NewsService;
-  public newsList:News[];
+  public newsList:Article[];
 
   // BASED ON AN ASPECT RATIO OF 2:1 (can also test 16:9)
   private readonly clientSizeBase: Size = new Size(1200, 600)
@@ -85,7 +85,7 @@ export class NewsComponent {
     }
   }
 
-  loadNews(news: News[]) {
+  loadNews(news: Article[]) {
     news.forEach(item => {
 
       // TODO: Date being serialized as a string

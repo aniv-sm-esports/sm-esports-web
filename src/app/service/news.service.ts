@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {firstValueFrom, Observable} from 'rxjs';
-import {News} from '../model/news.model';
+import {Article} from '../model/article.model';
 import {ApiResponse} from '../model/app.model';
 
 @Injectable({
@@ -30,10 +30,10 @@ export class NewsService {
       headers: httpHeaders
     };
 
-    return this.http.get<ApiResponse<News>>(this.urlGet.replace(':id', id.toString()), options);
+    return this.http.get<ApiResponse<Article>>(this.urlGet.replace(':id', id.toString()), options);
   }
 
-  create(news: News) : Observable<ApiResponse<News>> {
+  create(news: Article) : Observable<ApiResponse<Article>> {
 
     let httpHeaders = new HttpHeaders();
 
@@ -43,10 +43,10 @@ export class NewsService {
       headers: httpHeaders
     };
 
-    return this.http.post<ApiResponse<News>>(this.urlCreate, news, options);
+    return this.http.post<ApiResponse<Article>>(this.urlCreate, news, options);
   }
 
-  getAll(): Observable<ApiResponse<News[]>> {
+  getAll(): Observable<ApiResponse<Article[]>> {
 
     let httpHeaders = new HttpHeaders();
 
@@ -56,6 +56,6 @@ export class NewsService {
       headers: httpHeaders
     };
 
-    return this.http.get<ApiResponse<News[]>>(this.urlGetAll, options);
+    return this.http.get<ApiResponse<Article[]>>(this.urlGetAll, options);
   }
 }

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
-import {News} from '../../app/model/news.model';
+import {Article} from '../../app/model/article.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class NewsController extends BaseController {
 
     this.logRequest(request);
 
-    let news:News = new News();
+    let news:Article = new Article();
     let message:string = '';
 
     try {
@@ -24,7 +24,7 @@ export class NewsController extends BaseController {
       // Success
       if (this.serverDb.news.has(Number(request.params.newsId))) {
 
-        news = this.serverDb.news.get(Number(request.params.newsId)) || new News();
+        news = this.serverDb.news.get(Number(request.params.newsId)) || new Article();
 
         // Send during try/catch
         this.logResponseSuccess(response, news);
@@ -53,9 +53,9 @@ export class NewsController extends BaseController {
     let message:string = '';
 
     try {
-      let newsItems:News[] = [];
+      let newsItems:Article[] = [];
 
-      this.serverDb.news.forEach((news:News) => {
+      this.serverDb.news.forEach((news:Article) => {
         newsItems.push(news);
       })
 
@@ -86,7 +86,7 @@ export class NewsController extends BaseController {
     try {
 
       // Exists
-      this.serverDb.news.forEach((news:News) => {
+      this.serverDb.news.forEach((news:Article) => {
         if (news.title.trim() == request.body.title.trim()) {
           success = false;
           message = 'News article (of the same title) already exists';

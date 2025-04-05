@@ -1,5 +1,5 @@
 import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/user.model';
-import {BannerLinkType, News} from '../../app/model/news.model';
+import {BannerLinkType, Article} from '../../app/model/article.model';
 import {ChatRoom} from '../../app/model/chat-room.model';
 import {Chat} from '../../app/model/chat.model';
 import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
@@ -14,7 +14,7 @@ export class DataModel {
   chatRoomUserMap: ChatRoomUserMap;
   chatRooms: Map<number, ChatRoom>;
   users: Map<number, User>;
-  news: Map<number, News>;
+  news: Map<number, Article>;
 
   constructor() {
 
@@ -40,12 +40,12 @@ export class DataModel {
     nevdi.shortDescription = 'A Short Description of Nevdi';
     arealcutie.shortDescription = 'A Short Description of ARealCutie';
 
-    zoasty.longDescription = this.fillText(100, 150);
-    zeni.longDescription = this.fillText(100, 150);
-    oatsngoats.longDescription = this.fillText(100, 150);
-    eddie.longDescription = this.fillText(100, 150);
-    nevdi.longDescription = this.fillText(100, 150);
-    arealcutie.longDescription = this.fillText(100, 150);
+    zoasty.longDescription = this.fillLoremIpsumShort();
+    zeni.longDescription = this.fillLoremIpsumShort();
+    oatsngoats.longDescription = this.fillLoremIpsumShort();
+    eddie.longDescription = this.fillLoremIpsumShort();
+    nevdi.longDescription = this.fillLoremIpsumShort();
+    arealcutie.longDescription = this.fillLoremIpsumShort();
 
     zoasty.email = 'zoasty@nomail.com';
     zeni.email = 'zeni@nomail.com';
@@ -115,7 +115,7 @@ export class DataModel {
     this.chatRooms.set(3, chatGeneral);
 
     // News
-    let newsWelcome = News.from(0,
+    let newsWelcome = Article.from(0,
       'Welcome to Super Metroid Esports!',
       'The site dedicated as a community backbone for Super Metroid Esports',
       'Please see our <span class="highlight link">Statement of Purpose</span> for more details!',
@@ -124,7 +124,7 @@ export class DataModel {
       '',
       new Date());
 
-    let newsGDQ = new News();
+    let newsGDQ = new Article();
 
     newsGDQ.id = 1;
     newsGDQ.date = new Date();
@@ -141,6 +141,22 @@ export class DataModel {
     for (let i = 0; i < 50; i++) {
       this.chatRooms.get(0)?.chats.push(Chat.from(i, 0, 'aniv-sm-esports', this.fillText(30, 50)));
     }
+  }
+
+  fillLoremIpsumShort() {
+    return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eget felis vitae nisi ornare porttitor et sed tellus. Vestibulum accumsan egestas leo, nec lobortis justo varius suscipit. Quisque aliquet eros mauris, vel ornare enim finibus eu. Sed nec nibh venenatis, vulputate nisl in, congue ex. Vestibulum vel est a eros elementum facilisis. Sed rhoncus leo sed erat imperdiet, sit amet volutpat dolor euismod. Nullam sollicitudin finibus urna ut vehicula. Cras ac mauris ut neque egestas vulputate vitae sit amet quam. Maecenas laoreet, ipsum at aliquam malesuada, metus ante blandit arcu, a feugiat nisi magna dignissim lacus. Fusce nec arcu erat. Maecenas posuere felis in lacus congue facilisis. Duis laoreet metus turpis. Praesent in maximus sem. Quisque sit amet nunc eget ligula scelerisque cursus sed id felis.";
+  }
+
+  fillLoremIpsumLong() {
+    return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eget felis vitae nisi ornare porttitor et sed tellus. Vestibulum accumsan egestas leo, nec lobortis justo varius suscipit. Quisque aliquet eros mauris, vel ornare enim finibus eu. Sed nec nibh venenatis, vulputate nisl in, congue ex. Vestibulum vel est a eros elementum facilisis. Sed rhoncus leo sed erat imperdiet, sit amet volutpat dolor euismod. Nullam sollicitudin finibus urna ut vehicula. Cras ac mauris ut neque egestas vulputate vitae sit amet quam. Maecenas laoreet, ipsum at aliquam malesuada, metus ante blandit arcu, a feugiat nisi magna dignissim lacus. Fusce nec arcu erat. Maecenas posuere felis in lacus congue facilisis. Duis laoreet metus turpis. Praesent in maximus sem. Quisque sit amet nunc eget ligula scelerisque cursus sed id felis.\n" +
+      "\n" +
+      "Integer aliquam, sapien at sollicitudin porttitor, tortor tortor consectetur justo, at sagittis orci ligula eu ipsum. Curabitur sit amet vulputate nulla, vitae luctus elit. Ut molestie justo eget finibus tempor. Praesent nisl orci, lacinia id libero a, maximus consectetur velit. Fusce cursus tempor purus vitae ullamcorper. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut non suscipit quam. Fusce porttitor condimentum orci nec porta. Aliquam erat volutpat.\n" +
+      "\n" +
+      "Aenean et odio ut libero auctor sagittis id quis mauris. Curabitur vehicula augue a sapien tincidunt consequat. Quisque iaculis facilisis auctor. Nulla aliquam lobortis libero iaculis ultrices. Donec a enim aliquet, pellentesque libero sit amet, laoreet massa. Aenean vel dictum elit, blandit blandit risus. In hac habitasse platea dictumst. Cras enim elit, rutrum ut lectus consectetur, placerat placerat purus.\n" +
+      "\n" +
+      "Sed ac aliquet lorem. Vivamus mollis dolor sit amet ornare tempus. Donec euismod purus et neque scelerisque suscipit. Morbi nulla quam, consequat sit amet sodales id, gravida sit amet nunc. Cras vitae eros eget leo eleifend luctus ullamcorper vel eros. Aliquam porttitor aliquam ipsum sit amet facilisis. Fusce mattis volutpat eros, ut laoreet massa lobortis eget. Curabitur malesuada gravida sapien. Donec laoreet porta nibh, ut commodo elit tristique quis. Fusce vel dui urna. Morbi feugiat, metus ut eleifend facilisis, dolor magna semper velit, eu eleifend urna lorem vel enim. Sed erat tortor, gravida nec nisi et, varius mattis dolor.\n" +
+      "\n" +
+      "Maecenas pharetra enim sed lectus fringilla sagittis. Nulla mollis mauris vitae mi feugiat aliquam. Fusce rhoncus dolor vitae risus varius, eget egestas sapien condimentum. Maecenas quis metus porttitor, tristique leo id, elementum sapien. Mauris interdum justo sed arcu porta, eu accumsan ante accumsan. Cras gravida consequat erat nec laoreet. Duis aliquam, nisl eu pellentesque maximus, sem purus blandit elit, id pulvinar justo erat eleifend libero. Nunc auctor ac neque non porta. Nunc id venenatis leo, sit amet varius magna. Donec semper urna nulla, quis vehicula quam varius ac. Donec laoreet porttitor tincidunt. Sed hendrerit tempor libero, vitae semper eros tincidunt eget. ";
   }
 
   fillText(from:number, to:number) {

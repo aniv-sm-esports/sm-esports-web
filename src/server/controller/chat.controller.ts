@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
-import {News} from '../../app/model/news.model';
+import {Article} from '../../app/model/article.model';
 import {Chat} from '../../app/model/chat.model';
 import {ChatRoom} from '../../app/model/chat-room.model';
 import {ApiResponse} from '../../app/model/app.model';

@@ -6,7 +6,8 @@ export enum BannerLinkType {
   YoutubeVideo = 'youtube-video',
 }
 
-export class News {
+export class Article {
+
   public id: number = -1;
   public date: Date = new Date();
   public title: string = "News Article";
@@ -15,7 +16,6 @@ export class News {
   public bannerLinkImgUrl: string = "";
   public bannerLinkYoutubeSourceId: string = "";
   public bannerLinkType: BannerLinkType = BannerLinkType.None;
-  public bannerLinkSanitized: SafeResourceUrl | undefined;
 
   constructor() {
   }
@@ -26,7 +26,7 @@ export class News {
                             bodyHtml:string,
                             bannerLinkYoutubeSourceId: string) {
 
-    let result = new News();
+    let result = new Article();
 
     result.id = id;
     result.title = title;
@@ -48,7 +48,7 @@ export class News {
                      bannerLinkYoutubeSourceId: string,
                      date: Date) {
 
-    let result = new News();
+    let result = new Article();
 
     result.id = id;
     result.date = date;
