@@ -27,6 +27,18 @@ export class Chat {
     this.flagComments = chat.flagComments;
   }
 
+  public static from(id: number, userId: number, userName: string, text: string) {
+    let chat = new Chat();
+
+    chat.id = id;
+    chat.userId = userId;
+    chat.userName = userName;
+    chat.text = text;
+    chat.date = new Date();
+
+    return chat;
+  }
+
   public static fromUser(userId: number, userName: string, text: string) {
     let chat = new Chat();
 

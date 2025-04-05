@@ -4,6 +4,7 @@ import {ChatRoom} from '../../app/model/chat-room.model';
 import {Chat} from '../../app/model/chat.model';
 import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
+import {randomInt} from 'node:crypto';
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +80,40 @@ export class DataModel {
 
     this.news.set(0, newsWelcome);
     this.news.set(1, newsGDQ);
+
+    // MOCK CHAT DATA
+    for (let i = 0; i < 50; i++) {
+      this.chatRooms.get(0)?.chats.push(Chat.from(i, 0, 'aniv-sm-esports', this.fillText()));
+    }
+  }
+
+  fillText() {
+    return this.fillWords(randomInt(5, 30));
+  }
+
+  fillWords(wordNumber: number) {
+    let result = '';
+
+    for (let i = 0; i < wordNumber; i++) {
+      result += this.fillChars() + ' ';
+    }
+
+    return result;
+  }
+
+  fillChars() {
+    let length = randomInt(3, 15);
+    let result = '';
+
+    for (let i = 0; i < length; i++) {
+      result += String.fromCharCode(this.fillChar());
+    }
+
+    return result;
+  }
+
+
+  fillChar() {
+    return randomInt(97, 122);
   }
 }

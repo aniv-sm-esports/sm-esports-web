@@ -1,9 +1,7 @@
 <style>
 
   .container {
-  }
-
-  .container.loading {
+    height:100%;
   }
 
   .container > .header {
@@ -13,11 +11,12 @@
     height: 40px;
   }
 
-  .container > .body {
-    overflow-y: auto;
+  .container .body {
+    height: calc(100% - 108px);
+    overflow: auto;
   }
 
-  .container > .body > .chat-container {
+  .container .chat-container {
     display:flex;
   }
 
@@ -43,42 +42,40 @@
     margin: 5px;
   }
 
-  .container > .input-container {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+  .container > .header > h2 {
+    margin: 5px;
+  }
 
+  .container > .input-container {
     background-color: rgba(255, 255, 255, 0.3);
 
     color: lightgray;
     text-align: right;
-    padding: 10px;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
+    horiz-align: right !important;
 
-    display:flex;
-  }
-
-  .container > .header > h2 {
-    margin: 5px;
+    border-radius: 0 10px 10px 0;
+    -webkit-border-radius: 0 10px 10px 0;
   }
 
   .container > .input-container > input {
     width: 300px;
     font-size: 1.0em;
     color: dimgray;
-    margin: 5px;
+    margin: 10px 0 10px 10px;
     padding:8px;
     border:2px solid #eee;
-    -webkit-border-radius: 20px;
     border-radius: 20px;
+    -webkit-border-radius: 20px;
+
+    float: right;
   }
   .container > .input-container > input:focus {
     border:1px solid #ccc;
   }
   .container > .input-container > sm-esports-button {
-    align-content: center;
     width:50px;
+    float: right;
+    margin: 10px;
   }
 </style>
 
@@ -100,10 +97,11 @@
   </div>
 
   <div class="input-container">
+    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (clicked)="submitChat()" />
     <input [(ngModel)]="chatInput"
            (keyup.enter)="!!chatInput? submitChat() : noop()"
            type="text"
            required />
-    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (clicked)="submitChat()" />
+    <div class="clear-fix"></div>
   </div>
 </div>
