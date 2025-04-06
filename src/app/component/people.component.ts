@@ -3,13 +3,15 @@ import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
 import {NgForOf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../service/app.service';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'people',
   imports: [
     NgForOf,
     NgOptimizedImage,
-    NgStyle
+    NgStyle,
+    RouterLink
   ],
   templateUrl: './template/people.component.html'
 })
@@ -17,12 +19,14 @@ export class PeopleComponent {
 
   protected readonly appService: AppService;
   private readonly userService: UserService;
+  private readonly router: Router;
 
   protected userList: User[];
 
-  constructor(appService:AppService, userService: UserService) {
+  constructor(appService:AppService, userService: UserService, router: Router) {
     this.appService = appService;
     this.userService = userService;
+    this.router = router;
     this.userList = [];
   }
 

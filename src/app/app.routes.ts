@@ -4,11 +4,13 @@ import {NewsComponent} from './component/news.component';
 import {PeopleComponent} from './component/people.component';
 import {ChatComponent} from './component/chat.component';
 import {ChatBoxComponent} from './component/chatbox.component';
+import {PersonalComponent} from './component/personal.component';
 
 export const routes: Routes = [
   { path:"home",  component: HomeComponent },
   { path:"news",  component: NewsComponent },
   { path:"people",  component: PeopleComponent },
+  { path:"personal/:userName",  component: PersonalComponent },
   { path:"chat",  component: ChatComponent, children: [
       { path:"politics", component: ChatBoxComponent },
       { path:"people", component: ChatBoxComponent },

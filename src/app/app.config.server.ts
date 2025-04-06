@@ -3,12 +3,12 @@ import { provideServerRendering } from '@angular/platform-server';
 import { provideServerRouting } from '@angular/ssr';
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
-import {provideHttpClient, withFetch} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideServerRouting(serverRoutes)
   ]
 };

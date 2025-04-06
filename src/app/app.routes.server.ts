@@ -9,6 +9,7 @@ export const serverRoutes: ServerRoute[] = [
   { path:"home",  renderMode: RenderMode.Server },
   { path:"news",  renderMode: RenderMode.Server },
   { path:"people",  renderMode: RenderMode.Server },
+  { path:"personal/:userName",  renderMode: RenderMode.Server },
   { path:"chat",  renderMode: RenderMode.Client },
   { path:"chat/politics", renderMode: RenderMode.Client },
   { path:"chat/people", renderMode: RenderMode.Client },

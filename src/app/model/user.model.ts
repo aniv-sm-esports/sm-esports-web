@@ -35,6 +35,8 @@ export class User {
   name: string;
   email: string;
   emailVisible: boolean;
+  password: string;
+  accoutCreation: Date;
   pictureUrl: string;
   shortDescription: string;
   longDescription: string;
@@ -46,6 +48,8 @@ export class User {
     this.id = id;
     this.name = name;
     this.email = '';
+    this.password = '';
+    this.accoutCreation = new Date();
     this.emailVisible = false;
     this.pictureUrl = '';
     this.shortDescription = '';

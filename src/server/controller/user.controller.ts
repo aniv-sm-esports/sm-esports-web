@@ -11,27 +11,26 @@ export class UserController extends BaseController {
 
   // GET -> /api/users/get/:userId
   //
-  get(request: Request<{userId:string}, any, any, ParsedQs, Record<string, any>>,
+  get(request: Request<{userName:string}, any, any, ParsedQs, Record<string, any>>,
       response: Response<any, Record<string, any>, number>) {
 
     this.logRequest(request);
 
-    let user:User = User.default();
     let message:string = '';
 
     try {
 
-      // Success
-      if (this.serverDb.users.has(Number(request.params.userId))) {
+      let user= this.serverDb.getUserByName(request.params.userName);
 
-        user = this.serverDb.users.get(Number(request.params.userId)) || User.default();
+      // Success
+      if (user) {
 
         // Send during try/catch
-        this.logResponseSuccess(response, user);
+        this.logResponseSuccess(response, user || User.default());
         return;
       }
       else {
-        message = `User not found:  ${request.params.userId}`;
+        message = `User not found:  ${request.params.userName}`;
       }
     }
     catch(error) {

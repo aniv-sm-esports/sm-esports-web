@@ -5,6 +5,7 @@ import {Chat} from '../../app/model/chat.model';
 import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
+import {UserLogon} from '../../app/model/user-logon.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class DataModel {
   chatRooms: Map<number, ChatRoom>;
   users: Map<number, User>;
   news: Map<number, Article>;
+  logons: Map<number, UserLogon>;
 
   constructor() {
 
@@ -22,6 +24,7 @@ export class DataModel {
     this.news = new Map();
     this.chatRooms = new Map();
     this.chatRoomUserMap = new ChatRoomUserMap();
+    this.logons = new Map();
 
     // Server Application Defaults
 
@@ -141,6 +144,19 @@ export class DataModel {
     for (let i = 0; i < 50; i++) {
       this.chatRooms.get(0)?.chats.push(Chat.from(i, 0, 'aniv-sm-esports', this.fillText(30, 50)));
     }
+  }
+
+  getUserByName(name: string) {
+
+    let result:User | undefined;
+
+    this.users.forEach((user) => {
+      if(user.name == name) {
+        result = user;
+      }
+    });
+
+    return result;
   }
 
   fillLoremIpsumShort() {

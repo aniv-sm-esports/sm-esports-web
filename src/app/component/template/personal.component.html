@@ -1,0 +1,145 @@
+<style>
+  h1 {
+    padding:0px;
+    color: #EEEEEE;
+    font-size: 2.5em;
+  }
+
+  .personal-container {
+    padding: 0px;
+    margin: 0px !important;
+  }
+
+  .personal-container .banner {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .personal-container .banner ul {
+    padding:0px;
+    margin:0px;
+    list-style: none;
+    display:flex;
+  }
+  .personal-container .banner ul.person-name li:first-child {
+    width: 60px;
+    text-align: center;
+    align-content: center;
+  }
+
+  .personal-container .banner ul.person-name {
+    float:left;
+  }
+
+  .personal-container .banner ul.button-panel {
+    float:right;
+    margin-right: 20px;
+  }
+
+  .personal-container .banner ul.button-panel li {
+    background-color: rgba(255,255,255,0.3);
+    cursor: pointer;
+  }
+  .personal-container .banner ul.button-panel li:hover {
+    background-color: rgba(255,255,255,0.5);
+  }
+
+  .personal-container .banner ul.button-panel li >h3 {
+    margin-right:10px;
+    margin-left:10px;
+  }
+
+  .personal-container .banner > h3 {
+    color: rgba(134,134,255,1);
+    margin: 0px;
+    padding: 5px 10px 5px 10px;
+  }
+
+  .personal-container .body-container {
+    margin:0px;
+    padding:0px;
+  }
+
+  .personal-container .body-container .personal-info {
+    margin:20px;
+    padding:0px;
+    float:left;
+  }
+  .personal-container .body-container .content {
+    padding:0px;
+    float:left;
+  }
+  .personal-container .body-container .chat-container {
+    margin-left:20px;
+    padding:0px;
+    width:350px;
+    float:right;
+  }
+
+  .personal-container .body-container .chat-container > chatbox {
+  }
+
+  .personal-container .body-container .personal-info > .person-role {
+    margin:5px 0 5px 0;
+    padding:0;
+  }
+  .personal-container .body-container .personal-info > .user-email {
+    margin:0 0 5px 0;
+    padding:0px;
+    color: rgb(134,134,255);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+</style>
+
+<div class="personal-container">
+
+  <div class="banner">
+
+    <ul class="person-name">
+      <li>
+        <img src="metroid-angle-right.png"
+             alt="metroid-angle-right.png"
+             width="36" height="36" />
+      </li>
+      <li>
+        <h3 class="russo-one-regular">{{person?.name}}</h3>
+      </li>
+    </ul>
+
+    <ul class="button-panel">
+      <li [routerLink]="'personal/' + (person?.name || '') + '/bio'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Bio</h3></li>
+      <li [routerLink]="'personal/' + (person?.name || '') + '/schedule'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Schedule</h3></li>
+      <li [routerLink]="'personal/' + (person?.name || '') + '/links'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Links</h3></li>
+    </ul>
+
+    <div class="clear-fix"></div>
+
+  </div>
+
+  <div class="body-container" [ngStyle]="{'height': ((this.appService.getSize()?.height || 0)) + 'px'}">
+
+    <div class="personal-info">
+      <img width="150"
+           height="200"
+           alt="metroid.png"
+           [ngSrc]="person?.pictureUrl || 'metroid.png'" />
+      <h5 class="person-role">{{person?.roleInfo?.personRole}}</h5>
+      <h5 class="user-email">{{person?.email}}</h5>
+    </div>
+
+    <div class="content">
+      <h3>CONTAINER</h3>
+    </div>
+
+    <div class="chat-container" [ngStyle]="{'height': ((this.appService.getSize()?.height || 0)) + 'px'}">
+      <chatbox />
+    </div>
+
+    <div class="clear-fix"></div>
+
+  </div>
+
+</div>
+
+

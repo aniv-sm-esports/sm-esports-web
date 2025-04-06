@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ChatService} from '../service/chat.service';
 import {ActivatedRoute} from '@angular/router';
 import {ChatRoom} from '../model/chat-room.model';
@@ -8,6 +8,7 @@ import {formatDate, NgClass, NgForOf} from '@angular/common';
 import {Chat} from '../model/chat.model';
 import {noop} from 'rxjs';
 import {BasicButtonComponent} from './button.component';
+import {UserService} from '../service/user.service';
 
 @Component({
   selector: 'chatbox',
@@ -21,11 +22,19 @@ import {BasicButtonComponent} from './button.component';
 })
 export class ChatBoxComponent {
 
+  // Chat Activation:  Must input chatRoomName on the DOM
+  //
+  @Input() chatRoomName!:string;
+
   // Services
   private readonly chatService: ChatService;
-  private readonly chatRoomRoute: string;
+  private readonly userService: UserService;
 
+  // DOM Properties (for chat permissions and readiness)
+  //
   protected loading: boolean = true;
+  protected chatRoomExists: boolean = false;
+  protected userVerified: boolean = false;
 
   // DOM (template) USAGE
   protected readonly formatDate = formatDate;
@@ -38,24 +47,26 @@ export class ChatBoxComponent {
   public user: User | undefined;
   public chatInput: string = '';
 
-  constructor(chatService: ChatService, activatedRoute: ActivatedRoute) {
+  constructor(userService:UserService, chatService: ChatService) {
+
+    this.userService = userService;
+    this.chatService = chatService;
 
     // Must retrieve data from server
     this.chatRoom = new ChatRoom();
-
-    // TODO: Active User
-    this.user = new User(0, 'aniv-sm-esports');
-
-    this.chatService = chatService;
-
-    // Parse Chat Room Id (from URL) (Handling default as 'politics', should be reroute)
-    //
-    this.chatRoomRoute = activatedRoute.snapshot.routeConfig?.path || 'politics';
   }
 
+  // Procedure:
+  //
+  // 1) Verify User Identity / Logon Information        (May be required for personal chat rooms)
+  // 2) Get ChatRoom from the chatRoomRoute input
+  // 3) Verify User has permissions to the chat room    (Read / Write Permissions)
+  // 4) Show UI accordingly                             (Show, ShowReadOnly, RedirectToLogon, ShowPermissionDenied, ShowBanned)
+  //
   ngOnInit() {
+
     this.chatService
-      .getChatRoom(this.chatRoomRoute)
+      .getChatRoom(this.chatRoomName)
       .subscribe(response => {
 
         if (response.success) {
