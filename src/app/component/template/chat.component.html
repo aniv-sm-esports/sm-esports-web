@@ -10,6 +10,10 @@
     margin: 5px;
   }
 
+  .tab-header .button {
+    width: 100% !important;
+  }
+
   .tab-header sm-esports-button {
     display:block;
     margin-bottom: 5px !important;
@@ -37,7 +41,7 @@
   <div class="tab-control">
     <div class="tab-header">
       <sm-esports-button *ngFor="let tab of chatTabs; index as i;"
-                         class="russo-one-regular"
+                         class="russo-one-regular button"
                          (clicked)="navigateRoute($event)"
                          [text]="tab.name"
                          [route]="tab.route" />
