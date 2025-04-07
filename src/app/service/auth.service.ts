@@ -18,6 +18,9 @@ export class AuthService {
   private readonly localIdKey: string = 'id_token';
   private readonly localExpiresAtKey: string = 'expires_at';
 
+  // Stored UserLogon
+  private userLogon:UserLogon | undefined;
+
   // URL Endpoint
   private readonly urlLogon:string = '/api/login';
 
@@ -27,10 +30,13 @@ export class AuthService {
 
   logon(userName:string, password:string) {
     return this.http.post<UserLogon>(this.urlLogon, UserLogon.fromLogon(userName, password))
-                    .subscribe(res => this.setSession);
+                    .subscribe(res => this.setSession(res));
   }
 
   private setSession(authResult:UserLogon) {
+
+    // Save UserLogon
+    this.userLogon = authResult;
 
     if (!localStorage) {
       this.loggedInSubject.next(this.isLoggedIn());
@@ -66,8 +72,13 @@ export class AuthService {
   public getLocalIdKey(): string {
     return this.localIdKey;
   }
+
   public getLocalExpiresAtKey(): string {
     return this.localExpiresAtKey;
+  }
+
+  public getLastLogon(){
+    return this.userLogon;
   }
 
   public isLoggedIn() {

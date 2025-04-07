@@ -6,6 +6,7 @@ import {BaseController} from './base.controller';
 import {UserLogon} from '../../app/model/user-logon.model';
 import * as jwt from 'jsonwebtoken';
 import * as fs from 'node:fs';
+import {ApiResponse} from '../../app/model/app.model';
 
 
 @Injectable({
@@ -19,14 +20,14 @@ export class AuthController extends BaseController {
 
   // GET -> /api/users/get/:userId
   //
-  logon(request: Request<{}, UserLogon, any, ParsedQs, Record<string, any>>,
+  logon(request: Request<{}, ApiResponse<UserLogon>, UserLogon, ParsedQs, Record<string, any>>,
         response: Response<any, Record<string, any>, number>) {
 
     this.logRequest(request);
 
     // Validate User Data
-    if (!request.body.data?.userName ||
-         request.body.data?.userName.trim() == '') {
+    if (!request.body.userName ||
+         request.body.userName.trim() == '') {
       this.logResponseFail(response, 'User information invalid');
       return;
     }
@@ -36,12 +37,12 @@ export class AuthController extends BaseController {
     try {
 
       // User Lookup
-      let user= this.serverDb.getUserByName(request.body.data?.userName || '');
+      let user= this.serverDb.getUserByName(request.body.userName || '');
 
       // User Found
       if (user) {
 
-        if (request.body.data?.password != user?.password) {
+        if (request.body.password != user?.password) {
 
           // Mark Unauthorized
           response.status(401);
@@ -70,7 +71,7 @@ export class AuthController extends BaseController {
 
       // User Not Found
       else {
-        message = `User not found:  ${request.body.data?.userName}`;
+        message = `User not found:  ${request.body.userName}`;
       }
     }
     catch(error) {

@@ -10,6 +10,7 @@ import {NgIf, NgStyle} from '@angular/common';
 import {AppService} from '../service/app.service';
 import {ScrollTrackerDirective} from '../directive/scroll-tracker.directive';
 import {PictureChooserComponent} from './picture-chooser.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -38,23 +39,40 @@ export class LoginComponent {
   public userReadTerms: boolean = true;
   public userFormValid: boolean = false;
 
-  constructor(appService:AppService, authService: AuthService, userService: UserService) {
+  constructor(router:Router, appService:AppService, authService: AuthService, userService: UserService) {
     this.appService = appService;
     this.authService = authService;
     this.userService = userService;
 
     this.authService.subscribeLogonChanged(() =>{
       this.userLoggedOn = this.authService.isLoggedIn();
+
+      // Redirect -> Home
+      //
+      if (this.userLoggedOn) {
+        router.navigate(['home']);
+      }
     });
   }
 
   ngOnInit() {
+    this.userLoggedOn = this.authService.isLoggedIn();
     this.createAccountMode = false;
     this.userFormValid = false;
   }
 
   login(){
 
+    // Already Logged On
+    if (this.userLoggedOn)
+      return;
+
+    // Logon Mode + User Form Valid -> Logon
+    //
+    if (!this.createAccountMode &&
+         this.userFormValid) {
+      this.authService.logon(this.userLogon.userName, this.userLogon.password);
+    }
   }
 
   onFormInput(){

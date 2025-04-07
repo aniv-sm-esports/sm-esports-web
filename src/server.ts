@@ -112,7 +112,7 @@ app.use(
 
 // User Session:  Login / Logout (JWT bearer tokens) (created and sent by the AuthController)
 //
-app.use('/api/login', (request, response) =>{
+app.post('/api/login', (request, response) =>{
   authController.logon(request, response);
 });
 

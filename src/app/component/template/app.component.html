@@ -252,6 +252,11 @@
 
 <main class="main">
 
+  <!-- Primary UserLogon -->
+  <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
+    <h4>SM Esports User ({{this.primaryUser.name}}) ({{this.primaryUserLogon.logonTime}}</h4>
+  </div>
+
   <div class="sidenav-container"
        [ngClass]="{'expand': this.showSideNav, 'collapse': !this.showSideNav}"
        (clickOutside)="onSideNavOffClick($event)"
