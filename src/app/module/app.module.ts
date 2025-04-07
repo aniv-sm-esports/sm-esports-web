@@ -6,10 +6,17 @@ import { AppComponent } from '../component/app.component';
 import {NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {UserService} from '../service/user.service';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import {NewsService} from '../service/news.service';
 import {AppService} from '../service/app.service';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {AuthInterceptor} from '../interceptor/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -25,6 +32,12 @@ import {ClickOutsideModule} from 'ng-click-outside';
   ],
   providers: [
     provideClientHydration(withEventReplay()),
+    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
     HttpClient,
     UserService,
     NewsService,

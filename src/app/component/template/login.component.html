@@ -1,0 +1,190 @@
+<style>
+  .login-container .banner > h1 {
+    padding:0;
+    margin: 10px;
+    color: #EEEEEE;
+    font-size: 2.5em;
+  }
+
+  .login-container {
+    padding: 0px;
+    margin: 0px !important;
+  }
+
+  .login-container .banner {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .login-container .body-container {
+    display:flex;
+  }
+
+  .login-container .form-panel {
+    margin: 20px;
+  }
+
+  .login-container .legal-body {
+    margin: 20px 20px 20px 0;
+    border-radius: 20px;
+    background: rgba(255,255,255, 0.3);
+    overflow: auto;
+  }
+
+  .login-container .legal-body .board-policy,
+  .login-container .legal-body .terms-and-conditions{
+    margin:20px;
+  }
+
+  .login-container .form-panel > .form-container {
+    width: 350px;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    background: rgba(255,255,255,0.3);
+  }
+
+  .login-container .form-panel > .form-container > table {
+    width: 100%;
+  }
+
+  .login-container .form-panel > .form-container .form-field  td {
+    text-align:right;
+    horiz-align: right;
+  }
+
+  .login-container .form-panel > .form-container .form-field input {
+    width: 210px;
+    margin: 5px;
+    font-size: 1.0em;
+    color: #888;
+    padding:10px;
+    border: none;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+  }
+
+  .login-container .form-panel > .form-container .form-field input:focus {
+    outline: 3px solid rgba(134, 134, 255, 0.5);
+  }
+
+  .login-container .form-panel > .form-container .form-field input::placeholder {
+    color: rgba(150,150,150,0.5);
+  }
+
+  .login-container .form-panel .form-container .picture {
+    padding: 10px;
+  }
+
+  .login-container .form-panel > .form-container .submit-container {
+    padding: 10px;
+    margin: 0;
+    text-align: right;
+  }
+
+  .login-container .form-panel > .form-container .submit-container sm-esports-checkbox {
+    font-size: 0.9em;
+  }
+
+  .login-container .form-panel .form-container .submit-container .submit-container-input {
+    margin-top: 10px;
+  }
+
+  .login-container .legal-body h3 {
+    margin: 0;
+    padding: 0;
+  }
+
+</style>
+
+<div class="login-container">
+
+  <div class="banner">
+    <h1 class="russo-one-regular">Login</h1>
+  </div>
+
+  <div class="body-container">
+
+    <div class="form-panel">
+      <div class="form-container">
+
+        <table class="russo-one-regular">
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr class="form-field">
+            <td>User Name</td>
+            <td><input type="text" class="russo-one-regular" [(ngModel)]="userLogon.userName" (ngModelChange)="onFormInput()" placeholder="Enter User Name..." /></td>
+          </tr>
+          <tr class="form-field">
+            <td>Password</td>
+            <td><input type="password" class="russo-one-regular" [(ngModel)]="userLogon.password" (ngModelChange)="onFormInput()" placeholder="Password" /></td>
+          </tr>
+          <tr class="form-field">
+            <td></td>
+            <td class="picture"><picture-chooser [pictureFile]="userLogon.pictureFile" (pictureFileChanged)="onFormInput()" /></td>
+          </tr>
+        </table>
+
+        <div class="submit-container">
+          <sm-esports-checkbox [text]="'I have read and understood the Site Policy / Terms and Conditions'"
+                               [value]="userSubmittedToTerms"
+                               [disabled]="!userReadTerms"
+                               (change)="onFormInput()" />
+          <div class="submit-container-input">
+            <sm-esports-button [text]="'Submit'" [disabled]="!userFormValid" (click)="login()" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="legal-body"
+         scrollTracker
+         (scrollHeightReached)="this.userReadTerms=true"
+         [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',
+                   'height': ((this.appService.getSize()?.height || 0) - 110 - this.appService.bannerHeight - (2 * this.appService.bodyMargin)) + 'px'}">
+      <div class="board-policy">
+        <h3>Site Policy</h3>
+        <ul>
+          <li>
+            <h4>Statement of Purpose</h4>
+            <p>
+              This is the statement of purpose as drafted by the Super Metroid Esports Board. Please read
+              and understand how we conduct our affairs as a group collaboration to work together for a
+              unified purpose.
+            </p>
+          </li>
+          <li>
+            <h4>Expected Conduct</h4>
+            <p>
+              We expect people to treat each other respectfully; and to abide by our internet code of conduct
+              which covers all allowed content, safety rules and regulations, as wells as <span>copyrighted</span>
+              content regulations.
+            </p>
+            <p>
+              Should we see a need the board will take action to ban any user for non-compliance to our conduct
+              policy; and further legal action should it regard content that is either illegal or takes conflict
+              with our <span>site policy on personal advertisements</span>.
+            </p>
+            <p>
+              You may appeal <span>chat bans</span> or <span>site bans</span> at any time by emailing one of our
+              board members.
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="terms-and-conditions">
+        <h3>Legal Conditions</h3>
+        <p>
+          (DEAR BOARD) These need to be worked out for a number of details:  Copyright (Nintendo, Twitch, Youtube, etc..);
+          PAYPAL AND OTHER MONEY RELATED LINKS MUST BE HANDLED HERE!!! There could be legal ramifications to donations; and
+          the site could be sued for non-compliance.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+

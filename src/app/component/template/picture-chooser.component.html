@@ -1,0 +1,35 @@
+<style>
+  .checkbox-container > ul {
+    list-style: none;
+    display:flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  .checkbox-container > ul > li:first-child.disabled {
+    color: #555555;
+  }
+
+  .checkbox-container input[type=checkbox] {
+    width:20px;
+    height:20px;
+    cursor: pointer;
+    margin:3px 0 5px 5px;
+  }
+
+</style>
+
+<div class="picture-chooser-container">
+  <img width="100"
+       height="150"
+       [ngSrc]="this.pictureFile"
+       [alt]="this.pictureFile"
+       (click)="pictureFileInput.click()" />
+
+  <input #pictureFileInput
+         type="file"
+         hidden="hidden"
+         accept=".png,.jpg,.jpeg,.bmp"
+         multiple="multiple"
+         (change)="onFileChanged($event)"/>
+</div>

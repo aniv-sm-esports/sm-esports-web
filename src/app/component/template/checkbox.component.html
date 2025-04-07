@@ -1,0 +1,27 @@
+<style>
+  .checkbox-container > ul {
+    list-style: none;
+    display:flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  .checkbox-container > ul > li:first-child.disabled {
+    color: #555555;
+  }
+
+  .checkbox-container input[type=checkbox] {
+    width:20px;
+    height:20px;
+    cursor: pointer;
+    margin:3px 0 5px 5px;
+  }
+
+</style>
+
+<div class="checkbox-container">
+  <ul>
+    <li class="russo-one-regular" [ngClass]="{'disabled': disabled}" >{{text}}</li>
+    <li><input type="checkbox" [(ngModel)]="value" [disabled]="disabled" /></li>
+  </ul>
+</div>

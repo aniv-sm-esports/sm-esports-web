@@ -6,8 +6,10 @@ import {PeopleComponent} from '../component/people.component';
 import {ChatComponent} from '../component/chat.component';
 import {ChatBoxComponent} from '../component/chatbox.component';
 import {PersonalComponent} from '../component/personal.component';
+import {LoginComponent} from '../component/login.component';
 
 const routes: Routes = [
+  { path:"login",  component: LoginComponent },
   { path:"home",  component: HomeComponent },
   { path:"news",  component: NewsComponent },
   { path:"people",  component: PeopleComponent },

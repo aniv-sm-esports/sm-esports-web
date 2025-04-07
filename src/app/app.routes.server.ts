@@ -6,10 +6,11 @@ import {HomeComponent} from './component/home.component';
 import {ChatBoxComponent} from './component/chatbox.component';
 
 export const serverRoutes: ServerRoute[] = [
-  { path:"home",  renderMode: RenderMode.Server },
-  { path:"news",  renderMode: RenderMode.Server },
-  { path:"people",  renderMode: RenderMode.Server },
-  { path:"personal/:userName",  renderMode: RenderMode.Server },
+  { path:"login", renderMode: RenderMode.Client },
+  { path:"home",  renderMode: RenderMode.Client },
+  { path:"news",  renderMode: RenderMode.Client },
+  { path:"people",  renderMode: RenderMode.Client },
+  { path:"personal/:userName",  renderMode: RenderMode.Client },
   { path:"chat",  renderMode: RenderMode.Client },
   { path:"chat/politics", renderMode: RenderMode.Client },
   { path:"chat/people", renderMode: RenderMode.Client },
@@ -21,6 +22,6 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'news/create', renderMode: RenderMode.Client },
   {
     path: '**',
-    renderMode: RenderMode.Prerender
+    renderMode: RenderMode.Client
   }
 ];

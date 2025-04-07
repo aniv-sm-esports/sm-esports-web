@@ -3,6 +3,7 @@ import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
 import {Size} from '../model/app.model';
 import {AppService} from '../service/app.service';
+import {AuthService} from '../service/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,8 @@ export class AppComponent {
   // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
   //                      would then be the "user's service"
   public primaryUser: User;
+  public primaryUserLoggedOn: boolean;
+  public primaryUserIdentified: boolean;
 
   // The size of the body will be dynamically set during resize / load events
   //
@@ -28,12 +31,19 @@ export class AppComponent {
 
   title = 'sm-esports-web';
 
-  constructor(appService: AppService, userService: UserService) {
+  constructor(appService: AppService, userService: UserService, authService: AuthService) {
 
     this.appService = appService;
     this.primaryUser = new User(-1, 'Not Logged In');
+    this.primaryUserLoggedOn = false;
+    this.primaryUserIdentified = false;
     this.userService = userService;
 
+    // User Logon Listener
+    //
+    authService.subscribeLogonChanged(() =>{
+      this.primaryUserLoggedOn = authService.isLoggedIn();
+    });
   }
 
   @HostListener('window:load', ['$event'])
@@ -60,18 +70,5 @@ export class AppComponent {
 
   onSideNavOffClick(event: Event) {
     this.showSideNav = false;
-  }
-
-  logOn(){
-
-    // Finish Logon
-    this.userService
-      .createUser(new User(-1, this.primaryUser.name))    // Emitted value
-      .subscribe(response => {
-
-        // Finally, set the new user
-        //this.primaryUser.loggedOn = true;
-      });
-
   }
 }

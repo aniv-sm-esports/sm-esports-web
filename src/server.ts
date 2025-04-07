@@ -19,6 +19,7 @@ import bodyParser from 'body-parser';
 import {AuthController} from './server/controller/auth.controller';
 import * as fs from 'node:fs';
 import {Secret} from 'jsonwebtoken';
+import {FileController} from './server/controller/file.controller';
 
 // Some server constants
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -39,6 +40,7 @@ const authController = new AuthController(serverDb);
 const userController = new UserController(serverDb);
 const newsController = new NewsController(serverDb);
 const chatController = new ChatController(serverDb);
+const fileController = new FileController(serverDb);
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -113,6 +115,19 @@ app.use(
 app.use('/api/login', (request, response) =>{
   authController.logon(request, response);
 });
+
+// API: File -> Get
+app.route('/api/file/get/:fileName')
+   .get(checkIfAuthenticated, async (req, res) => {
+  fileController.get(req, res);
+});
+
+app.route('/api/file/post')
+   .post(checkIfAuthenticated, async (req, res) => {
+    fileController.post(req, res);
+  });
+
+// API: File -> Post
 
 // API: Users -> Get
 app.get('/api/users/get/:userName', async (req, res) => {
