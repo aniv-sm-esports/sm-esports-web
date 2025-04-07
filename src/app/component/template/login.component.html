@@ -135,7 +135,11 @@
           </tr>
           <tr class="form-field">
             <td>Password</td>
-            <td><input type="password" class="russo-one-regular" [(ngModel)]="userLogon.password" (ngModelChange)="onFormInput()" placeholder="Password" /></td>
+            <td><input type="password" class="russo-one-regular"
+                       [(ngModel)]="userLogon.password"
+                       (ngModelChange)="onFormInput()"
+                       (keyup.enter)="this.userFormValid ? login() : noop()"
+                       placeholder="Password" /></td>
           </tr>
           <tr class="form-field"
               *ngIf="!this.createAccountMode"

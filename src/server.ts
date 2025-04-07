@@ -92,11 +92,11 @@ app.use(bodyParser.json());
 /**
  * JWT Request Headers
  */
-const RSA_PUBLIC_KEY = '1234546546435634';
+const SECRET_KEY = fs.readFileSync('public.key', 'utf-8');
 
 const checkIfAuthenticated = expressjwt({
-  secret: RSA_PUBLIC_KEY,
-  algorithms: ['RS256']
+  secret: SECRET_KEY,
+  algorithms: ['HS256']
 });
 
 /**

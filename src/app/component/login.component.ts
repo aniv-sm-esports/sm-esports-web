@@ -11,6 +11,7 @@ import {AppService} from '../service/app.service';
 import {ScrollTrackerDirective} from '../directive/scroll-tracker.directive';
 import {PictureChooserComponent} from './picture-chooser.component';
 import {Router} from '@angular/router';
+import {noop} from 'rxjs';
 
 @Component({
   selector: 'login',
@@ -119,4 +120,6 @@ export class LoginComponent {
       });
     */
   }
+
+  protected readonly noop = noop;
 }

@@ -4,9 +4,9 @@ import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
 import {UserLogon} from '../../app/model/user-logon.model';
-import * as jwt from 'jsonwebtoken';
 import * as fs from 'node:fs';
 import {ApiResponse} from '../../app/model/app.model';
+import * as jwt from 'jsonwebtoken';
 
 
 @Injectable({
@@ -16,7 +16,7 @@ export class AuthController extends BaseController {
 
   // JWT Public Key
   //
-  private readonly RSA_PUBLIC_KEY:Buffer = fs.readFileSync('public.key');
+  private readonly SECRET_KEY:string = fs.readFileSync('public.key', 'utf-8');
 
   // GET -> /api/users/get/:userId
   //
@@ -51,9 +51,14 @@ export class AuthController extends BaseController {
           return;
         }
 
+        console.log(this.SECRET_KEY);
+
         // JWT Token
-        const jwtBearerToken = jwt.sign({}, this.RSA_PUBLIC_KEY, {
-          algorithm: 'RS256',
+        const jwtBearerToken = jwt.sign({
+          userName: user?.name,
+          userId: user?.id
+        }, this.SECRET_KEY, {
+          algorithm: 'HS256',
           expiresIn: 120,
           subject: user.name
         });
