@@ -1,4 +1,4 @@
-import {Component, Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Directive, ElementRef, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 
@@ -22,11 +22,14 @@ export class BasicCheckboxComponent {
   @Input() disabled!: boolean;
 
   // Provides [value]
-  @Input() value!: boolean;
+  @Input() checked!: boolean;
+
+  @Output('checkChanged') checkChanged = new EventEmitter<boolean>();
 
   constructor() {
-    this.value = false;
-    this.disabled = false;
-    this.text = 'Check Box';
+  }
+
+  onChanged($event: Event) {
+    this.checkChanged.emit(this.checked);
   }
 }

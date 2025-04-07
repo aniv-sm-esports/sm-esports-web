@@ -22,6 +22,6 @@
 <div class="checkbox-container">
   <ul>
     <li class="russo-one-regular" [ngClass]="{'disabled': disabled}" >{{text}}</li>
-    <li><input type="checkbox" [(ngModel)]="value" [disabled]="disabled" /></li>
+    <li><input type="checkbox" [(ngModel)]="checked" (change)="onChanged($event)" [disabled]="disabled" /></li>
   </ul>
 </div>

@@ -70,6 +70,24 @@ export class LoginComponent {
     }
   }
 
+  onCheckChanged($event: boolean) {
+
+    // Update Value
+    this.userSubmittedToTerms = $event;
+
+    // Re-validate form
+    this.onFormInput();
+  }
+
+  setCreateAccountMode(){
+
+    // Set create account mode
+    this.createAccountMode = true;
+
+    // Re-validate form
+    this.onFormInput();
+  }
+
   createUser(){
 
     // Finish Logon

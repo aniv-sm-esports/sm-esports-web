@@ -135,11 +135,11 @@
           </tr>
           <tr class="form-field"
               *ngIf="!this.createAccountMode"
-              (click)="this.createAccountMode = true">
+              (click)="setCreateAccountMode()">
             <td></td>
             <td><span class="link">Create an Account</span></td>
           </tr>
-          <tr class="form-field" *ngIf="this.createAccountMode">
+          <tr class="form-field" *ngIf="false">
             <td></td>
             <td class="picture"><picture-chooser [pictureFile]="userLogon.pictureFile" (pictureFileChanged)="onFormInput()" /></td>
           </tr>
@@ -149,9 +149,8 @@
           <div class="checkbox-container">
             <sm-esports-checkbox *ngIf="this.createAccountMode"
                                  [text]="'I have read and understood the Site Policy / Terms and Conditions'"
-                                 [value]="userSubmittedToTerms"
-                                 [disabled]="!userReadTerms"
-                                 (change)="onFormInput()" />
+                                 (checkChanged)="onCheckChanged($event)"
+                                 [disabled]="!this.userReadTerms" />
           </div>
           <div class="submit-container-input">
             <sm-esports-button [text]="'Submit'"
