@@ -6,7 +6,7 @@ import {UserService} from '../service/user.service';
 import {FormsModule} from '@angular/forms';
 import {BasicButtonComponent} from './button.component';
 import {BasicCheckboxComponent} from './checkbox.component';
-import {NgStyle} from '@angular/common';
+import {NgIf, NgStyle} from '@angular/common';
 import {AppService} from '../service/app.service';
 import {ScrollTrackerDirective} from '../directive/scroll-tracker.directive';
 import {PictureChooserComponent} from './picture-chooser.component';
@@ -19,7 +19,8 @@ import {PictureChooserComponent} from './picture-chooser.component';
     BasicCheckboxComponent,
     NgStyle,
     ScrollTrackerDirective,
-    PictureChooserComponent
+    PictureChooserComponent,
+    NgIf
   ],
   templateUrl: './template/login.component.html'
 })
@@ -28,6 +29,8 @@ export class LoginComponent {
   protected readonly appService: AppService;
   private readonly authService: AuthService;
   private readonly userService: UserService;
+
+  public createAccountMode:boolean = false;
 
   public userLogon:UserLogon = new UserLogon();
   public userLoggedOn: boolean = false;
@@ -45,12 +48,26 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit() {
+    this.createAccountMode = false;
+    this.userFormValid = false;
+  }
+
   login(){
 
   }
 
   onFormInput(){
-    this.userFormValid = !!this.userLogon.userName && !!this.userLogon.password && this.userSubmittedToTerms;
+
+    // Create Account
+    if (this.createAccountMode) {
+      this.userFormValid = !!this.userLogon.userName && !!this.userLogon.password && this.userSubmittedToTerms;
+    }
+
+    // Logon
+    else {
+      this.userFormValid = !!this.userLogon.userName && !!this.userLogon.password;
+    }
   }
 
   createUser(){

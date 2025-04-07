@@ -1,4 +1,4 @@
-import {Component, Directive, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Directive, ElementRef, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {NgClass, NgForOf} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {} from '../extensions/app.global'
@@ -32,14 +32,29 @@ export class BasicButtonComponent {
   @Output('clicked') clicked = new EventEmitter<string>();
 
   constructor(router: Router) {
-    this.disabled = false;
-    this.text = 'Button';
-    this.route = '';
     this.router = router;
   }
 
   ngOnInit()  {
     this.routeActive();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    for (let propName in changes) {
+      let change = changes[propName];
+
+      if (propName == 'text')
+        this.text = change.currentValue;
+
+      else if (propName == 'route')
+        this.route = change.currentValue;
+
+      else if (propName == 'disabled')
+        this.disabled = change.currentValue;
+
+      else
+        console.log('ngOnChanges property not handled!');
+    }
   }
 
   onClick() {

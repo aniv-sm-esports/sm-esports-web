@@ -80,17 +80,31 @@
     text-align: right;
   }
 
+  .login-container .form-panel > .form-container .submit-container .checkbox-container{
+    margin-bottom:10px;
+  }
+
   .login-container .form-panel > .form-container .submit-container sm-esports-checkbox {
     font-size: 0.9em;
   }
 
   .login-container .form-panel .form-container .submit-container .submit-container-input {
-    margin-top: 10px;
   }
 
   .login-container .legal-body h3 {
     margin: 0;
     padding: 0;
+  }
+
+  .login-container .link {
+    color: #AAA;
+    cursor: pointer;
+    margin:0 10px 10px 10px;
+    padding: 0;
+  }
+  .login-container .link:hover {
+    color: #EEE;
+    text-decoration: underline;
   }
 
 </style>
@@ -119,19 +133,30 @@
             <td>Password</td>
             <td><input type="password" class="russo-one-regular" [(ngModel)]="userLogon.password" (ngModelChange)="onFormInput()" placeholder="Password" /></td>
           </tr>
-          <tr class="form-field">
+          <tr class="form-field"
+              *ngIf="!this.createAccountMode"
+              (click)="this.createAccountMode = true">
+            <td></td>
+            <td><span class="link">Create an Account</span></td>
+          </tr>
+          <tr class="form-field" *ngIf="this.createAccountMode">
             <td></td>
             <td class="picture"><picture-chooser [pictureFile]="userLogon.pictureFile" (pictureFileChanged)="onFormInput()" /></td>
           </tr>
         </table>
 
         <div class="submit-container">
-          <sm-esports-checkbox [text]="'I have read and understood the Site Policy / Terms and Conditions'"
-                               [value]="userSubmittedToTerms"
-                               [disabled]="!userReadTerms"
-                               (change)="onFormInput()" />
+          <div class="checkbox-container">
+            <sm-esports-checkbox *ngIf="this.createAccountMode"
+                                 [text]="'I have read and understood the Site Policy / Terms and Conditions'"
+                                 [value]="userSubmittedToTerms"
+                                 [disabled]="!userReadTerms"
+                                 (change)="onFormInput()" />
+          </div>
           <div class="submit-container-input">
-            <sm-esports-button [text]="'Submit'" [disabled]="!userFormValid" (click)="login()" />
+            <sm-esports-button [text]="'Submit'"
+                               [disabled]="!userFormValid"
+                               (click)="login()" />
           </div>
         </div>
 
@@ -140,6 +165,7 @@
 
     <div class="legal-body"
          scrollTracker
+         *ngIf="this.createAccountMode"
          (scrollHeightReached)="this.userReadTerms=true"
          [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',
                    'height': ((this.appService.getSize()?.height || 0) - 110 - this.appService.bannerHeight - (2 * this.appService.bodyMargin)) + 'px'}">

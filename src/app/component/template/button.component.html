@@ -1,21 +1,23 @@
 <style>
-  .container > button {
-  }
 
   .container >  button {
-    background-color: #CCCCCC;
+    background-color: #DDD;
     border: none;
     border-radius: 20px;
     box-shadow: none;
     color: #555555;
-    cursor: pointer;
     padding: 10px;
     text-align: left;
   }
 
-  .container > button:hover {
-    background-color: #EEEEEE;
-    color: #555555;
+  .container > button:hover:enabled {
+    background-color: #FFF;
+    cursor: pointer;
+  }
+
+  .container > button:disabled {
+    background-color: #CCCCCC;
+    color: #AAA;
   }
 
   .container > button.route-active {
