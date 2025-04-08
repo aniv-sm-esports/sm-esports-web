@@ -5,7 +5,7 @@ import {Chat} from '../../app/model/chat.model';
 import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
-import {UserLogon} from '../../app/model/user-logon.model';
+import {UserCredentials} from '../../app/model/user-logon.model';
 import {FileModel} from '../../app/model/file.model';
 import * as fs from 'node:fs';
 
@@ -20,7 +20,7 @@ export class DataModel {
   chatRooms: Map<number, ChatRoom>;
   users: Map<number, User>;
   news: Map<number, Article>;
-  logons: Map<number, UserLogon>;
+  credentials: Map<number, UserCredentials>;
   files: FileModel[];
 
   constructor() {
@@ -29,7 +29,7 @@ export class DataModel {
     this.news = new Map();
     this.chatRooms = new Map();
     this.chatRoomUserMap = new ChatRoomUserMap();
-    this.logons = new Map();
+    this.credentials = new Map();
     this.files = [];
 
     // Server Application Defaults
@@ -63,13 +63,6 @@ export class DataModel {
     nevdi.email = 'nevdi@nomail.com';
     arealcutie.email = 'arealcutie@nomail.com';
 
-    zoasty.password = 'test';
-    zeni.password = 'test';
-    oatsngoats.password = 'test';
-    eddie.password = 'test';
-    nevdi.password = 'test';
-    arealcutie.password = 'test';
-
     zoasty.pictureUrl = 'zoasty.png';
     zeni.pictureUrl = 'shinyzeni.png';
     oatsngoats.pictureUrl = 'oatsngoats.png';
@@ -91,7 +84,6 @@ export class DataModel {
     aniv.shortDescription = 'i am aniv!';
     aniv.longDescription = 'Hey Evenyone! I am aniv! #freeaniv! Thanks for joining me at this celebratory inaugural test-edition of Super Metroid Esports!';
     aniv.roleInfo = UserRole.from(UserRoleType.Admin, PersonRoleType.GeneralUser);
-    aniv.password = 'test';
 
     this.users.set(0, zoasty);
     this.users.set(1, zeni);
@@ -100,6 +92,12 @@ export class DataModel {
     this.users.set(4, nevdi);
     this.users.set(5, arealcutie);
     this.users.set(6, aniv);
+
+    // User Credentials - (using 'test' as password for every test user)
+    //
+    this.users.forEach((user: User) => {
+      this.credentials.set(user.id, UserCredentials.fromLogon(user.name, 'test'));
+    });
 
     // Chat Rooms
     let chatPolitics = ChatRoom.from(0,

@@ -1,9 +1,9 @@
 import moment from "moment";
 import {Injectable} from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import {UserLogon} from '../model/user-logon.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Size} from '../model/app.model';
+import {UserCredentials, UserJWT} from '../model/user-logon.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class AuthService {
   private readonly localExpiresAtKey: string = 'expires_at';
 
   // Stored UserLogon
-  private userLogon:UserLogon | undefined;
+  private userLogon:UserJWT | undefined;
 
   // URL Endpoint
   private readonly urlLogon:string = '/api/login';
@@ -29,11 +29,11 @@ export class AuthService {
   }
 
   logon(userName:string, password:string) {
-    return this.http.post<UserLogon>(this.urlLogon, UserLogon.fromLogon(userName, password))
+    return this.http.post<UserJWT>(this.urlLogon, UserCredentials.fromLogon(userName, password))
                     .subscribe(res => this.setSession(res));
   }
 
-  private setSession(authResult:UserLogon) {
+  private setSession(authResult:UserJWT) {
 
     // Save UserLogon
     this.userLogon = authResult;

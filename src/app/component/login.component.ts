@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {UserLogon} from '../model/user-logon.model';
+import {UserCredentials} from '../model/user-logon.model';
 import {AuthService} from '../service/auth.service';
 import {User} from '../model/user.model';
 import {UserService} from '../service/user.service';
@@ -34,7 +34,7 @@ export class LoginComponent {
 
   public createAccountMode:boolean = false;
 
-  public userLogon:UserLogon = new UserLogon();
+  public userLogon:UserCredentials = new UserCredentials();
   public userLoggedOn: boolean = false;
   public userSubmittedToTerms: boolean = false;
   public userReadTerms: boolean = true;

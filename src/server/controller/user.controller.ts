@@ -14,9 +14,8 @@ export class UserController extends BaseController {
   get(request: Request<{userName:string}, any, any, ParsedQs, Record<string, any>>,
       response: Response<any, Record<string, any>, number>) {
 
-    this.logRequest(request);
-
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     try {
 
@@ -24,22 +23,17 @@ export class UserController extends BaseController {
 
       // Success
       if (user) {
-
-        // Send during try/catch
-        this.logResponseSuccess(response, user || User.default());
+        this.sendSuccess(response, user || User.default());
         return;
       }
       else {
-        message = `User not found:  ${request.params.userName}`;
+        this.sendDataError(response, "User not found:  " + request.params.userName);
       }
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/users/getAll
@@ -47,9 +41,8 @@ export class UserController extends BaseController {
   getAll(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
-    this.logRequest(request);
-
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     try {
       let users:User[] = [];
@@ -59,16 +52,12 @@ export class UserController extends BaseController {
       })
 
       // Success
-      this.logResponseSuccess(response, users);
-      return;
+      this.sendSuccess(response, users);
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/users/create/:userName
@@ -76,37 +65,35 @@ export class UserController extends BaseController {
   create(request: Request<{ userName: string; }, any, any, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
-    this.logRequest(request);
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     // Parameter Validation -> Failure
     if (!request.params.userName) {
-      this.logResponseFail(response, 'User name not specified');
+      this.sendDataError(response, 'User name not specified');
       return;
     }
 
     // Parameter Validation -> Failure
     if (request.params.userName.trim() == '') {
-      this.logResponseFail(response, 'User name not specified');
+      this.sendDataError(response, 'User name not specified');
       return;
     }
 
-    // Mark success to look for existing (true)
-    let success:boolean = true;
-    let message:string = '';
-
     try {
+
+      let success = true;
 
       // Exists
       this.serverDb.users.forEach((user:User) => {
         if (user.name == request.params.userName.trim()) {
           success = false;
-          message = 'User already exists - Please try a different user name';
+          this.sendDataError(response, 'User already exists - Please try a different user name');
         }
       });
 
       // Already exists -> return
       if (!success) {
-        this.logResponseFail(response, message);
         return;
       }
 
@@ -116,18 +103,13 @@ export class UserController extends BaseController {
       this.serverDb.users.set(userId, new User(userId, request.params.userName.trim()));
 
       // Success
-      success = true;
-      message = 'User created successfully';
-      this.logResponseSuccess(response, message);
+      this.sendSuccess(response, this.serverDb.users.get(userId));
       return;
     }
     catch(error) {
       console.log(error);
-      success = false;
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/users/exists/:userName
@@ -135,17 +117,18 @@ export class UserController extends BaseController {
   exists(request: Request<{ userName: string; }, any, any, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
-    this.logRequest(request);
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     // Parameter Validation -> Failure
     if (!request.params.userName) {
-      this.logResponseFail(response, 'User name not specified');
+      this.sendDataError(response, 'User name not specified');
       return;
     }
 
     // Parameter Validation -> Failure
     if (request.params.userName.trim() == '') {
-      this.logResponseFail(response, 'User name not specified');
+      this.sendDataError(response, 'User name not specified');
       return;
     }
 
@@ -170,11 +153,10 @@ export class UserController extends BaseController {
     }
 
     if (success) {
-      this.logResponseSuccess(response, result);
+      this.sendSuccess(response, result);
     }
     else {
-      this.logResponseFail(response, message);
+      this.sendError(response, message);
     }
-
   }
 }

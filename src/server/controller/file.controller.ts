@@ -16,9 +16,8 @@ export class FileController extends BaseController {
   get(request: Request<{fileName:string}, FileModel, any, ParsedQs, Record<string, any>>,
       response: Response<any, Record<string, any>, number>) {
 
-    this.logRequest(request);
-
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(true);
 
     try {
 
@@ -30,16 +29,13 @@ export class FileController extends BaseController {
       });
 
       // Send during try/catch
-      this.logResponseSuccess(response, file);
+      this.sendSuccess(response, file);
       return;
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/chat/getRoom/:chatRoomRoute
@@ -47,17 +43,17 @@ export class FileController extends BaseController {
   post(request: Request<{}, ApiResponse<string>, FileModel, ParsedQs, Record<string, any>>,
        response: Response<any, Record<string, any>, number>) {
 
-    this.logRequest(request);
+    // Pre-work settings
+    this.setLogonRequired(true);
 
     // Validate File
     if (!request.body.name ||
         !request.body.fileData ||
         request.body.fileData.size == 0) {
-      this.logResponseFail(response, 'File Invalid!');
-      return ;
+      this.sendDataError(response, 'File Invalid!');
+      return;
     }
 
-    let message:string = '';
     let success:boolean = true;
 
     try {
@@ -80,9 +76,8 @@ export class FileController extends BaseController {
                fs.writeFile(request.body.name, new DataView(data),
                  (error) => {
 
-                 // Error
+                 // Error Catch
                  console.log(error);
-                 message = 'There was an error saving the file to the server';
                  success = false;
                });
 
@@ -90,18 +85,18 @@ export class FileController extends BaseController {
                if (success) {
                  let file = new FileModel(request.body.name, request.body.directory);
                  this.serverDb.files.push(file);
-                 this.logResponseSuccess(response, 'File uploaded successfully!');
+                 this.sendSuccess(response, 'File uploaded successfully!');
+               }
+
+               // Failure
+               else {
+                 this.sendError(response, 'There was an error saving the file to the server');
                }
       });
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
-    }
-
-    // Failure
-    if (!success) {
-      this.logResponseFail(response, message);
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
   }
 }

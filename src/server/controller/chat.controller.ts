@@ -17,29 +17,30 @@ export class ChatController extends BaseController {
   getChatRooms(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
                response: Response<any, Record<string, any>, number>) {
 
-    this.logRequest(request);
-
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     try {
 
       let chatRooms:ChatRoom[] = [];
 
+      // REMOVE CHATS FROM ROOMS! (These may require permissions)
       this.serverDb.chatRooms.forEach((room:ChatRoom) => {
-        chatRooms.push(room);
-      })
 
-        // Send during try/catch
-        this.logResponseSuccess(response, chatRooms);
-        return;
+        let roomExceptChats = Object.assign({}, room);
+        roomExceptChats.chats = [];
+
+        chatRooms.push(roomExceptChats);
+      });
+
+      // Success
+      this.sendSuccess(response, chatRooms);
+      return;
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/chat/getRoom/:chatRoomRoute
@@ -47,33 +48,32 @@ export class ChatController extends BaseController {
   getChatRoom(request: Request<{chatRoomRoute:string}, any, any, ParsedQs, Record<string, any>>,
               response: Response<any, Record<string, any>, number>) {
 
-    this.logRequest(request);
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     let result:ChatRoom | undefined;
-    let message:string = '';
 
     try {
 
+      // Must retrieve the chat room and remove the chat data
       this.serverDb.chatRooms.forEach((room:ChatRoom) => {
-        if (room.urlRoute == request.params.chatRoomRoute){
-          result = room;
+        if (room.urlRoute == request.params.chatRoomRoute) {
+          result = Object.assign({}, room);
+          result.chats = [];
           return;
         }
       });
 
       // Success
       if (result) {
-        this.logResponseSuccess(response, result);
+        this.sendSuccess(response, result);
         return;
       }
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/chat/getChats/:chatRoomId
@@ -81,31 +81,26 @@ export class ChatController extends BaseController {
   getChats(request: Request<{chatRoomId:string}, any, any, ParsedQs, Record<string, any>>,
            response: Response<any, Record<string, any>, number>){
 
-    this.logRequest(request);
-
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(true);
 
     try {
       let roomId = Number(request.params.chatRoomId);
 
       // Failure
       if (!this.serverDb.chatRooms.has(roomId)){
-        message = `Chat room does not exist: ${request.params.chatRoomId}`;
-        this.logResponseFail(response, message);
+        this.sendDataError(response, `Chat room does not exist: ${request.params.chatRoomId}`);
         return;
       }
 
       // Success
-      this.logResponseSuccess(response, this.serverDb.chatRooms.get(roomId)?.chats);
+      this.sendSuccess(response, this.serverDb.chatRooms.get(roomId)?.chats);
       return;
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // POST -> /api/chat/postChat/:chatRoomId
@@ -113,16 +108,14 @@ export class ChatController extends BaseController {
   postChat(request: Request<{chatRoomId:string}, ApiResponse<Chat>, Chat, ParsedQs, Record<string, any>>,
            response: Response<ApiResponse<Chat>, Record<string, any>, number>){
 
-    this.logRequest(request);
+    // Pre-work settings
+    this.setLogonRequired(true);
 
     if (request.body.userId < 0 ||
        !request.body.userName) {
-      this.logResponseFail(response, 'User is not valid (either not logged in, or not authorized for this chat room)');
+      this.sendDataError(response, 'User is not valid (either not logged in, or not authorized for this chat room)');
       return;
     }
-
-    // Mark success to look for existing (true)
-    let message:string = '';
 
     try {
 
@@ -130,8 +123,7 @@ export class ChatController extends BaseController {
 
       // Failure
       if (!this.serverDb.chatRooms.has(roomId)) {
-        message = `Chat room does not exist: ${request.params.chatRoomId}`;
-        this.logResponseFail(response, message);
+        this.sendDataError(response, `Chat room does not exist: ${request.params.chatRoomId}`);
         return;
       }
 
@@ -148,14 +140,12 @@ export class ChatController extends BaseController {
       chatRoom?.chats.push(chat);
 
       // Success
-      this.logResponseSuccess(response, chat);
+      this.sendSuccess(response, chat);
       return;
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    this.logResponseFail(response, message);
   }
 }

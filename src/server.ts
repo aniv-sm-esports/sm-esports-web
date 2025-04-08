@@ -17,8 +17,6 @@ import {ChatController} from './server/controller/chat.controller';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import {AuthController} from './server/controller/auth.controller';
-import * as fs from 'node:fs';
-import {Secret} from 'jsonwebtoken';
 import {FileController} from './server/controller/file.controller';
 
 // Some server constants
@@ -30,7 +28,6 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 //
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const expressjwt = require("express-jwt").expressjwt;
 
 // -> Data
 const serverDb = new DataModel();
@@ -92,12 +89,14 @@ app.use(bodyParser.json());
 /**
  * JWT Request Headers
  */
-const SECRET_KEY = fs.readFileSync('public.key', 'utf-8');
+//const SECRET_KEY = fs.readFileSync('public.key', 'utf-8');
 
+/*
 const checkIfAuthenticated = expressjwt({
   secret: SECRET_KEY,
   algorithms: ['HS256']
 });
+*/
 
 /**
  * Serve static files from /browser
@@ -116,74 +115,63 @@ app.post('/api/login', (request, response) =>{
   authController.logon(request, response);
 });
 
-// API: File -> Get
-app.route('/api/file/get/:fileName')
-   .get(checkIfAuthenticated, async (req, res) => {
-  fileController.get(req, res);
+// API: File
+app.get('/api/file/get/:fileName', (request, response) => {
+  fileController.authenticate(request, response);
+  fileController.get(request, response);
+});
+app.post('/api/file/post', (request, response) => {
+  fileController.authenticate(request, response);
+  fileController.post(request, response);
 });
 
-app.route('/api/file/post')
-   .post(checkIfAuthenticated, async (req, res) => {
-    fileController.post(req, res);
-  });
-
-// API: File -> Post
-
-// API: Users -> Get
-app.get('/api/users/get/:userName', async (req, res) => {
-  userController.get(req, res);
+// API: Users
+app.get('/api/users/get/:userName', (request, response) =>{
+  userController.authenticate(request, response);
+  userController.get(request, response);
+});
+app.get('/api/users/getAll', (request, response) =>{
+  userController.authenticate(request, response);
+  userController.getAll(request, response);
+});
+app.get('/api/users/exists/:userName', (request, response) =>{
+  userController.authenticate(request, response);
+  userController.exists(request, response);
+});
+app.get('/api/users/create/:userName', (request, response) =>{
+  userController.authenticate(request, response);
+  userController.create(request, response);
 });
 
-// API: Users -> GetAll
-app.get('/api/users/getAll', async (req, res) => {
-  userController.getAll(req, res);
+// API: News
+app.get('/api/news/get/:newsId', (request, response) =>{
+  newsController.authenticate(request, response);
+  newsController.get(request, response);
+});
+app.get('/api/news/getAll', (request, response) =>{
+  newsController.authenticate(request, response);
+  newsController.getAll(request, response);
+});
+app.post('/api/news/create', (request, response) =>{
+  newsController.authenticate(request, response);
+  newsController.create(request, response);
 });
 
-// API: Users -> Exists
-app.get('/api/users/exists/:userName', async (req, res) => {
-  userController.exists(req, res);
+// API: Chat
+app.get('/api/chat/getRooms', (request, response) =>{
+  chatController.authenticate(request, response);
+  chatController.getChatRooms(request, response);
 });
-
-// API: Users -> Create
-app.get('/api/users/create/:userName', async (req, res) => {
-  userController.create(req, res);
+app.get('/api/chat/getRoom/:chatRoomRoute', (request, response) =>{
+  chatController.authenticate(request, response);
+  chatController.getChatRoom(request, response);
 });
-
-// API: News -> Get
-app.get('/api/news/get/:newsId', async (req, res) => {
-  newsController.get(req, res);
+app.get('/api/chat/getChats/:chatRoomId', (request, response) =>{
+  chatController.authenticate(request, response);
+  chatController.getChats(request, response);
 });
-
-// API: News -> GetAll
-app.get('/api/news/getAll', (req, res) => {
-  newsController.getAll(req, res);
-});
-
-// API: News -> Create
-app.route('/api/news/create')
-   .post(checkIfAuthenticated, async (req, res) => {
-  newsController.create(req, res);
-});
-
-// API: Chat -> GetChatRooms
-app.get('/api/chat/getRooms', async (req, res) => {
-  chatController.getChatRooms(req, res);
-});
-
-// API: Chat -> GetChatRoom
-app.get('/api/chat/getRoom/:chatRoomRoute', async (req, res) => {
-  chatController.getChatRoom(req, res);
-});
-
-// API: Chat -> GetChats
-app.route('/api/chat/getChats/:chatRoomId')
-   .get(checkIfAuthenticated, async (req, res) => {
-  chatController.getChats(req, res);
-});
-
-// API: Chat -> PostChat
-app.route('/api/chat/postChat/:chatRoomId')
-   .post(checkIfAuthenticated, async (request, response) => {
+app.post('/api/chat/postChat/:chatRoomId', (request, response) =>{
+  chatController.authenticate(request, response);
   chatController.postChat(request, response);
 });
 

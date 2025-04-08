@@ -4,7 +4,7 @@ import {User} from '../model/user.model';
 import {Size} from '../model/app.model';
 import {AppService} from '../service/app.service';
 import {AuthService} from '../service/auth.service';
-import {UserLogon} from '../model/user-logon.model';
+import {UserJWT} from '../model/user-logon.model';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +19,8 @@ export class AppComponent {
   // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
   //                      would then be the "user's service"
   public primaryUser: User;
-  public primaryUserLogon: UserLogon;
+  public primaryUserLogon: UserJWT;
   public primaryUserLoggedOn: boolean;
-  public primaryUserIdentified: boolean;
 
   // The size of the body will be dynamically set during resize / load events
   //
@@ -36,10 +35,9 @@ export class AppComponent {
   constructor(appService: AppService, userService: UserService, authService: AuthService) {
 
     this.appService = appService;
-    this.primaryUser = new User(-1, 'Not Logged In');
-    this.primaryUserLogon = UserLogon.fromLogon('Not Logged In', '');
+    this.primaryUser = User.default();
+    this.primaryUserLogon = UserJWT.default();
     this.primaryUserLoggedOn = false;
-    this.primaryUserIdentified = false;
     this.userService = userService;
 
     // User Logon Listener
@@ -57,15 +55,13 @@ export class AppComponent {
             // Problem with user logon (Force Logon)
             if (!response.success) {
               this.primaryUserLoggedOn = false;
-              this.primaryUserIdentified = false;
-              this.primaryUser = response?.data || new User(-1, 'Not Logged In');
-              this.primaryUserLogon = UserLogon.fromLogon('Not Logged In', '');
+              this.primaryUser = response?.data || User.default();
+              this.primaryUserLogon = UserJWT.default();
             }
             else {
               this.primaryUserLoggedOn = true;
-              this.primaryUserIdentified = true;
-              this.primaryUser = response?.data || new User(-1, 'Not Logged In');
-              this.primaryUserLogon = authService.getLastLogon() || UserLogon.fromLogon('Not Logged In', '');
+              this.primaryUser = response?.data || User.default();
+              this.primaryUserLogon = authService.getLastLogon() || UserJWT.default();
             }
         });
       }

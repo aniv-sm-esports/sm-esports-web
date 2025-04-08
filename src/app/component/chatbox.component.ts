@@ -1,6 +1,5 @@
 import {Component, Input} from '@angular/core';
 import {ChatService} from '../service/chat.service';
-import {ActivatedRoute} from '@angular/router';
 import {ChatRoom} from '../model/chat-room.model';
 import {FormsModule} from '@angular/forms';
 import {User} from '../model/user.model';
@@ -9,6 +8,7 @@ import {Chat} from '../model/chat.model';
 import {noop} from 'rxjs';
 import {BasicButtonComponent} from './button.component';
 import {UserService} from '../service/user.service';
+import {ApiResponseType} from '../model/app.model';
 
 @Component({
   selector: 'chatbox',
@@ -69,7 +69,7 @@ export class ChatBoxComponent {
       .getChatRoom(this.chatRoomName)
       .subscribe(response => {
 
-        if (response.success) {
+        if (response.response == ApiResponseType.Success) {
           this.chatRoom.update(response.data as ChatRoom);
 
           this.refreshChats();
@@ -92,7 +92,7 @@ export class ChatBoxComponent {
         .postChat(chatRoomId, Chat.fromUser(userId, userName, this.chatInput))
         .subscribe(response => {
 
-          if (response.success) {
+          if (response.response == ApiResponseType.Success) {
             this.chatInput = '';
             this.refreshChats();
           }

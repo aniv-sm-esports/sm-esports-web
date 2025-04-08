@@ -1,8 +1,9 @@
-import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {formatDate, NgClass, NgForOf, NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common';
 import {FileService} from '../service/file.service';
 import {FileModel} from '../model/file.model';
+import {ApiResponseType} from '../model/app.model';
 
 @Component({
   selector: 'picture-chooser',
@@ -55,7 +56,7 @@ export class PictureChooserComponent {
         .subscribe(response =>{
 
         // Success -> Emit Change Event
-        if (response.success)
+        if (response.response == ApiResponseType.Success)
           this.pictureFileChanged.emit(this.pictureFile);
       });
     }

@@ -14,33 +14,30 @@ export class NewsController extends BaseController {
   get(request: Request<{newsId:string}, any, any, ParsedQs, Record<string, any>>,
       response: Response<any, Record<string, any>, number>) {
 
-    this.logRequest(request);
-
-    let news:Article = new Article();
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     try {
 
       // Success
       if (this.serverDb.news.has(Number(request.params.newsId))) {
 
-        news = this.serverDb.news.get(Number(request.params.newsId)) || new Article();
+        let news = this.serverDb.news.get(Number(request.params.newsId)) || new Article();
 
         // Send during try/catch
-        this.logResponseSuccess(response, news);
+        this.sendSuccess(response, news);
         return;
       }
+
+      // Data Error
       else {
-        message = `News not found:  ${request.params.newsId}`;
+        this.sendDataError(response, 'News not found:  ${request.params.newsId}');
       }
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // GET -> /api/news/getAll
@@ -48,9 +45,8 @@ export class NewsController extends BaseController {
   getAll(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
-    this.logRequest(request);
-
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(false);
 
     try {
       let newsItems:Article[] = [];
@@ -60,16 +56,13 @@ export class NewsController extends BaseController {
       })
 
       // Success
-      this.logResponseSuccess(response, newsItems);
+      this.sendSuccess(response, newsItems);
       return;
     }
     catch(error) {
       console.log(error);
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    // Failure
-    this.logResponseFail(response, message);
   }
 
   // POST -> /api/news/create
@@ -77,27 +70,23 @@ export class NewsController extends BaseController {
   create(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
-    this.logRequest(request);
-
-    // Mark success to look for existing (true)
-    let success:boolean = true;
-    let message:string = '';
+    // Pre-work settings
+    this.setLogonRequired(true);
 
     try {
+
+      let success = true;
 
       // Exists
       this.serverDb.news.forEach((news:Article) => {
         if (news.title.trim() == request.body.title.trim()) {
           success = false;
-          message = 'News article (of the same title) already exists';
+          this.sendDataError(response, 'News article (of the same title) already exists');
         }
       });
 
-      // Already exists -> return
-      if (!success) {
-        this.logResponseFail(response, message);
+      if (!success)
         return;
-      }
 
       let newsId = this.serverDb.news.size;
 
@@ -108,15 +97,11 @@ export class NewsController extends BaseController {
       this.serverDb.news.set(newsId, request.body);
 
       // Success
-      this.logResponseSuccess(response, request.body);
-      return;
+      this.sendSuccess(response, request.body);
     }
     catch(error) {
       console.log(error);
-      success = false;
-      message = 'An Error has occurred: See server log for details';
+      this.sendError(response, 'An Error has occurred: See server log for details');
     }
-
-    this.logResponseFail(response, request.body);
   }
 }
