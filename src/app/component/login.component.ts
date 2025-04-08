@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {UserCredentials} from '../model/user-logon.model';
+import {UserCredentials, UserJWT} from '../model/user-logon.model';
 import {AuthService} from '../service/auth.service';
 import {User} from '../model/user.model';
 import {UserService} from '../service/user.service';
@@ -12,6 +12,7 @@ import {ScrollTrackerDirective} from '../directive/scroll-tracker.directive';
 import {PictureChooserComponent} from './picture-chooser.component';
 import {Router} from '@angular/router';
 import {noop} from 'rxjs';
+import {AuthHandler} from '../model/handler.model';
 
 @Component({
   selector: 'login',
@@ -26,11 +27,12 @@ import {noop} from 'rxjs';
   ],
   templateUrl: './template/login.component.html'
 })
-export class LoginComponent {
+export class LoginComponent implements AuthHandler {
 
   protected readonly appService: AppService;
   private readonly authService: AuthService;
   private readonly userService: UserService;
+  private readonly router: Router;
 
   public createAccountMode:boolean = false;
 
@@ -41,25 +43,34 @@ export class LoginComponent {
   public userFormValid: boolean = false;
 
   constructor(router:Router, appService:AppService, authService: AuthService, userService: UserService) {
+    this.router = router;
     this.appService = appService;
     this.authService = authService;
     this.userService = userService;
 
-    this.authService.subscribeLogonChanged(() =>{
-      this.userLoggedOn = this.authService.isLoggedIn();
-
-      // Redirect -> Home
-      //
-      if (this.userLoggedOn) {
-        router.navigate(['home']);
-      }
-    });
+    this.authService.subscribeLogonChanged(this);
   }
 
   ngOnInit() {
-    this.userLoggedOn = this.authService.isLoggedIn();
+    this.userLoggedOn = false;
     this.createAccountMode = false;
     this.userFormValid = false;
+  }
+
+  onLoginChanged(value:UserJWT) {
+
+    if (value) {
+      this.userLoggedOn = !value.isDefault();
+    }
+    else {
+      return;
+    }
+
+    // Redirect -> Home
+    //
+    if (this.userLoggedOn && this.router) {
+      this.router.navigate(['home']);
+    }
   }
 
   login(){

@@ -174,7 +174,7 @@ export class DataModel {
 
   getUserByName(name: string) {
 
-    let result:User | undefined;
+    let result:User = User.default();
 
     this.users.forEach((user) => {
       if(user.name == name) {

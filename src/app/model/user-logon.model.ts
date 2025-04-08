@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual';
 
 export class UserCredentials {
 
@@ -29,16 +30,32 @@ export class UserJWTPayload {
 export class UserJWT {
 
   public token: string = '';
-  public expiresAt: Date = new Date();
-  public loggedinAt: Date = new Date();
+  public expiresAt: Date = new Date("2001-09-11");
+  public loggedinAt: Date = new Date("2001-09-11");
   public userName: string = '';
+
+  public isDefault() {
+    return isEqual(this, UserJWT.default());
+  }
 
   public static default() {
     let result:UserJWT = new UserJWT();
     result.token = '';
-    result.expiresAt = new Date();
-    result.loggedinAt = new Date();
+    result.expiresAt = new Date("2001-09-11")
+    result.loggedinAt = new Date("2001-09-11");
     result.userName = '';
+    return result;
+  }
+
+  public static from(data:UserJWT | undefined): UserJWT {
+    if (!data)
+      return UserJWT.default();
+
+    let result:UserJWT = new UserJWT();
+    result.token = data.token;
+    result.expiresAt = data.expiresAt;
+    result.loggedinAt = data.loggedinAt;
+    result.userName = data.userName;
     return result;
   }
 

@@ -1,4 +1,5 @@
 import {UserJWT} from './user-logon.model';
+import {User} from './user.model';
 
 export enum ApiResponseType {
   None = 'None',
@@ -9,7 +10,7 @@ export enum ApiResponseType {
   ServerError = 'Server Error'
 }
 
-export class ApiResponse<T> {
+export class ApiResponse<T>  {
 
   public data: T | undefined;
   public response: ApiResponseType;

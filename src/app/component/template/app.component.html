@@ -114,6 +114,18 @@
     color: rgba(100, 100, 255, 1);
   }
 
+  .primary-user-logon {
+    position: absolute;
+    text-align:right;
+    width:100%;
+  }
+  .primary-user-logon > h5 {
+    font-size:0.7em;
+    margin-top: 3px;
+    margin-right:20px;
+    padding: 0px;
+  }
+
   @keyframes fadein {
     from { opacity: 0}
     to   { opacity: 1}
@@ -252,11 +264,6 @@
 
 <main class="main">
 
-  <!-- Primary UserLogon -->
-  <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
-    <h4>SM Esports User ({{this.primaryUser.name}}) ({{this.primaryUserLogon.loggedinAt}}</h4>
-  </div>
-
   <div class="sidenav-container"
        [ngClass]="{'expand': this.showSideNav, 'collapse': !this.showSideNav}"
        (clickOutside)="onSideNavOffClick($event)"
@@ -298,6 +305,11 @@
     <div class="logo">
       <h1 class="russo-one-regular animate">Super Metroid Esports</h1>
     </div>
+  </div>
+
+  <!-- Primary UserLogon -->
+  <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
+    <h5>({{this.primaryUserLogon.userName}}) ({{this.primaryUserLogon.loggedinAt}})</h5>
   </div>
 
   <div class="app-body"

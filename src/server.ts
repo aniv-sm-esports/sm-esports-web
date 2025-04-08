@@ -114,6 +114,10 @@ app.use(
 app.post('/api/login', (request, response) =>{
   authController.logon(request, response);
 });
+app.get('/api/login/getSession', (request, response) => {
+  authController.authenticate(request, response);
+  authController.getSession(request, response);
+});
 
 // API: File
 app.get('/api/file/get/:fileName', (request, response) => {

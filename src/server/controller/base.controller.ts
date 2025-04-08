@@ -10,6 +10,7 @@ import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/user-log
 import moment from 'moment';
 import {NextFunction} from 'express';
 import {User} from '../../app/model/user.model';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,8 @@ export class BaseController {
   });
 
   // User for this request (or not defined if not stored with express-jwt)
-  protected requestUser:User | undefined = undefined;
-  protected requestJWT:UserJWT | undefined = undefined;
+  protected requestUser:User = User.default();
+  protected requestJWT:UserJWT = UserJWT.default();
   private logonRequired:boolean = false;
 
   constructor(protected readonly serverDb: DataModel) {
@@ -101,8 +102,8 @@ export class BaseController {
     try {
 
       // Reset Session Data
-      //this.requestUser = User.default();
-      //this.requestJWT = UserJWT.default();
+      this.requestUser = User.default();
+      this.requestJWT = UserJWT.default();
 
       // NOTE*****  The "Bearer undefined" value should not be hard coded, here. The middle ware is having
       //            problems somewhere in jwt.verify; and it is swallowing exceptions.
@@ -115,26 +116,25 @@ export class BaseController {
 
       else {
 
-        // DEBUG JWT
-        console.log('Request Headers:  ', request.headers);
+        // NOTE SURE HOW THIS IS USUALLY DONE! ('Bearer ') seems consistent!
+        let token = request.headers.authorization.replace('Bearer ', '');
 
         // Retrieve token
-        let decrypted = jwt.verify(request.headers.authorization || '', BaseController.PUBLIC_KEY, {
+        let decrypted = jwt.verify(token, BaseController.PUBLIC_KEY, {
           algorithms: ['HS256']
-        });
-
-        // Parse payload from decrypted token
-        let payload:UserJWTPayload = JSON.parse(decrypted.toString()) as UserJWTPayload;
+        }) as JwtPayload;
 
         // Identify the server's User / JWT to complete authentication
-        if (payload.userName) {
-          this.requestUser = this.serverDb.getUserByName(payload.userName);
-          this.requestJWT = UserJWT.fromLogon(payload.userName, request.headers.authorization || '', payload.loginTime, payload.expirationTime);
+        if (decrypted.sub) {
+          this.requestUser = this.serverDb.getUserByName(decrypted.sub);
+          this.requestJWT = UserJWT.fromLogon(decrypted.sub, request.headers.authorization || '',
+                                              moment(decrypted.iat).toDate(),
+                                              moment(decrypted.exp).toDate());
         }
       }
     }
     catch (error) {
-      console.log('Server Request Error: Could not verify user from auth headers', error);
+      console.log('Server Request Error: Could not verify user from auth headers (usually this means the JWT token has expired)');
     }
   }
 
@@ -144,9 +144,9 @@ export class BaseController {
 
     // Create payload to store user name and logon time
     //
-    let payload:UserJWTPayload = new UserJWTPayload(credentials.userName, moment().toDate(), moment().add(120).toDate());
+    let payload:UserJWTPayload = new UserJWTPayload(credentials.userName, moment().toDate(), moment().add(120, 'minutes').toDate());
 
-    let jwtBearerToken = jwt.sign(payload, BaseController.PUBLIC_KEY, {
+    let jwtBearerToken = jwt.sign({}, BaseController.PUBLIC_KEY, {
       algorithm: 'HS256',
       expiresIn: 120,
       subject: credentials.userName

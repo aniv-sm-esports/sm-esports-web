@@ -1,9 +1,9 @@
-import moment from "moment";
 import {Injectable} from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Size} from '../model/app.model';
+import {ApiResponse, ApiResponseType} from '../model/app.model';
 import {UserCredentials, UserJWT} from '../model/user-logon.model';
+import {AuthHandler} from '../model/handler.model'
 
 @Injectable({
   providedIn: 'root'
@@ -11,43 +11,27 @@ import {UserCredentials, UserJWT} from '../model/user-logon.model';
 export class AuthService {
 
   // Observable (is user logged in?)
-  private readonly loggedIn$: Observable<boolean>;
-  private readonly loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private readonly loggedIn$: Observable<UserJWT>;
+  private readonly loggedInSubject: BehaviorSubject<UserJWT> = new BehaviorSubject<UserJWT>(UserJWT.default());
 
   // Local Storage
   private readonly localIdKey: string = 'id_token';
   private readonly localExpiresAtKey: string = 'expires_at';
 
-  // Stored UserLogon
-  private userLogon:UserJWT | undefined;
-
   // URL Endpoint
   private readonly urlLogon:string = '/api/login';
+  private readonly urlGetSession:string = '/api/login/getSession';
 
   constructor(private http: HttpClient) {
     this.loggedIn$ = this.loggedInSubject.asObservable();
   }
 
   logon(userName:string, password:string) {
-    return this.http.post<UserJWT>(this.urlLogon, UserCredentials.fromLogon(userName, password))
-                    .subscribe(res => this.setSession(res));
-  }
-
-  private setSession(authResult:UserJWT) {
-
-    // Save UserLogon
-    this.userLogon = authResult;
-
-    if (!localStorage) {
-      this.loggedInSubject.next(this.isLoggedIn());
-    }
-
-    // Set local storage
-    localStorage.setItem(this.localIdKey, authResult.token);
-    localStorage.setItem(this.localExpiresAtKey, JSON.stringify(authResult.expiresAt.valueOf()));
-
-    // Update Observable
-    this.loggedInSubject.next(this.isLoggedIn());
+    return this.http.post<ApiResponse<UserJWT>>(this.urlLogon, UserCredentials.fromLogon(userName, password))
+                    .subscribe(response =>
+                    {
+                        this.setSession(UserJWT.from(response?.data));
+                    });
   }
 
   logout() {
@@ -60,12 +44,28 @@ export class AuthService {
     localStorage.removeItem(this.localExpiresAtKey);
 
     // Update Observable
-    this.loggedInSubject.next(this.isLoggedIn());
+    //this.loggedInSubject.next(authResult !== UserJWT.default());
   }
 
-  public subscribeLogonChanged(callback: Function) {
+  private setSession(authResult:UserJWT) {
+
+    // JWT Token Present (UserJWT !== default())
+    if (!localStorage) {
+      this.loggedInSubject.next(UserJWT.default());
+      return;
+    }
+
+    // Set local storage
+    localStorage.setItem(this.localIdKey, authResult.token);
+    localStorage.setItem(this.localExpiresAtKey, JSON.stringify(authResult.expiresAt));
+
+    // Update Observable
+    this.loggedInSubject.next(authResult);
+  }
+
+  public subscribeLogonChanged(handler: AuthHandler) {
     this.loggedIn$.subscribe(value => {
-      callback(value);
+      handler.onLoginChanged(value);
     });
   }
 
@@ -77,24 +77,15 @@ export class AuthService {
     return this.localExpiresAtKey;
   }
 
-  public getLastLogon(){
-    return this.userLogon;
-  }
+  // Gets UserJWT (which includes user name) from the server; and refreshes
+  // client side JWT (to assure logon is still valid)
+  //
+  public refreshSession(){
 
-  public isLoggedIn() {
-
-    if (!localStorage) {
-      return false;
-    }
-
-    if (!localStorage.getItem(this.localIdKey) ||
-        !localStorage.getItem(this.localExpiresAtKey)) {
-      return false;
-    }
-
-    let expiration = localStorage.getItem(this.localExpiresAtKey) || '';
-    let expiresAt = JSON.parse(expiration);
-
-    return moment().isBefore(moment(expiresAt));
+    return this.http.get<ApiResponse<UserJWT>>(this.urlGetSession)
+                    .subscribe(response =>
+                    {
+                      this.setSession(UserJWT.from(response?.data));
+                    });
   }
 }

@@ -1,24 +1,24 @@
 import {afterNextRender, Component, HostListener} from '@angular/core';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
-import {Size} from '../model/app.model';
+import {ApiResponseType, Size} from '../model/app.model';
 import {AppService} from '../service/app.service';
 import {AuthService} from '../service/auth.service';
 import {UserJWT} from '../model/user-logon.model';
+import {AuthHandler} from '../model/handler.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './template/app.component.html',
   standalone: false
 })
-export class AppComponent {
+export class AppComponent implements AuthHandler {
 
   protected readonly appService: AppService;
   private readonly userService: UserService;
 
   // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
   //                      would then be the "user's service"
-  public primaryUser: User;
   public primaryUserLogon: UserJWT;
   public primaryUserLoggedOn: boolean;
 
@@ -35,37 +35,31 @@ export class AppComponent {
   constructor(appService: AppService, userService: UserService, authService: AuthService) {
 
     this.appService = appService;
-    this.primaryUser = User.default();
     this.primaryUserLogon = UserJWT.default();
     this.primaryUserLoggedOn = false;
     this.userService = userService;
 
     // User Logon Listener
     //
-    authService.subscribeLogonChanged(() =>{
-      this.primaryUserLoggedOn = authService.isLoggedIn();
+    authService.subscribeLogonChanged(this);
+    authService.refreshSession();
+  }
 
-      // Get User Info
-      if (this.primaryUserLoggedOn) {
+  onLoginChanged(value: UserJWT){
 
-        userService
-          .getUser(authService.getLastLogon()?.userName || '')
-          .subscribe(response => {
+    if (!value) {
+      this.primaryUserLogon = UserJWT.default();
+      this.primaryUserLoggedOn = false;
+    }
 
-            // Problem with user logon (Force Logon)
-            if (!response.success) {
-              this.primaryUserLoggedOn = false;
-              this.primaryUser = response?.data || User.default();
-              this.primaryUserLogon = UserJWT.default();
-            }
-            else {
-              this.primaryUserLoggedOn = true;
-              this.primaryUser = response?.data || User.default();
-              this.primaryUserLogon = authService.getLastLogon() || UserJWT.default();
-            }
-        });
-      }
-    });
+    else {
+      this.primaryUserLogon = value;
+      this.primaryUserLoggedOn = !value.isDefault();
+    }
+  }
+
+  ngOnInit() {
+    this.primaryUserLoggedOn = false;
   }
 
   @HostListener('window:load', ['$event'])

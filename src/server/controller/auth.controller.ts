@@ -11,7 +11,7 @@ import {UserCredentials, UserJWT} from '../../app/model/user-logon.model';
 })
 export class AuthController extends BaseController {
 
-  // GET -> /api/users/get/:userId
+  // POST -> /api/login
   //
   logon(request: Request<{}, ApiResponse<UserJWT>, UserCredentials, ParsedQs, Record<string, any>>,
         response: Response<any, Record<string, any>, number>) {
@@ -57,6 +57,31 @@ export class AuthController extends BaseController {
       // User Not Found
       else {
         this.sendDataError(response, 'User not found');
+      }
+    }
+    catch(error) {
+      console.log(error);
+      this.sendError(response, 'An Error has occurred: See server log for details');
+    }
+  }
+
+  // GET -> /api/login/getSession
+  //
+  getSession(request: Request<{}, ApiResponse<UserJWT>, any, ParsedQs, Record<string, any>>,
+             response: Response<any, Record<string, any>, number>) {
+
+    // Pre-work settings
+    this.setLogonRequired(true);
+
+    try {
+
+      // Success -> Send JWT Token
+      if (!this.requestJWT.isDefault())
+        this.sendSuccess(response, this.requestJWT);
+
+      // User Not Found
+      else {
+        this.sendError(response, 'User not logged in!');
       }
     }
     catch(error) {
