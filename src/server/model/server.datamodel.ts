@@ -35,12 +35,12 @@ export class DataModel {
     // Server Application Defaults
 
     // Users
-    let zoasty = new User(0, 'zoasty');
-    let zeni = new User(1, 'ShinyZeni');
-    let oatsngoats = new User(2, 'Oatsngoats');
-    let eddie = new User(3, 'Eddie');
-    let nevdi = new User(4, 'Nevdi');
-    let arealcutie = new User(5, 'ARealCutie');
+    let zoasty = User.from(0, 'zoasty');
+    let zeni = User.from(1, 'ShinyZeni');
+    let oatsngoats = User.from(2, 'Oatsngoats');
+    let eddie = User.from(3, 'Eddie');
+    let nevdi = User.from(4, 'Nevdi');
+    let arealcutie = User.from(5, 'ARealCutie');
 
     zoasty.shortDescription = 'A Short Description of Zoasty';
     zeni.shortDescription = 'A Short Description of ShinyZeni';
@@ -77,7 +77,7 @@ export class DataModel {
     nevdi.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
     arealcutie.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
 
-    let aniv = new User(6, 'aniv-sm-esports');
+    let aniv = User.from(6, 'aniv-sm-esports');
 
     aniv.email = 'aniv-sm-esports@gmail.com';
     aniv.pictureUrl = 'aniv.png';
@@ -154,7 +154,7 @@ export class DataModel {
 
     // MOCK CHAT DATA
     for (let i = 0; i < 50; i++) {
-      this.chatRooms.get(0)?.chats.push(Chat.from(i, 0, 'aniv-sm-esports', this.fillText(30, 50)));
+      this.chatRooms.get(0)?.chats.push(Chat.from(i, 'aniv-sm-esports', this.fillText(30, 50)));
     }
 
     // FILES

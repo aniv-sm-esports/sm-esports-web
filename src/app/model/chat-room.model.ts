@@ -1,4 +1,5 @@
 import {Chat} from './chat.model';
+import isEqual from 'lodash/isEqual';
 
 export class ChatRoom {
   public id: number;
@@ -41,6 +42,14 @@ export class ChatRoom {
     while (this.chats.length > 0) {
       this.chats.pop();
     }
+  }
+
+  public isDefault() {
+    return isEqual(this, ChatRoom.default());
+  }
+
+  public static default() {
+    return new ChatRoom();
   }
 
   public static from(id: number, name: string, description:string, urlRoute:string, chatRulesHtml:string): ChatRoom {

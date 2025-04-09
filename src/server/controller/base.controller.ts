@@ -134,6 +134,9 @@ export class BaseController {
       }
     }
     catch (error) {
+
+      //TODO: BOOT THE CREDENTIALS TO PREVENT FALSE VALIDATION!!!!!!!
+
       console.log('Server Request Error: Could not verify user from auth headers (usually this means the JWT token has expired)');
     }
   }

@@ -100,7 +100,7 @@ export class UserController extends BaseController {
       // Add User
       let userId = this.serverDb.users.size;
 
-      this.serverDb.users.set(userId, new User(userId, request.params.userName.trim()));
+      this.serverDb.users.set(userId, User.from(userId, request.params.userName.trim()));
 
       // Success
       this.sendSuccess(response, this.serverDb.users.get(userId));

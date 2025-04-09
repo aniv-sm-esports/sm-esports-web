@@ -1,3 +1,4 @@
+import isEqual from 'lodash/isEqual';
 
 export enum UserRoleType {
   General = 'General',
@@ -43,9 +44,9 @@ export class User {
 
   links: UserLink[];
 
-  constructor(id: number, name: string) {
-    this.id = id;
-    this.name = name;
+  constructor() {
+    this.id = -1;
+    this.name = 'Not Logged In';
     this.email = '';
     this.accoutCreation = new Date();
     this.emailVisible = false;
@@ -56,7 +57,18 @@ export class User {
     this.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
   }
 
-  static default(){
-    return new User(-1, 'Not Logged In');
+  public static from(userId:number, userName:string){
+    let user:User = new User();
+    user.id = userId;
+    user.name = userName;
+    return user;
+  }
+
+  public isDefault() {
+    return isEqual(this, User.default());
+  }
+
+  public static default(){
+    return new User();
   }
 }

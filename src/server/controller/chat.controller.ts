@@ -111,8 +111,7 @@ export class ChatController extends BaseController {
     // Pre-work settings
     this.setLogonRequired(true);
 
-    if (request.body.userId < 0 ||
-       !request.body.userName) {
+    if (this.requestUser.isDefault()) {
       this.sendDataError(response, 'User is not valid (either not logged in, or not authorized for this chat room)');
       return;
     }
@@ -141,7 +140,6 @@ export class ChatController extends BaseController {
 
       // Success
       this.sendSuccess(response, chat);
-      return;
     }
     catch(error) {
       console.log(error);

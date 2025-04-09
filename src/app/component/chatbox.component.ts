@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, SimpleChanges} from '@angular/core';
 import {ChatService} from '../service/chat.service';
 import {ChatRoom} from '../model/chat-room.model';
 import {FormsModule} from '@angular/forms';
@@ -9,6 +9,10 @@ import {noop} from 'rxjs';
 import {BasicButtonComponent} from './button.component';
 import {UserService} from '../service/user.service';
 import {ApiResponseType} from '../model/app.model';
+import {AuthService} from '../service/auth.service';
+import {AuthHandler} from '../model/handler.model';
+import {UserJWT} from '../model/user-logon.model';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'chatbox',
@@ -20,21 +24,15 @@ import {ApiResponseType} from '../model/app.model';
   ],
   templateUrl: './template/chatbox.component.html'
 })
-export class ChatBoxComponent {
-
-  // Chat Activation:  Must input chatRoomName on the DOM
-  //
-  @Input() chatRoomName!:string;
+export class ChatBoxComponent implements AuthHandler {
 
   // Services
   private readonly chatService: ChatService;
-  private readonly userService: UserService;
+  private readonly authService: AuthService;
 
   // DOM Properties (for chat permissions and readiness)
   //
-  protected loading: boolean = true;
-  protected chatRoomExists: boolean = false;
-  protected userVerified: boolean = false;
+  protected userJWT: UserJWT;
 
   // DOM (template) USAGE
   protected readonly formatDate = formatDate;
@@ -44,16 +42,39 @@ export class ChatBoxComponent {
   public chatRoom:ChatRoom;
 
   // Chat Data
-  public user: User | undefined;
   public chatInput: string = '';
 
-  constructor(userService:UserService, chatService: ChatService) {
+  constructor(activatedRoute:ActivatedRoute, authService:AuthService, chatService: ChatService) {
 
-    this.userService = userService;
+    this.authService = authService;
     this.chatService = chatService;
 
     // Must retrieve data from server
-    this.chatRoom = new ChatRoom();
+    this.chatRoom = ChatRoom.default();
+    this.userJWT = UserJWT.default();
+
+    // Subscribe for logon JWT (which contains user name)
+    this.authService.subscribeLogonChanged(this);
+
+    // Get chatRoomName from URL
+    if (activatedRoute.snapshot?.url.length == 1) {
+
+      let chatRoomName =  activatedRoute.snapshot?.url[0].path;
+
+      // Initialize Chat Room
+      this.chatService
+        .getChatRoom(chatRoomName)
+        .subscribe(response => {
+
+          if (response.response == ApiResponseType.Success) {
+            this.chatRoom.update(response.data as ChatRoom);
+
+            this.refreshChats();
+          }
+        });
+    }
+    else
+      console.log('URL for chat box component needs to be updated: URL segment mismatch for chatRoomName');
   }
 
   // Procedure:
@@ -63,33 +84,20 @@ export class ChatBoxComponent {
   // 3) Verify User has permissions to the chat room    (Read / Write Permissions)
   // 4) Show UI accordingly                             (Show, ShowReadOnly, RedirectToLogon, ShowPermissionDenied, ShowBanned)
   //
-  ngOnInit() {
-
-    this.chatService
-      .getChatRoom(this.chatRoomName)
-      .subscribe(response => {
-
-        if (response.response == ApiResponseType.Success) {
-          this.chatRoom.update(response.data as ChatRoom);
-
-          this.refreshChats();
-          this.loading = false;
-        }
-      });
+  onLoginChanged(value:UserJWT){
+    this.userJWT = value;
   }
 
   submitChat() {
 
-    if (!this.chatInput || !this.user) {
+    if (!this.chatInput ||
+         this.userJWT.isDefault() ||
+         this.chatRoom.isDefault()) {
       return;
     }
 
-    let chatRoomId = this.chatRoom?.id || 0;
-    let userId = this.user?.id || 0;
-    let userName = this.user?.name || '';
-
     this.chatService
-        .postChat(chatRoomId, Chat.fromUser(userId, userName, this.chatInput))
+        .postChat(this.chatRoom.id, Chat.fromUserJWT(this.userJWT, this.chatInput))
         .subscribe(response => {
 
           if (response.response == ApiResponseType.Success) {
