@@ -6,6 +6,9 @@ import {AppService} from '../service/app.service';
 import {AuthService} from '../service/auth.service';
 import {UserJWT} from '../model/user-logon.model';
 import {AuthHandler} from '../model/handler.model';
+import moment from 'moment';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faTwitch } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +20,9 @@ export class AppComponent implements AuthHandler {
   protected readonly appService: AppService;
   private readonly userService: UserService;
 
+  // Font Awesome
+  public faBars = faBars;
+
   // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
   //                      would then be the "user's service"
   public primaryUserLogon: UserJWT;
@@ -24,7 +30,8 @@ export class AppComponent implements AuthHandler {
 
   // The size of the body will be dynamically set during resize / load events
   //
-  public showSideNav: boolean = false;
+  public showSideNavRight: boolean = false;
+  public showSideNavLeft: boolean = false;
   public showChatNavTree: boolean = false;
 
   // Logon Dialog
@@ -85,6 +92,9 @@ export class AppComponent implements AuthHandler {
   }
 
   onSideNavOffClick(event: Event) {
-    this.showSideNav = false;
+    this.showSideNavLeft = false;
+    this.showSideNavRight = false;
   }
+
+  protected readonly moment = moment;
 }

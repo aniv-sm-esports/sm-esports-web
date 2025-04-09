@@ -23,66 +23,14 @@
     color: darkgray;
   }
 
+  .app-body {
+    background-color: rgba(0,0,0,0.70);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 
-  main {
-  }
+    color: #EEEEEE;
 
-  .sidenav-container {
-    position: absolute;
-    top: 0;
-    bottom:0;
-    left: -260px;
-    width: 260px;
-    background: rgba(255,255,255, 1);
-  }
-
-  .sidenav-container.expand {
-    transition: left 0.35s ease-in-out;
-    left: 0;
-  }
-  .sidenav-container.collapse {
-    transition: left 0.35s ease-in-out;
-    left: -260px;
-  }
-
-  .sidenav-container > div.logo {
-    background-image: url("../../../../public/metroid-inactive.png");
-    background-size: 32px 32px;
-    background-repeat: no-repeat;
-    background-position-x: 222px;
-    background-position-y: 5px;
-  }
-  .sidenav-container > div.logo > h4 {
-    margin: 0px;
-    padding: 10px;
-  }
-
-  .sidenav-content a {
-    display: block;
-    text-decoration: none;
-    padding: 5px;
-    padding-left: 10px;
-    color: #B5B5B5;
-  }
-
-  .sidenav-content a:hover,
-  .sidenav-content .sidenav-tree-header:hover {
-    color: #888888 !important;
-    background-color: rgba(134,134,255,0.3);
-  }
-
-  .sidenav-content .sidenav-tree .sidenav-tree-header {
-    cursor: pointer;
-  }
-
-  .sidenav-content .sidenav-tree .sidenav-tree-item {
-    padding-left: 20px;
-  }
-
-  .sidenav-content .sidenav-tree .sidenav-tree-expander {
-    font-size: 1.1em;
-  }
-  .sidenav-content .sidenav-tree .sidenav-tree-expander.expand:after {
+    overflow: hidden;
   }
 
   .banner {
@@ -114,54 +62,134 @@
     color: rgba(100, 100, 255, 1);
   }
 
-  .primary-user-logon {
+  .sidenav-container-left {
     position: absolute;
-    text-align:right;
-    width:100%;
+    top: 0;
+    bottom:0;
+    left: -260px;
+    width: 260px;
+    background: rgba(255,255,255, 1);
   }
-  .primary-user-logon > h5 {
-    font-size:0.7em;
-    margin-top: 3px;
-    margin-right:20px;
-    padding: 0px;
+  .sidenav-container-right {
+    position: absolute;
+    opacity: 0;
+    width: 260px;
+    height: 80px;
+    padding-top:20px;
+    top: 50px;
+    right: 16px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    background: #FFF;
   }
 
-  @keyframes fadein {
-    from { opacity: 0}
-    to   { opacity: 1}
+  .sidenav-container-left.expand {
+    transition: left 0.15s ease-in-out;
+    left: 0;
+  }
+  .sidenav-container-left.collapse {
+    transition: left 0.15s ease-in-out;
+    left: -260px;
   }
 
-  .app-body {
-    background-color: rgba(0,0,0,0.70);
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-
-    color: #EEEEEE;
-
+  .sidenav-container-right.expand {
+    transition: opacity 0.5s ease-in-out;
     opacity: 1;
-    animation: fadein 2s;
-    overflow: hidden;
+  }
+  .sidenav-container-right.collapse {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
   }
 
-  .modal-container h2 {
-    text-align: center;
+  .sidenav-container-left div.logo {
+    display:block;
+    background-image: url("../../../../public/metroid-inactive.png");
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position-x: 222px;
+    background-position-y: 5px;
   }
-  .modal-container button {
-    margin-right: 8px;
-  }
-  .modal-container  input,
-  .modal-container  mat-form-field {
-    width: 100%;
+  .sidenav-container-left div.logo > h4 {
+    text-align:left;
+    margin: 0px;
+    padding: 10px;
   }
 
-  .primary-user {
+  .sidenav-container-right div.logo {
+    display:block;
+    background-image: url("../../../../public/metroid-inactive.png");
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position-x: 222px;
+    background-position-y: 5px;
+  }
+  .sidenav-container-right div.logo > h4 {
+    margin: 0px;
+    padding: 10px;
+
+  }
+  .sidenav-container-right .primary-user-logon {
+    padding: 10px;
+    background: rgba(134,134,255,0.3);
+  }
+  .sidenav-container-right .primary-user-logon h5 {
+    color: #888;
+    padding: 0;
+    margin:0;
+  }
+  .sidenav-container-right .primary-user-logon h5:first-child {
+    margin-bottom:10px;
+  }
+
+  .sidenav-container-left .sidenav-content a {
+    display: block;
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 10px;
+    color: #B5B5B5;
+  }
+  .sidenav-container-right .sidenav-content a {
+    display: block;
+    text-decoration: none;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left:10px;
+    color: #B5B5B5;
+  }
+
+  .sidenav-container-left .sidenav-content a:hover,
+  .sidenav-container-left .sidenav-content .sidenav-tree-header:hover {
+    color: #888888 !important;
+    background-color: rgba(134,134,255,0.3);
+  }
+
+  .sidenav-container-right .sidenav-content a:hover,
+  .sidenav-container-right .sidenav-content .sidenav-tree-header:hover {
+    color: #888888 !important;
+    background-color: rgba(134,134,255,0.3);
+  }
+
+  .sidenav-content .sidenav-tree .sidenav-tree-header {
+    cursor: pointer;
+  }
+  .sidenav-content .sidenav-tree .sidenav-tree-item {
+    padding-left: 20px;
+  }
+  .sidenav-content .sidenav-tree .sidenav-tree-expander {
+    font-size: 1.1em;
+  }
+  .sidenav-content .sidenav-tree .sidenav-tree-expander.expand:after {
+  }
+
+  .sidenav-left-opener {
     color: lightgray;
     text-align: left;
     align-content: center;
     padding-right: 10px;
   }
 
-  .primary-user > input {
+  .sidenav-left-opener > button {
     font-size: 1.0em;
     color: dimgray;
     margin: 5px;
@@ -170,16 +198,42 @@
     -webkit-border-radius: 20px;
     border-radius: 20px;
   }
-  .primary-user > input:focus {
+  .sidenav-left-opener > button:focus {
     border:2px solid #eee;
+  }
+
+  .sidenav-right-opener {
+    color: lightgray;
+    text-align: left;
+    align-content: center;
+    padding-right: 10px;
+  }
+
+  .sidenav-right-opener > button {
+    font-size: 1.0em;
+    color: #888888;
+    margin: 5px;
+    padding:6px;
+    border:none;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    cursor:pointer;
+    background-color: #EFEFEF;
+  }
+  .sidenav-right-opener > button:hover {
+    background-color: rgba(134,134,255,0.3);
+  }
+  .sidenav-right-opener > button:focus {
   }
 
   .logo {
     flex: max-content;
+    flex-direction: row-reverse;
+    display: flex;
   }
 
   .logo h1,
-  .logo h4{
+  .logo h4 {
       color: rgba(134, 134, 255, 0.5);
       font-size: 2.5em;
       margin: 10px;
@@ -211,7 +265,7 @@
       font-size: 0.80em;
     }
 
-    .primary-user > button {
+    .sidenav-left-opener > button {
       width: 40px;
       height: 40px;
       margin: 5px 0px 5px 10px;
@@ -225,18 +279,18 @@
       cursor: pointer;
     }
 
-    .primary-user > button:hover {
+    .sidenav-left-opener > button:hover {
       background-color: rgba(134, 134, 255, 0.4);
     }
 
-    .primary-user > button:active {
+    .sidenav-left-opener > button:active {
       background-color: rgba(0, 0, 0, 0.3);
       background-image: url("../../../../public/metroid.png");
     }
   }
 
   @media screen and (min-width: 1400px) {
-    .primary-user > button {
+    .sidenav-left-opener > button {
       width: 52px;
       height: 52px;
       margin: 5px 0px 5px 10px;
@@ -250,11 +304,11 @@
       cursor: pointer;
     }
 
-    .primary-user > button:hover {
+    .sidenav-left-opener > button:hover {
       background-color: rgba(134, 134, 255, 0.4);
     }
 
-    .primary-user > button:active {
+    .sidenav-left-opener > button:active {
       background-color: rgba(0, 0, 0, 0.3);
       background-image: url("../../../../public/metroid.png");
     }
@@ -264,8 +318,9 @@
 
 <main class="main">
 
-  <div class="sidenav-container"
-       [ngClass]="{'expand': this.showSideNav, 'collapse': !this.showSideNav}"
+  <!-- Side Nav Left -->
+  <div class="sidenav-container-left"
+       [ngClass]="{'expand': this.showSideNavLeft, 'collapse': !this.showSideNavLeft}"
        (clickOutside)="onSideNavOffClick($event)"
        [attachOutsideOnClick]="true"
        [emitOnBlur]="true">
@@ -273,28 +328,47 @@
       <h4>Super Metroid Esports</h4>
     </div>
     <div class="sidenav-content">
-      <a class="russo-one-regular" (click)="this.showSideNav = false" routerLink="/home" routerLinkActive="active">Home</a>
-      <a class="russo-one-regular" (click)="this.showSideNav = false" routerLink="/news" routerLinkActive="active">News</a>
-      <a class="russo-one-regular" (click)="this.showSideNav = false" routerLink="/people" routerLinkActive="active">People</a>
+      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/home" routerLinkActive="active">Home</a>
+      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/news" routerLinkActive="active">News</a>
+      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/people" routerLinkActive="active">People</a>
       <div class="sidenav-tree">
         <div class="sidenav-tree-header" (click)="this.showChatNavTree = !this.showChatNavTree">
           <a class="russo-one-regular">Chat <span class="sidenav-tree-expander"
                                                   [textContent]="!this.showChatNavTree ? '+' : '-'"></span></a>
         </div>
         <div class="sidenav-tree-body" *ngIf="this.showChatNavTree">
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/politics" routerLinkActive="active">Politics</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/people" routerLinkActive="active">People</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/speed-running" routerLinkActive="active">SM Speed Running</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNav = false" routerLink="/chat/general" routerLinkActive="active">General</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/politics" routerLinkActive="active">Politics</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/people" routerLinkActive="active">People</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/speed-running" routerLinkActive="active">SM Speed Running</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/general" routerLinkActive="active">General</a>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Side Nav Right -->
+  <div class="sidenav-container-right"
+       [ngClass]="{'expand': this.showSideNavRight, 'collapse': !this.showSideNavRight}"
+       (clickOutside)="onSideNavOffClick($event)"
+       [attachOutsideOnClick]="true"
+       [emitOnBlur]="true">
+    <div class="sidenav-content">
+
+      <!-- Primary UserLogon -->
+      <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
+        <h5>User ({{this.primaryUserLogon.userName}})</h5>
+        <h5>Logged On {{moment(this.primaryUserLogon.loggedinAt).format('DD/MM/YYYY h:mm a')}})</h5>
+      </div>
+
+      <a class="russo-one-regular" (click)="this.showSideNavRight = false" routerLink="/login" routerLinkActive="active" *ngIf="!primaryUserLoggedOn">Logon</a>
+
+    </div>
+  </div>
+
   <div class="banner">
 
-    <div class="primary-user">
-      <button (click)="showSideNav=true"></button>
+    <div class="sidenav-left-opener">
+      <button (click)="showSideNavLeft=true"></button>
     </div>
 
     <a class="banner-item russo-one-regular" routerLink="/home" routerLinkActive="active">Home</a>
@@ -303,14 +377,15 @@
     <a class="banner-item russo-one-regular" routerLink="/chat/politics" routerLinkActive="active">Chat</a>
 
     <div class="logo">
+      <div class="sidenav-right-opener">
+        <button (click)="showSideNavRight=!showSideNavRight"><fa-icon [icon]="faBars"></fa-icon></button>
+      </div>
       <h1 class="russo-one-regular animate">Super Metroid Esports</h1>
     </div>
+
   </div>
 
-  <!-- Primary UserLogon -->
-  <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
-    <h5>({{this.primaryUserLogon.userName}}) ({{this.primaryUserLogon.loggedinAt}})</h5>
-  </div>
+
 
   <div class="app-body"
        [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',

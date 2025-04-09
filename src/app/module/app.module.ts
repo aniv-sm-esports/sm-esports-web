@@ -16,6 +16,7 @@ import {
 import {NewsService} from '../service/news.service';
 import {AppService} from '../service/app.service';
 import {ClickOutsideModule} from 'ng-click-outside';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {AuthInterceptor} from '../interceptor/auth.interceptor';
 
 @NgModule({
@@ -28,7 +29,8 @@ import {AuthInterceptor} from '../interceptor/auth.interceptor';
     HttpClientModule,
     FormsModule,
     NgOptimizedImage,
-    ClickOutsideModule
+    ClickOutsideModule,
+    FontAwesomeModule
   ],
   providers: [
     provideClientHydration(withEventReplay()),
