@@ -18,6 +18,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import {AuthController} from './server/controller/auth.controller';
 import {FileController} from './server/controller/file.controller';
+import fs from 'node:fs';
+import {AuthService} from './server/service/auth.service';
 
 // Some server constants
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -31,13 +33,18 @@ const angularApp = new AngularNodeAppEngine();
 
 // -> Data
 const serverDb = new DataModel();
+//const jwt = require('jsonwebtoken');
+//const PUBLIC_KEY:string = fs.readFileSync('public.key', 'utf-8');
+
+// -> Services (Auth Service: Needs to complete JWT for key rotation and hosting)
+const authService = new AuthService(serverDb);
 
 // -> Controllers
-const authController = new AuthController(serverDb);
-const userController = new UserController(serverDb);
-const newsController = new NewsController(serverDb);
-const chatController = new ChatController(serverDb);
-const fileController = new FileController(serverDb);
+const authController = new AuthController(serverDb, authService);
+const userController = new UserController(serverDb, authService);
+const newsController = new NewsController(serverDb, authService);
+const chatController = new ChatController(serverDb, authService);
+const fileController = new FileController(serverDb, authService);
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -109,72 +116,97 @@ app.use(
   }),
 );
 
+// expressjwt (auth) -> then (try jwt.verify) to retrieve user
+//
+/*
+const expressAuth = expressjwt({
+  algorithms: ['HS256'],
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+  }),
+
+  // Validate the audience and the issuer.
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+});
+*/
+
+// BYPASS FOR DEVELOPMENT:  Next problem is to implement the JWKS server
+const expressAuth = function (req: any, res: any, next: () => void) {
+  next();
+}
+
+app.use(expressAuth);
+
 // User Session:  Login / Logout (JWT bearer tokens) (created and sent by the AuthController)
 //
 app.post('/api/login', (request, response) =>{
   authController.logon(request, response);
 });
-app.get('/api/login/getSession', (request, response) => {
+app.route('/api/login/getSession').get(expressAuth, (request, response) => {
   authController.authenticate(request, response);
   authController.getSession(request, response);
 });
 
 // API: File
-app.get('/api/file/get/:fileName', (request, response) => {
+app.route('/api/file/get/:fileName').get(expressAuth, (request, response) => {
   fileController.authenticate(request, response);
   fileController.get(request, response);
 });
-app.post('/api/file/post', (request, response) => {
+app.route('/api/file/post').post(expressAuth, (request, response) => {
   fileController.authenticate(request, response);
   fileController.post(request, response);
 });
 
 // API: Users
-app.get('/api/users/get/:userName', (request, response) =>{
+app.route('/api/users/get/:userName').get(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.get(request, response);
 });
-app.get('/api/users/getAll', (request, response) =>{
+app.route('/api/users/getAll').get(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.getAll(request, response);
 });
-app.get('/api/users/exists/:userName', (request, response) =>{
+app.route('/api/users/exists/:userName').get(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.exists(request, response);
 });
-app.get('/api/users/create/:userName', (request, response) =>{
+app.route('/api/users/create/:userName').get(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.create(request, response);
 });
 
 // API: News
-app.get('/api/news/get/:newsId', (request, response) =>{
+app.route('/api/news/get/:newsId').get(expressAuth, (request, response) =>{
   newsController.authenticate(request, response);
   newsController.get(request, response);
 });
-app.get('/api/news/getAll', (request, response) =>{
+app.route('/api/news/getAll').get(expressAuth, (request, response) =>{
   newsController.authenticate(request, response);
   newsController.getAll(request, response);
 });
-app.post('/api/news/create', (request, response) =>{
+app.route('/api/news/create').post(expressAuth, (request, response) =>{
   newsController.authenticate(request, response);
   newsController.create(request, response);
 });
 
 // API: Chat
-app.get('/api/chat/getRooms', (request, response) =>{
+app.route('/api/chat/getRooms').get(expressAuth, (request, response) =>{
   chatController.authenticate(request, response);
   chatController.getChatRooms(request, response);
 });
-app.get('/api/chat/getRoom/:chatRoomRoute', (request, response) =>{
+app.route('/api/chat/getRoom/:chatRoomRoute').get(expressAuth, (request, response) =>{
   chatController.authenticate(request, response);
   chatController.getChatRoom(request, response);
 });
-app.get('/api/chat/getChats/:chatRoomId', (request, response) =>{
+app.route('/api/chat/getChats/:chatRoomId').get(expressAuth, (request, response) =>{
   chatController.authenticate(request, response);
   chatController.getChats(request, response);
 });
-app.post('/api/chat/postChat/:chatRoomId', (request, response) =>{
+app.route('/api/chat/postChat/:chatRoomId').post(expressAuth, (request, response) =>{
   chatController.authenticate(request, response);
   chatController.postChat(request, response);
 });

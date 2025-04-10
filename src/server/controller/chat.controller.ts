@@ -7,9 +7,6 @@ import {Chat} from '../../app/model/chat.model';
 import {ChatRoom} from '../../app/model/chat-room.model';
 import {ApiResponse} from '../../app/model/app.model';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class ChatController extends BaseController {
 
   // GET -> /api/chat/getRooms
@@ -112,6 +109,7 @@ export class ChatController extends BaseController {
     this.setLogonRequired(true);
 
     if (this.requestUser.isDefault()) {
+      console.log(this.requestUser);
       this.sendDataError(response, 'User is not valid (either not logged in, or not authorized for this chat room)');
       return;
     }

@@ -2,36 +2,30 @@ import { Request, Response} from 'express-serve-static-core';
 import {ApiResponse, ApiResponseType} from '../../app/model/app.model';
 import {DataModel} from '../model/server.datamodel';
 import {ParsedQs} from 'qs';
-import {Injectable} from '@angular/core';
-import {expressjwt} from 'express-jwt';
-import * as fs from 'node:fs';
-import * as jwt from 'jsonwebtoken';
 import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/user-logon.model';
 import moment from 'moment';
-import {NextFunction} from 'express';
 import {User} from '../../app/model/user.model';
-import { JwtPayload } from 'jsonwebtoken';
 
-@Injectable({
-  providedIn: 'root'
-})
+import CryptoJS from 'crypto-js';
+import {AuthService} from '../service/auth.service';
+
+
 export class BaseController {
 
   // *** Server-Wide JWT instance ***
   //
-  protected static readonly PUBLIC_KEY:string = fs.readFileSync('public.key', 'utf-8');
-  protected static readonly expressJWT = expressjwt({
-    secret: BaseController.PUBLIC_KEY,
-    algorithms: ['HS256']
-  });
+  protected readonly authService: AuthService;
+  protected readonly serverDb: DataModel;
+
 
   // User for this request (or not defined if not stored with express-jwt)
   protected requestUser:User = User.default();
   protected requestJWT:UserJWT = UserJWT.default();
   private logonRequired:boolean = false;
 
-  constructor(protected readonly serverDb: DataModel) {
-
+  constructor(serverDb: DataModel, authService: AuthService) {
+    this.authService = authService;
+    this.serverDb = serverDb;
   }
 
   protected setLogonRequired(value:boolean) {
@@ -116,46 +110,65 @@ export class BaseController {
 
       else {
 
-        // NOTE SURE HOW THIS IS USUALLY DONE! ('Bearer ') seems consistent!
-        let token = request.headers.authorization.replace('Bearer ', '');
+        // Verify
+        let payload = this.authService.verify(request.headers.authorization.replace('Bearer ', ''));
 
+        // Default (User Not Logged On)
+        if (!payload) {
+          this.requestUser = User.default();
+          this.requestJWT = UserJWT.default();
+          console.log("User Defaulted");
+        }
+
+        // SUCCESS
+        else {
+          this.requestUser = this.serverDb.getUserByName(payload.userName);
+          this.requestJWT = UserJWT.fromLogon(payload.userName, request.headers.authorization || '',
+            payload.loginTime,
+            payload.expirationTime);
+
+          console.log("User Verified " + payload.userName);
+        }
+
+        /*
         // Retrieve token
-        let decrypted = jwt.verify(token, BaseController.PUBLIC_KEY, {
+        let decrypted = this.jwt.verify(request.headers.authorization, this.PUBLIC_KEY, {
           algorithms: ['HS256']
         }) as JwtPayload;
 
         // Identify the server's User / JWT to complete authentication
         if (decrypted.sub) {
-          this.requestUser = this.serverDb.getUserByName(decrypted.sub);
-          this.requestJWT = UserJWT.fromLogon(decrypted.sub, request.headers.authorization || '',
-                                              moment(decrypted.iat).toDate(),
-                                              moment(decrypted.exp).toDate());
+
+          // Check expiration
+          if (moment().isAfter(moment(decrypted.exp).add(decrypted.iat, 'hours'))) {
+
+            // RESET LOGON INFORMATION - WILL PROMPT NEW JWT.
+            this.requestUser = User.default();
+            this.requestJWT = UserJWT.default();
+
+            console.log('Server Request (JWT): Login has expired');
+          }
+
+          // SUCCESS
+          else {
+            this.requestUser = this.serverDb.getUserByName(decrypted.sub);
+            this.requestJWT = UserJWT.fromLogon(decrypted.sub, request.headers.authorization || '',
+              moment(decrypted.iat).toDate(),
+              moment(decrypted.exp).toDate());
+          }
         }
+        */
       }
     }
     catch (error) {
 
-      //TODO: BOOT THE CREDENTIALS TO PREVENT FALSE VALIDATION!!!!!!!
+      // RESET LOGON INFORMATION - WILL PROMPT NEW JWT.
+      this.requestUser = User.default();
+      this.requestJWT = UserJWT.default();
 
       console.log('Server Request Error: Could not verify user from auth headers (usually this means the JWT token has expired)');
+      console.log(error);
     }
-  }
-
-  // Signs User Credentials:  Creates JWT bearer token information using express-jwt
-  //
-  protected sign(credentials:UserCredentials) {
-
-    // Create payload to store user name and logon time
-    //
-    let payload:UserJWTPayload = new UserJWTPayload(credentials.userName, moment().toDate(), moment().add(120, 'minutes').toDate());
-
-    let jwtBearerToken = jwt.sign({}, BaseController.PUBLIC_KEY, {
-      algorithm: 'HS256',
-      expiresIn: 120,
-      subject: credentials.userName
-    });
-
-    return UserJWT.fromLogon(credentials.userName, jwtBearerToken, payload.loginTime, payload.expirationTime);
   }
 
   // Sends Response: This will send one ApiResponse<T> for the controller

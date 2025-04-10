@@ -6,9 +6,6 @@ import {ApiResponse} from '../../app/model/app.model';
 import {FileModel} from '../../app/model/file.model';
 import * as fs from 'node:fs';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class FileController extends BaseController {
 
   // GET -> /api/file/get/:fileName

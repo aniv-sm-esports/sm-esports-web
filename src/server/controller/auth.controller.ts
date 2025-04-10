@@ -6,9 +6,6 @@ import {ApiResponse} from '../../app/model/app.model';
 import {UserCredentials, UserJWT} from '../../app/model/user-logon.model';
 
 
-@Injectable({
-  providedIn: 'root'
-})
 export class AuthController extends BaseController {
 
   // POST -> /api/login
@@ -48,7 +45,7 @@ export class AuthController extends BaseController {
         }
 
         // JWT Token
-        let userJWT = this.sign(userCredentials);
+        let userJWT = this.authService.logon(userCredentials);
 
         // Success -> Send JWT Token
         this.sendSuccess(response, userJWT);

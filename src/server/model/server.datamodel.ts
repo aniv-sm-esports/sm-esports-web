@@ -5,7 +5,7 @@ import {Chat} from '../../app/model/chat.model';
 import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
-import {UserCredentials} from '../../app/model/user-logon.model';
+import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/user-logon.model';
 import {FileModel} from '../../app/model/file.model';
 import * as fs from 'node:fs';
 
@@ -23,6 +23,10 @@ export class DataModel {
   credentials: Map<number, UserCredentials>;
   files: FileModel[];
 
+  // Auth Service (this may move to separate auth server)
+  userTokenMap: Map<string, string>;
+  tokenMap: Map<string, UserJWTPayload>;
+
   constructor() {
 
     this.users = new Map();
@@ -31,6 +35,8 @@ export class DataModel {
     this.chatRoomUserMap = new ChatRoomUserMap();
     this.credentials = new Map();
     this.files = [];
+    this.userTokenMap = new Map<string, string>();
+    this.tokenMap = new Map<string, UserJWTPayload>();
 
     // Server Application Defaults
 

@@ -4,9 +4,6 @@ import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
 import {Article} from '../../app/model/article.model';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class NewsController extends BaseController {
 
   // GET -> /api/news/get/:newsId

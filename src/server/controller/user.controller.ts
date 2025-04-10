@@ -4,9 +4,6 @@ import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
 
-@Injectable({
-  providedIn: 'root'
-})
 export class UserController extends BaseController {
 
   // GET -> /api/users/get/:userId
