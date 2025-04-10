@@ -33,6 +33,13 @@
     overflow: hidden;
   }
 
+  .link {
+    cursor: pointer;
+  }
+  .link:hover {
+
+  }
+
   .banner {
     display: flex;
     flex-direction: row;
@@ -73,9 +80,6 @@
   .sidenav-container-right {
     position: absolute;
     opacity: 0;
-    width: 260px;
-    height: 80px;
-    padding-top:20px;
     top: 50px;
     right: 16px;
     border: 1px solid #888;
@@ -94,11 +98,11 @@
   }
 
   .sidenav-container-right.expand {
-    transition: opacity 0.25s ease-in-out;
+    transition: opacity 0.15s ease-in-out;
     opacity: 1;
   }
   .sidenav-container-right.collapse {
-    transition: opacity 0.25s ease-in-out;
+    transition: opacity 0.15s ease-in-out;
     opacity: 0;
   }
 
@@ -130,14 +134,23 @@
 
   }
   .sidenav-container-right .primary-user-logon {
+    font-style: italic;
+    text-align:right;
     padding: 10px;
+    margin: 20px 0 20px 0;
     background: rgba(134,134,255,0.3);
   }
   .sidenav-container-right .primary-user-logon h5 {
     color: #888;
-    padding: 0;
-    margin:0;
+    margin: 0;
+    padding:0;
   }
+
+  .sidenav-container-right .primary-user-logon > h5 > .primary-user-name {
+    font-style: normal;
+    color: #555;
+  }
+
   .sidenav-container-right .primary-user-logon h5:first-child {
     margin-bottom:10px;
   }
@@ -354,11 +367,11 @@
 
       <!-- Primary UserLogon -->
       <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
-        <h5>User ({{this.primaryUserLogon.userName}})</h5>
-        <h5>Logged On {{moment(this.primaryUserLogon.loggedinAt).format('DD/MM/YYYY h:mm a')}})</h5>
+        <h5>Logged on as <span class="primary-user-name link" [routerLink]="'/personal/' + this.primaryUserLogon.userName">{{this.primaryUserLogon.userName}}</span></h5>
+        <h5>{{moment(this.primaryUserLogon.loggedinAt).format('YYYY-MM-DD h:mm:ss a')}}</h5>
       </div>
 
-      <a class="russo-one-regular" (click)="this.showSideNavRight = false" routerLink="/login" routerLinkActive="active" *ngIf="!primaryUserLoggedOn">Logon</a>
+      <login *ngIf="!this.primaryUserLoggedOn" (formFinished)="this.showSideNavRight = false" />
 
     </div>
   </div>

@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {User} from '../model/user.model';
 import {firstValueFrom, Observable} from 'rxjs';
 import {ApiResponse} from '../model/app.model';
+import {UserCreation} from '../model/user-creation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +66,7 @@ export class UserService {
     return this.http.get<ApiResponse<User>>(this.urlExists.replace(':userName', userName), options);
   }
 
-  createUser(user: User) : Observable<ApiResponse<User>> {
+  createUser(userCreation: UserCreation) : Observable<ApiResponse<UserCreation>> {
 
     let httpHeaders = new HttpHeaders();
 
@@ -75,6 +76,6 @@ export class UserService {
       headers: httpHeaders
     };
 
-    return this.http.post<ApiResponse<User>>(this.urlCreate, user, options);
+    return this.http.post<ApiResponse<UserCreation>>(this.urlCreate, userCreation, options);
   }
 }

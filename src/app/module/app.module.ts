@@ -18,6 +18,7 @@ import {AppService} from '../service/app.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {AuthInterceptor} from '../interceptor/auth.interceptor';
 import {ClickOutsideDirective} from '../directive/click-outside.directive';
+import {LoginComponent} from '../component/login.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {ClickOutsideDirective} from '../directive/click-outside.directive';
     FormsModule,
     NgOptimizedImage,
     FontAwesomeModule,
-    ClickOutsideDirective
+    ClickOutsideDirective,
+    LoginComponent
   ],
   providers: [
     provideClientHydration(withEventReplay()),

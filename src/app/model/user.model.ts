@@ -57,10 +57,11 @@ export class User {
     this.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
   }
 
-  public static from(userId:number, userName:string){
+  public static from(userId:number, userName:string, email:string){
     let user:User = new User();
     user.id = userId;
     user.name = userName;
+    user.email = email;
     return user;
   }
 

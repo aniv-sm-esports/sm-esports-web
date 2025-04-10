@@ -6,9 +6,11 @@ import {ChatComponent} from './component/chat.component';
 import {ChatBoxComponent} from './component/chatbox.component';
 import {PersonalComponent} from './component/personal.component';
 import {LoginComponent} from './component/login.component';
+import {CreateAccountComponent} from './component/create-account.component';
 
 export const routes: Routes = [
   { path:"login",  component: LoginComponent },
+  { path:"create-account",  component: CreateAccountComponent },
   { path:"home",  component: HomeComponent },
   { path:"news",  component: NewsComponent },
   { path:"people",  component: PeopleComponent },
@@ -20,10 +22,6 @@ export const routes: Routes = [
       { path:"general", component: ChatBoxComponent }
     ]
   },
-  { path: 'users/getAll', component: HomeComponent },
-  { path: 'users/create/:userName', component: HomeComponent },
-  { path: 'news/getAll', component: NewsComponent },
-  { path: 'news/create', component: NewsComponent },
   {
     path: '**', redirectTo: 'home'
   }

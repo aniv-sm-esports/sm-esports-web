@@ -174,7 +174,7 @@ app.route('/api/users/exists/:userName').get(expressAuth, (request, response) =>
   userController.authenticate(request, response);
   userController.exists(request, response);
 });
-app.route('/api/users/create/:userName').get(expressAuth, (request, response) =>{
+app.route('/api/users/create').post(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.create(request, response);
 });
