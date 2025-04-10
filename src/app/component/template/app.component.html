@@ -94,11 +94,11 @@
   }
 
   .sidenav-container-right.expand {
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.25s ease-in-out;
     opacity: 1;
   }
   .sidenav-container-right.collapse {
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.25s ease-in-out;
     opacity: 0;
   }
 
@@ -321,9 +321,8 @@
   <!-- Side Nav Left -->
   <div class="sidenav-container-left"
        [ngClass]="{'expand': this.showSideNavLeft, 'collapse': !this.showSideNavLeft}"
-       (clickOutside)="onSideNavOffClick($event)"
-       [attachOutsideOnClick]="true"
-       [emitOnBlur]="true">
+       (clickOutside)="onSideNavOffClick()"
+       [clickOutsideAttached]="this.showSideNavLeft">
     <div class="logo">
       <h4>Super Metroid Esports</h4>
     </div>
@@ -349,9 +348,8 @@
   <!-- Side Nav Right -->
   <div class="sidenav-container-right"
        [ngClass]="{'expand': this.showSideNavRight, 'collapse': !this.showSideNavRight}"
-       (clickOutside)="onSideNavOffClick($event)"
-       [attachOutsideOnClick]="true"
-       [emitOnBlur]="true">
+       (clickOutside)="onSideNavOffClick()"
+       [clickOutsideAttached]="this.showSideNavRight">
     <div class="sidenav-content">
 
       <!-- Primary UserLogon -->

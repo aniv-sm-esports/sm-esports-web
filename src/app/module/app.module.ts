@@ -15,9 +15,9 @@ import {
 } from '@angular/common/http';
 import {NewsService} from '../service/news.service';
 import {AppService} from '../service/app.service';
-import {ClickOutsideModule} from 'ng-click-outside';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {AuthInterceptor} from '../interceptor/auth.interceptor';
+import {ClickOutsideDirective} from '../directive/click-outside.directive';
 
 @NgModule({
   declarations: [
@@ -29,8 +29,8 @@ import {AuthInterceptor} from '../interceptor/auth.interceptor';
     HttpClientModule,
     FormsModule,
     NgOptimizedImage,
-    ClickOutsideModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ClickOutsideDirective
   ],
   providers: [
     provideClientHydration(withEventReplay()),

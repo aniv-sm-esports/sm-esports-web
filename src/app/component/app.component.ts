@@ -1,6 +1,5 @@
 import {afterNextRender, Component, HostListener} from '@angular/core';
 import {UserService} from '../service/user.service';
-import {User} from '../model/user.model';
 import {ApiResponseType, Size} from '../model/app.model';
 import {AppService} from '../service/app.service';
 import {AuthService} from '../service/auth.service';
@@ -91,7 +90,7 @@ export class AppComponent implements AuthHandler {
     this.appService.updateClientSize(new Size((event.target as Window).innerWidth, (event.target as Window).innerHeight));
   }
 
-  onSideNavOffClick(event: Event) {
+  onSideNavOffClick() {
     this.showSideNavLeft = false;
     this.showSideNavRight = false;
   }
