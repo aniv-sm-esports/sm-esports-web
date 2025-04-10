@@ -27,6 +27,10 @@ export class Chat {
     this.flagComments = chat.flagComments;
   }
 
+  public static default() {
+    return new Chat();
+  }
+
   public static from(id: number, userName: string, text: string) {
     let chat = new Chat();
 

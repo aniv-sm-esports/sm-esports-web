@@ -20,6 +20,10 @@ export class Article {
   constructor() {
   }
 
+  public static default() {
+    return new Article();
+  }
+
   public static fromYoutube(id: number,
                             title: string,
                             description: string,

@@ -28,7 +28,7 @@ export class NewsController extends BaseController {
 
       // Data Error
       else {
-        this.sendDataError(response, 'News not found:  ${request.params.newsId}');
+        this.sendDataError(response, Article.default(), 'News not found:  ${request.params.newsId}');
       }
     }
     catch(error) {
@@ -78,7 +78,7 @@ export class NewsController extends BaseController {
       this.serverDb.news.forEach((news:Article) => {
         if (news.title.trim() == request.body.title.trim()) {
           success = false;
-          this.sendDataError(response, 'News article (of the same title) already exists');
+          this.sendDataError(response, Article.default(), 'News article (of the same title) already exists');
         }
       });
 

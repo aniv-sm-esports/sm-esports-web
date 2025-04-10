@@ -4,6 +4,7 @@ import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
 import {ApiResponse} from '../../app/model/app.model';
 import {UserCredentials, UserJWT} from '../../app/model/user-logon.model';
+import {Chat} from '../../app/model/chat.model';
 
 
 export class AuthController extends BaseController {
@@ -19,7 +20,7 @@ export class AuthController extends BaseController {
     // Validate User Data
     if (!request.body.userName ||
          request.body.userName.trim() == '') {
-      this.sendDataError(response, 'User name is not valid');
+      this.sendDataError(response, UserJWT.default(), 'User name is not valid');
       return;
     }
 
@@ -40,7 +41,7 @@ export class AuthController extends BaseController {
           response.status(401);
 
           // Response with message + empty token
-          this.sendDataError(response, 'Password invalid');
+          this.sendDataError(response, UserJWT.default(), 'Password invalid');
           return;
         }
 
@@ -53,7 +54,7 @@ export class AuthController extends BaseController {
 
       // User Not Found
       else {
-        this.sendDataError(response, 'User not found');
+        this.sendDataError(response, UserJWT.default(), 'User not found');
       }
     }
     catch(error) {

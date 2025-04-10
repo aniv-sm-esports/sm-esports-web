@@ -37,6 +37,8 @@ export class CreateAccountComponent implements AuthHandler {
   public userSubmittedToTerms: boolean = false;
   public userReadTerms: boolean = true;
   public userFormValid: boolean = false;
+  public userCreationGeneralError: boolean = false;
+  public userCreationGeneralErrorMessage:string = '';
 
   constructor(router:Router, appService:AppService, authService: AuthService, userService: UserService) {
     this.router = router;
@@ -91,12 +93,19 @@ export class CreateAccountComponent implements AuthHandler {
       .createUser(this.userCreation)    // Emitted value
       .subscribe(response => {
 
+        if (response.data)
+          this.userCreation.update(response.data);
+
         // Success
         if (response.response == ApiResponseType.Success){
+          this.userCreationGeneralError = false;
+          this.userCreationGeneralErrorMessage = '';
 
+          this.authService.logon(response.data?.userName || '', response.data?.password || '');
         }
         else {
-
+          this.userCreationGeneralError = !response.data?.userNameInvalid && !response.data?.passwordInvalid && !response.data?.emailInvalid;
+          this.userCreationGeneralErrorMessage = response.message;
         }
       });
   }

@@ -208,7 +208,7 @@ export class BaseController {
     // Permission Required
     response.send(apiResponse.permissionRequired());
   }
-  protected sendDataError<T>(response: Response<any, Record<string, any>, number>, message:string) {
+  protected sendDataError<T>(response: Response<any, Record<string, any>, number>, data:T | undefined, message:string) {
 
     console.log('Server Response: Input Data Error');
 
@@ -216,7 +216,7 @@ export class BaseController {
     let apiResponse = this.initApiResponse<T>();
 
     // Input Data Error
-    response.send(apiResponse.inputDataError(message));
+    response.send(apiResponse.inputDataError(data, message));
   }
   protected sendError<T>(response: Response<any, Record<string, any>, number>, message:string) {
 

@@ -75,9 +75,10 @@ export class ApiResponse<T>  {
     return this;
   }
 
-  public inputDataError(message:string) {
+  public inputDataError(data:T | undefined, message:string) {
     this.response = ApiResponseType.InputDataError;
     this.message = message;
+    this.data = data;
 
     return this;
   }

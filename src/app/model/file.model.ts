@@ -5,10 +5,23 @@ export class FileModel {
   public fileData:Blob = new Blob([]);
   public isLoaded:boolean = false;
 
-  constructor(name:string, directory:string) {
-    this.name = name;
-    this.directory = directory;
+  constructor() {
+    this.name = '';
+    this.directory = '';
     this.fileData = new Blob([]);
     this.isLoaded = false;
+  }
+
+  public static default() {
+    return new FileModel();
+  }
+
+  public static from(name:string, directory:string) {
+    let result = new FileModel();
+    result.name = name;
+    result.directory = directory;
+    result.fileData = new Blob([]);
+    result.isLoaded = false;
+    return result;
   }
 }

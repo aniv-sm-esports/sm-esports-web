@@ -18,7 +18,7 @@ export class FileController extends BaseController {
 
     try {
 
-      let file = new FileModel(request.params.fileName, this.serverDb.publicFolder);
+      let file = FileModel.from(request.params.fileName, this.serverDb.publicFolder);
 
       // Read file using node:fs
       fs.readFile(request.params.fileName, (err, data) => {
@@ -47,7 +47,7 @@ export class FileController extends BaseController {
     if (!request.body.name ||
         !request.body.fileData ||
         request.body.fileData.size == 0) {
-      this.sendDataError(response, 'File Invalid!');
+      this.sendDataError(response, FileModel.default(), 'File Invalid!');
       return;
     }
 
@@ -80,7 +80,7 @@ export class FileController extends BaseController {
 
                // Success
                if (success) {
-                 let file = new FileModel(request.body.name, request.body.directory);
+                 let file = FileModel.from(request.body.name, request.body.directory);
                  this.serverDb.files.push(file);
                  this.sendSuccess(response, 'File uploaded successfully!');
                }

@@ -27,7 +27,7 @@ export class UserController extends BaseController {
         return;
       }
       else {
-        this.sendDataError(response, "User not found:  " + request.params.userName);
+        this.sendDataError(response, user, "User not found:  " + request.params.userName);
       }
     }
     catch(error) {
@@ -68,7 +68,18 @@ export class UserController extends BaseController {
     // Pre-work settings
     this.setLogonRequired(false);
 
+    console.log(request.body);
+
     try {
+
+      // Reset Validation
+      //
+      request.body.userNameInvalid = false;
+      request.body.emailInvalid = false;
+      request.body.passwordInvalid = false;
+      request.body.userNameValidationMessage = '';
+      request.body.emailValidationMessage = '';
+      request.body.passwordValidationMessage = '';
 
       // UserName: Must be >= 8 characters, Alpha-Numeric, and unique disregarding case (CASE IGNORED ONLY FOR DUPLICATE NAME CREATION)
       // Email: Must be a valid email, and must submit email code
@@ -92,7 +103,7 @@ export class UserController extends BaseController {
         request.body.userNameValidationMessage = "User name is required";
         success = false;
       }
-      else if (request.body.userName.contains(" ")) {
+      else if (request.body.userName.includes(" ")) {
         request.body.userNameInvalid = true;
         request.body.userNameValidationMessage = "User name must not contain white space(s)";
         success = false;
@@ -110,36 +121,36 @@ export class UserController extends BaseController {
 
       // Email
       //
-      let emailMatcher = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      let emailMatcher = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
       if (!request.body.email) {
-        request.body.userNameInvalid = true;
-        request.body.userNameValidationMessage = "Email is required";
+        request.body.emailInvalid = true;
+        request.body.emailValidationMessage = "Email is required";
         success = false;
       }
-      else if (request.body.email.contains(" ")) {
-        request.body.userNameInvalid = true;
-        request.body.userNameValidationMessage = "Email cannot contain white space(s)";
+      else if (request.body.email.includes(" ")) {
+        request.body.emailInvalid = true;
+        request.body.emailValidationMessage = "Email cannot contain white space(s)";
         success = false;
       }
       else if (!request.body.email.match(emailMatcher)) {
-        request.body.userNameInvalid = true;
-        request.body.userNameValidationMessage = "Email is invalid";
+        request.body.emailInvalid = true;
+        request.body.emailValidationMessage = "Email is invalid";
         success = false;
       }
 
       // Password
       //
-      let passwordMatcher1 = /^(?=.*[A-Z])$/;
-      let passwordMatcher2 = /^(?=.*[!@#$&*])$/;
-      let passwordMatcher3 = /^(?=.*[0-9])$/;
-      let passwordMatcher4 = /^(?=.*[a-z]).{8}$/;
+      let passwordMatcher1 = /^(?=.*[A-Z])/;
+      let passwordMatcher2 = /^(?=.*[!@#$&*])/;
+      let passwordMatcher3 = /^(?=.*[0-9])/;
+      let passwordMatcher4 = /^(?=.*[a-z]).{8}/;
 
       if (!request.body.password) {
         request.body.passwordInvalid = true;
         request.body.passwordValidationMessage = "Password is required";
         success = false;
       }
-      else if (request.body.password.contains(" ")) {
+      else if (request.body.password.includes(" ")) {
         request.body.passwordInvalid = true;
         request.body.passwordValidationMessage = "Password cannot contain white space(s)";
         success = false;
@@ -172,15 +183,15 @@ export class UserController extends BaseController {
 
       // Validation Failed
       if (!success) {
-        this.sendDataError(response, "There was a validation error. Please check your credentials.");
+        this.sendDataError(response, request.body, "There was a validation error. Please check your credentials.");
         return;
       }
 
-      // Exists
-      let existingUser = this.serverDb.getUserByName(request.body.userName);
+      // Exists:  IGNORING CASE!
+      let existingUser = this.serverDb.getUserByName(request.body.userName, true);
 
       if (existingUser != User.default()) {
-        this.sendDataError(response, 'User already exists - Please try a different user name');
+        this.sendDataError(response, request.body, 'User already exists - Please try a different user name');
         return;
       }
 
@@ -212,13 +223,13 @@ export class UserController extends BaseController {
 
     // Parameter Validation -> Failure
     if (!request.params.userName) {
-      this.sendDataError(response, 'User name not specified');
+      this.sendDataError(response, request.body, 'User name not specified');
       return;
     }
 
     // Parameter Validation -> Failure
     if (request.params.userName.trim() == '') {
-      this.sendDataError(response, 'User name not specified');
+      this.sendDataError(response, request.body, 'User name not specified');
       return;
     }
 

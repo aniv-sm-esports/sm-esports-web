@@ -4,6 +4,7 @@ import {User} from '../model/user.model';
 import {firstValueFrom, Observable} from 'rxjs';
 import {ApiResponse} from '../model/app.model';
 import {UserCreation} from '../model/user-creation.model';
+import {Chat} from '../model/chat.model';
 
 @Injectable({
   providedIn: 'root'
@@ -68,14 +69,6 @@ export class UserService {
 
   createUser(userCreation: UserCreation) : Observable<ApiResponse<UserCreation>> {
 
-    let httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('Content-Type', 'application/json');
-
-    let options = {
-      headers: httpHeaders
-    };
-
-    return this.http.post<ApiResponse<UserCreation>>(this.urlCreate, userCreation, options);
+    return this.http.post<ApiResponse<UserCreation>>(this.urlCreate, userCreation);
   }
 }

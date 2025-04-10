@@ -23,6 +23,10 @@ export class UserCreation{
     this.passwordValidationMessage = '';
   }
 
+  public update(userCreation:UserCreation){
+    Object.assign(this, userCreation);
+  }
+
   public static default(){
     return new UserCreation();
   }

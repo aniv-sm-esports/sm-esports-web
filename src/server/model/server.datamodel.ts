@@ -163,21 +163,34 @@ export class DataModel {
       }
       else{
         files.forEach((item) => {
-          this.files.push(new FileModel(item, this.publicFolder));
+          this.files.push(FileModel.from(item, this.publicFolder));
         });
       }
 
     });
   }
 
-  getUserByName(name: string) {
+  getUserByName(name: string, ignoreCase:boolean = false) {
 
     let result:User = User.default();
 
     this.users.forEach((user) => {
-      if(user.name == name) {
-        result = user;
+
+      if (!ignoreCase) {
+        if(user.name == name) {
+          result = user;
+          return;
+        }
       }
+      else {
+        if (user.name.toLowerCase() == name.toLowerCase()) {
+          if(user.name == name) {
+            result = user;
+            return;
+          }
+        }
+      }
+
     });
 
     return result;

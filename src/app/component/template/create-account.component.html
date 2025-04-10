@@ -44,6 +44,7 @@
 
   .login-container .form-panel > .form-container > table {
     width: 100%;
+    border-collapse:collapse;
   }
 
   .login-container .form-panel > .form-container .form-field  td {
@@ -68,6 +69,27 @@
 
   .login-container .form-panel > .form-container .form-field input::placeholder {
     color: rgba(150,150,150,0.5);
+  }
+
+  .login-container .form-panel > .form-container .form-field-validation {
+    color: rgba(255, 30, 30, 1);
+    font-size: 0.85em;
+    font-style: italic;
+    text-align:right;
+  }
+  .login-container .form-panel > .form-container .form-field-validation:first-child {
+
+  }
+  .login-container .form-panel > .form-container .form-field-validation > td {
+    padding:5px 10px 5px 10px;
+    background: rgba(255, 0 , 0, 0.3);
+    border: none;
+    grid-gap: 0;
+    width:100%;
+  }
+  .login-container .form-panel > .form-container .form-field-validation {
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.3);
   }
 
   .login-container .form-panel .form-container .picture {
@@ -116,7 +138,7 @@
 <div class="login-container">
 
   <div class="banner">
-    <h1 class="russo-one-regular">Login</h1>
+    <h1 class="russo-one-regular">Account Creation</h1>
   </div>
 
   <div class="body-container">
@@ -131,11 +153,19 @@
           </tr>
           <tr class="form-field">
             <td>Email</td>
-            <td><input type="email" class="russo-one-regular" [(ngModel)]="userCreation.email" (ngModelChange)="onFormInput()" placeholder="Enter Email..." /></td>
+            <td><input type="email" class="russo-one-regular"
+                       [(ngModel)]="userCreation.email"
+                       (ngModelChange)="onFormInput()"
+                       (keyup.enter)="this.userFormValid ? createAccount() : noop()"
+                       placeholder="Enter Email..." /></td>
           </tr>
           <tr class="form-field">
             <td>User Name</td>
-            <td><input type="text" class="russo-one-regular" [(ngModel)]="userCreation.userName" (ngModelChange)="onFormInput()" placeholder="Enter User Name..." /></td>
+            <td><input type="text" class="russo-one-regular"
+                       [(ngModel)]="userCreation.userName"
+                       (ngModelChange)="onFormInput()"
+                       (keyup.enter)="this.userFormValid ? createAccount() : noop()"
+                       placeholder="Enter User Name..." /></td>
           </tr>
           <tr class="form-field">
             <td>Password</td>
@@ -146,17 +176,21 @@
                        placeholder="Password" /></td>
           </tr>
           <!-- Validation -->
-          <tr class="form-field-validation">
+          <tr class="form-field-validation" *ngIf="userCreationGeneralError">
             <td></td>
-            <td *ngIf="!userCreation.emailInvalid">{{userCreation.emailValidationMessage}}</td>
+            <td>{{userCreationGeneralErrorMessage}}</td>
           </tr>
-          <tr class="form-field-validation">
+          <tr class="form-field-validation" *ngIf="userCreation.emailInvalid">
             <td></td>
-            <td *ngIf="!userCreation.userNameInvalid">{{userCreation.userNameValidationMessage}}</td>
+            <td>{{userCreation.emailValidationMessage}}</td>
           </tr>
-          <tr class="form-field-validation">
+          <tr class="form-field-validation" *ngIf="userCreation.userNameInvalid">
             <td></td>
-            <td *ngIf="!userCreation.passwordInvalid">{{userCreation.passwordValidationMessage}}</td>
+            <td>{{userCreation.userNameValidationMessage}}</td>
+          </tr>
+          <tr class="form-field-validation"  *ngIf="userCreation.passwordInvalid">
+            <td></td>
+            <td>{{userCreation.passwordValidationMessage}}</td>
           </tr>
           <!--tr class="form-field" *ngIf="false">
             <td></td>

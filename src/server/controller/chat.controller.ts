@@ -86,7 +86,7 @@ export class ChatController extends BaseController {
 
       // Failure
       if (!this.serverDb.chatRooms.has(roomId)){
-        this.sendDataError(response, `Chat room does not exist: ${request.params.chatRoomId}`);
+        this.sendDataError(response,Chat.default(),  `Chat room does not exist: ${request.params.chatRoomId}`);
         return;
       }
 
@@ -110,7 +110,7 @@ export class ChatController extends BaseController {
 
     if (this.requestUser.isDefault()) {
       console.log(this.requestUser);
-      this.sendDataError(response, 'User is not valid (either not logged in, or not authorized for this chat room)');
+      this.sendDataError(response, Chat.default(), 'User is not valid (either not logged in, or not authorized for this chat room)');
       return;
     }
 
@@ -120,7 +120,7 @@ export class ChatController extends BaseController {
 
       // Failure
       if (!this.serverDb.chatRooms.has(roomId)) {
-        this.sendDataError(response, `Chat room does not exist: ${request.params.chatRoomId}`);
+        this.sendDataError(response,Chat.default(),  `Chat room does not exist: ${request.params.chatRoomId}`);
         return;
       }
 
