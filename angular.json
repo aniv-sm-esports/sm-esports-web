@@ -77,6 +77,10 @@
               "buildTarget": "sm-esports-web:build:development"
             }
           },
+          "options": {
+            "host": "localhost",
+            "port": 80
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
