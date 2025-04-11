@@ -1,16 +1,10 @@
 {
   "name": "sm-esports-web",
   "version": "0.0.0",
-  "engines": {
-    "node": "^22.14.0",
-    "npm": "11.3.0",
-    "ng": "19.2.5"
-  },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration development",
     "build": "ng build --configuration development",
-    "watch": "ng build --watch",
+    "start": "ng serve --configuration development",
     "test": "ng test",
     "serve:ssr:sm-esports-web": "node dist/sm-esports-web/server/server.mjs"
   },
