@@ -241,8 +241,9 @@ app.use('/**', (req, res, next) => {
  */
 if (isMainModule(import.meta.url)) {
   const port = process?.env['PORT'] || '4200';
-  app.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+  const host = process?.env['HOST'] || 'localhost';
+  app.listen(host + ":" + port, () => {
+    console.log(`Node Express server listening on ${host}:${port}`);
   });
 }
 
