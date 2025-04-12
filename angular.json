@@ -78,7 +78,7 @@
             }
           },
           "options": {
-            "host": "localhost",
+            "host": "66.179.81.19",
             "port": 80
           },
           "defaultConfiguration": "development"
