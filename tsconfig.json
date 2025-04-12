@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,  /* Passenger hosting error (can't support server.mjs) */
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
