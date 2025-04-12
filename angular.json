@@ -78,7 +78,7 @@
             }
           },
           "options": {
-            "host": "66.179.81.19",
+            "host": "smesportsdev.org",
             "port": 80
           },
           "defaultConfiguration": "development"
