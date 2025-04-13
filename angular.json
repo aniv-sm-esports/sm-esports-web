@@ -80,7 +80,10 @@
           "defaultConfiguration": "development",
           "options": {
             "port": 10000,
-            "host": "0.0.0.0"
+            "host": "0.0.0.0",
+            "allowedHosts": [
+              "sm-esports-web-zpnb.onrender.com"
+            ]
           }
         },
         "extract-i18n": {
