@@ -1,0 +1,14 @@
+# Exported from Render on 2025-04-13T02:38:06Z
+services:
+  - type: web
+    name: sm-esports-web
+    runtime: node
+    repo: https://github.com/aniv-sm-esports/sm-esports-web
+    plan: standard
+    envVars:
+      - key: PORT
+        sync: false
+    region: oregon
+    buildCommand: npm install; npm run build
+    startCommand: npm run start
+version: "1"
