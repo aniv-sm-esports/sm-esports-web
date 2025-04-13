@@ -1,4 +1,4 @@
-import {afterNextRender, Component, HostListener} from '@angular/core';
+import {afterNextRender, Component, DestroyRef, HostListener, inject} from '@angular/core';
 import {UserService} from '../service/user.service';
 import {ApiResponseType, Size} from '../model/app.model';
 import {AppService} from '../service/app.service';
@@ -8,6 +8,9 @@ import {AuthHandler} from '../model/handler.model';
 import moment from 'moment';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { faTwitch } from '@fortawesome/free-brands-svg-icons';
+import {ActivatedRoute, Data, NavigationEnd, Router} from '@angular/router';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {filter, switchMap} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,8 @@ import { faTwitch } from '@fortawesome/free-brands-svg-icons';
 })
 export class AppComponent implements AuthHandler {
 
+  protected readonly router:Router;
+  protected readonly activatedRoute:ActivatedRoute;
   protected readonly appService: AppService;
   private readonly userService: UserService;
 
@@ -33,13 +38,15 @@ export class AppComponent implements AuthHandler {
   public showSideNavLeft: boolean = false;
   public showChatNavTree: boolean = false;
 
-  // Logon Dialog
-  //public userNameInput: string;
+  // Activated Routes:  Need some information about what to display
+  //
+  private readonly destroyRef = inject(DestroyRef);
+  public routeTitle:string = '';
 
-  title = 'sm-esports-web';
+  constructor(router:Router, activatedRoute:ActivatedRoute, appService: AppService, userService: UserService, authService: AuthService) {
 
-  constructor(appService: AppService, userService: UserService, authService: AuthService) {
-
+    this.router = router;
+    this.activatedRoute = activatedRoute;
     this.appService = appService;
     this.primaryUserLogon = UserJWT.default();
     this.primaryUserLoggedOn = false;
@@ -49,6 +56,21 @@ export class AppComponent implements AuthHandler {
     //
     authService.subscribeLogonChanged(this);
     authService.refreshSession();
+  }
+
+  ngOnInit() {
+
+    // Wait for logon event
+    this.primaryUserLoggedOn = false;
+
+    // Get route title from router-outlet component
+    this.router.events.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      filter(e => e instanceof NavigationEnd),
+      switchMap(() => this.activatedRoute.firstChild ? this.activatedRoute.firstChild.title : this.activatedRoute.title),
+    ).subscribe((title) => {
+      this.routeTitle = title || '';
+    })
   }
 
   onLoginChanged(value: UserJWT){
@@ -64,10 +86,6 @@ export class AppComponent implements AuthHandler {
     }
   }
 
-  ngOnInit() {
-    this.primaryUserLoggedOn = false;
-  }
-
   @HostListener('window:load', ['$event'])
   onLoad(event: Event) {
     if (!this.appService || !event || !event.currentTarget)
@@ -76,7 +94,7 @@ export class AppComponent implements AuthHandler {
     // Window + Body Size (NOTE: event.target != event.currentTarget)
     //
     // AppService -> Observable / BehaviorSubscriber -> ...
-    this.appService.updateClientSize(new Size((event.currentTarget as Window).innerWidth, (event.currentTarget as Window).innerHeight));
+    this.appService.updateClientSize(Size.from((event.currentTarget as Window).innerWidth, (event.currentTarget as Window).innerHeight));
   }
 
   @HostListener('window:resize', ['$event'])
@@ -87,7 +105,7 @@ export class AppComponent implements AuthHandler {
     // Window + Body Size (NOTE: event.target != event.currentTarget)
     //
     // AppService -> Observable / BehaviorSubscriber -> ...
-    this.appService.updateClientSize(new Size((event.target as Window).innerWidth, (event.target as Window).innerHeight));
+    this.appService.updateClientSize(Size.from((event.target as Window).innerWidth, (event.target as Window).innerHeight));
   }
 
   onSideNavOffClick() {

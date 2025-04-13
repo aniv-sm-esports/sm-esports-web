@@ -8,13 +8,7 @@
   .container {
   }
 
-  .container .header-container {
-    width: 100%;
-    background: #CCCCCCCC;
-  }
-
-  .container .header-container:first-child > h1 {
-    color: rgba(134,134,255,1);
+  .container .body-container {
   }
 
   .news-article {
@@ -84,68 +78,67 @@
 
 <div class="container">
 
-  <div class="header-container">
-    <h1 class="russo-one-regular">News</h1>
-  </div>
+  <div class="body-container">
 
-  <div class="news-article"
-       *ngFor="let news of newsList;index as i">
+    <div class="news-article"
+         *ngFor="let news of newsList;index as i">
 
-    <div class="news-article-header">
-      <h3 class="russo-one-regular">{{news.title}}</h3>
-      <h4>{{news.date.toDateString()}}</h4>
+      <div class="news-article-header">
+        <h3 class="russo-one-regular">{{news.title}}</h3>
+        <h4>{{news.date.toDateString()}}</h4>
 
-      <div class="clear-fix"></div>
-    </div>
+        <div class="clear-fix"></div>
+      </div>
 
-    <!-- Article (Plain) -->
-    <div class="news-article-content" *ngIf="news.bannerLinkType == BannerLinkType.None">
+      <!-- Article (Plain) -->
+      <div class="news-article-content" *ngIf="news.bannerLinkType == BannerLinkType.None">
 
-        <div class="news-article-description">
-          <h4>{{news.description}}</h4>
+          <div class="news-article-description">
+            <h4>{{news.description}}</h4>
+          </div>
+
+          <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+
+      </div>
+
+      <!-- Article + Img -->
+      <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.Img">
+
+        <div class="news-article-left">
+          <img />
         </div>
 
-        <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
-
-    </div>
-
-    <!-- Article + Img -->
-    <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.Img">
-
-      <div class="news-article-left">
-        <img />
-      </div>
-
-      <div class="news-article-right">
-        <div class="news-article-description">
-          <h4>{{news.description}}</h4>
+        <div class="news-article-right">
+          <div class="news-article-description">
+            <h4>{{news.description}}</h4>
+          </div>
+          <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
         </div>
-        <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+
+        <div class="clear-fix"></div>
       </div>
 
-      <div class="clear-fix"></div>
-    </div>
+      <!-- Article + Youtube Video -->
+      <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.YoutubeVideo">
 
-    <!-- Article + Youtube Video -->
-    <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.YoutubeVideo">
-
-      <div class="news-article-left">
-        <youtube-player [videoId]="news.bannerLinkYoutubeSourceId"
-                        [width]="(videoSizeBase.width * this.sizeMultiplier) || videoSizeBase.width"
-                        [height]="(videoSizeBase.height * this.sizeMultiplier) || videoSizeBase.height"
-                        (ready)="refreshYoutube()">
-        </youtube-player>
-      </div>
-
-      <div class="news-article-right">
-        <div class="news-article-description">
-          <h4>{{news.description}}</h4>
+        <div class="news-article-left">
+          <youtube-player [videoId]="news.bannerLinkYoutubeSourceId"
+                          [width]="(videoSizeBase.width * this.sizeMultiplier) || videoSizeBase.width"
+                          [height]="(videoSizeBase.height * this.sizeMultiplier) || videoSizeBase.height"
+                          (ready)="refreshYoutube()">
+          </youtube-player>
         </div>
-        <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+
+        <div class="news-article-right">
+          <div class="news-article-description">
+            <h4>{{news.description}}</h4>
+          </div>
+          <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+        </div>
+
+        <div class="clear-fix"></div>
       </div>
 
-      <div class="clear-fix"></div>
     </div>
-
   </div>
 </div>

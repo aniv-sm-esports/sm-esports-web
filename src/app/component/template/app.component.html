@@ -23,14 +23,31 @@
     color: darkgray;
   }
 
-  .app-body {
+  .app-body-container {
     background-color: rgba(0,0,0,0.70);
     -webkit-border-radius: 10px;
     border-radius: 10px;
 
     color: #EEEEEE;
+  }
+  .app-body-container > .app-body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .app-body-container .app-body-header {
+    width: 100%;
+    background: #CCCCCCCC;
+    margin:0;
+    padding:0;
+    border-radius:10px 10px 0 0;
+    -webkit-border-radius: 10px 10px 0 0;
+  }
 
-    overflow: hidden;
+  .app-body-container .app-body-header h1 {
+    color: rgba(134,134,255,1);
+    margin:10px;
+    display: inline-block;
+    font-size: 2.0em;
   }
 
   .link {
@@ -391,18 +408,24 @@
       <div class="sidenav-right-opener">
         <button (click)="showSideNavRight=!showSideNavRight"><fa-icon [icon]="faBars"></fa-icon></button>
       </div>
-      <h1 class="russo-one-regular animate">Super Metroid Esports (DEVELOPER PREVIEW ONLY!)</h1>
+      <h1 class="russo-one-regular animate">Super Metroid Esports (DEVELOPER PREVIEW)</h1>
     </div>
 
   </div>
 
-
-
-  <div class="app-body"
-       [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',
-                   'height': ((this.appService.getSize()?.height || 0) - this.appService.bannerHeight - (2 * this.appService.bodyMargin)) + 'px',
+  <div class="app-body-container"
+       [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
+                   'height': this.appService.getBodySize().height + 'px',
                    'margin': this.appService.bodyMargin + 'px'}">
-    <router-outlet />
+    <div class="app-body-header">
+      <h1 class="russo-one-regular">{{this.routeTitle}}</h1>
+    </div>
+
+    <div class="app-body"
+         [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
+                     'height': (this.appService.getBodySize().height - 60) + 'px'}">
+      <router-outlet />
+    </div>
   </div>
 </main>
 

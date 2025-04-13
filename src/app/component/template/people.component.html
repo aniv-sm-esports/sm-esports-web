@@ -10,20 +10,6 @@
     margin: 0px !important;
   }
 
-  .people-container .header-container {
-    background: #CCCCCCCC;
-  }
-
-  .people-container .header-container > h1 {
-    color: rgba(134,134,255,1);
-    margin: 0px;
-    padding: 5px 10px 5px 10px;
-  }
-
-  .people-container > .body-container {
-    overflow-y: auto !important;
-  }
-
   .people-container > .body-container table {
     width: 100%;
   }
@@ -104,13 +90,9 @@
 
 <div class="people-container">
 
-  <div class="header-container">
-    <h1 class="russo-one-regular">People</h1>
-  </div>
-
   <div class="body-container"
-       [ngStyle]="{'width': ((this.appService.getSize()?.width || 0) - (2 * this.appService.bodyMargin)) + 'px',
-                   'height': ((this.appService.getSize()?.height || 0) - this.appService.bannerHeight - (2 * this.appService.bodyMargin)) + 'px'}">
+       [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
+                   'height': this.appService.getBodySize().height + 'px'}">
     <div class="user-container"
          *ngFor="let user of userList;index as i">
 

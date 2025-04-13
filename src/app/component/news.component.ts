@@ -1,7 +1,7 @@
 import {afterNextRender, Component, inject} from '@angular/core';
 import {BannerLinkType, Article} from '../model/article.model';
 import {NewsService} from '../service/news.service';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AppService} from '../service/app.service';
 import {Size} from '../model/app.model';
@@ -13,19 +13,20 @@ import {YouTubePlayer} from '@angular/youtube-player';
     NgForOf,
     NgIf,
     FormsModule,
-    YouTubePlayer
+    YouTubePlayer,
+    NgStyle
   ],
   templateUrl: './template/news.component.html'
 })
 export class NewsComponent {
 
-  private readonly appService: AppService;
+  protected readonly appService: AppService;
   private readonly newsService: NewsService;
   public newsList:Article[];
 
   // BASED ON AN ASPECT RATIO OF 2:1 (can also test 16:9)
-  private readonly clientSizeBase: Size = new Size(1200, 600)
-  public readonly videoSizeBase: Size = new Size(640, 320);
+  private readonly clientSizeBase: Size = Size.from(1200, 600)
+  public readonly videoSizeBase: Size = Size.from(640, 320);
   public sizeMultiplier: number = 1;
 
   constructor(appService: AppService, newsService:NewsService) {

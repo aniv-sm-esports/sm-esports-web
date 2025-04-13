@@ -145,15 +145,29 @@ export class DataModel {
     newsGDQ.bannerLinkType = BannerLinkType.YoutubeVideo;
     newsGDQ.description = 'From Left to Right:  Eddie, Imyt, Andy, and Oatsngoats giving it their all at GDQ! Save the Animals!';
     newsGDQ.title = 'Super Metroid by Andy, Oatsngoats, imyt and Eddie in 1:19:50';
-    newsGDQ.bodyHtml = "<p>Lorem ipsum dolor sit amet consectetur <span class=\'link highlight\'>adipiscing</span> elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>";
+    newsGDQ.bodyHtml = "<p>This speedrun was recorded during Awesome Games Done Quick 2025, a week long charity speedrun marathon raising money for the Prevent Cancer Foundation. Awesome Games Done Quick 2025 is just one of the many charity marathons organized by Games Done Quick. For more information on Awesome Games Done Quick 2025, find us at: <a>https://gamesdonequick.com/</a></p>";
+
+    let newsGDQZoasty = new Article();
+
+    newsGDQZoasty.id = 2;
+    newsGDQZoasty.date = new Date();
+    newsGDQZoasty.title = 'Super Metroid - SPEED RUN in 1:19:55 (100%) by zoast';
+    newsGDQZoasty.bannerLinkYoutubeSourceId = "ZHw9I15HVrU";
+    newsGDQZoasty.bannerLinkType = BannerLinkType.YoutubeVideo;
+    newsGDQZoasty.description = 'Look at the crowd for this one!! Run starts at 04:00. Game #70, runner is zoast, check out his channel here (zoasty link)';
+    newsGDQZoasty.bodyHtml = "<p>Captured live during SDA's Summer Games Done Quick 2013 in which $255,160.62 in over 10000 individual donations to Doctors without Borders was raised (as of August 1st), making this the first time the $1,000,000 mark has been reached and surpassed for money raised by SDA charity marathons (in total across all marathons)!!!! A huge thanks to everyone who donated, the SDA community and all those who worked tirelessly to make the marathon another success. Here's to #AGDQ14:) \n" +
+      "\n" +
+      "Released in April 1994, Super Metroid was the eagerly anticipated third game in the Metroid series. Samus Aran returns to the planet Zebes to once again fight the space pirates and Mother Brain who have taken the metroid hatchling.</p>";
 
     this.news.set(0, newsWelcome);
     this.news.set(1, newsGDQ);
+    this.news.set(2, newsGDQZoasty);
 
     // MOCK CHAT DATA
-    for (let i = 0; i < 50; i++) {
-      this.chatRooms.get(0)?.chats.push(Chat.from(i, 'AnivSmEsports', this.fillText(30, 50)));
-    }
+    this.chatRooms.forEach(chatRoom => {
+      chatRoom.chats.push(Chat.from(0, 'AnivSmEsports', this.helloMessage()));
+    });
+
 
     // FILES
     fs.readdir(this.publicFolder, (error, files) => {
@@ -194,6 +208,10 @@ export class DataModel {
     });
 
     return result;
+  }
+
+  helloMessage() {
+    return "Hello! This is Aniv from SM Esports. Please enjoy chatting respectfully."
   }
 
   fillLoremIpsumShort() {

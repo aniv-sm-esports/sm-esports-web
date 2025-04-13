@@ -11,6 +11,16 @@
     height: 40px;
   }
 
+  .container > .header > h2 {
+    float: left;
+  }
+
+  .container > .header > h4 {
+    float: right;
+    margin: 10px;
+    margin-right: 20px;
+  }
+
   .container .body {
     height: calc(100% - 108px);
     overflow: auto;
@@ -84,6 +94,8 @@
 
   <div class="header">
     <h2>{{chatRoom.name}}</h2>
+    <h4>{{chatRoom.description}}</h4>
+    <div class="clear-fix"></div>
   </div>
 
   <div class="body">

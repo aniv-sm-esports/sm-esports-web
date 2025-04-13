@@ -9,17 +9,17 @@ import {LoginComponent} from './component/login.component';
 import {CreateAccountComponent} from './component/create-account.component';
 
 export const routes: Routes = [
-  { path:"login",  component: LoginComponent },
-  { path:"create-account",  component: CreateAccountComponent },
-  { path:"home",  component: HomeComponent },
-  { path:"news",  component: NewsComponent },
-  { path:"people",  component: PeopleComponent },
-  { path:"personal/:userName",  component: PersonalComponent },
-  { path:"chat",  component: ChatComponent, children: [
-      { path:"politics", component: ChatBoxComponent },
-      { path:"people", component: ChatBoxComponent },
-      { path:"speed-running", component: ChatBoxComponent },
-      { path:"general", component: ChatBoxComponent }
+  { path:"login",  component: LoginComponent, title: 'Login' },
+  { path:"create-account",  component: CreateAccountComponent, title: 'Create Account' },
+  { path:"home",  component: HomeComponent, title: 'Super Metroid Esports!' },
+  { path:"news",  component: NewsComponent, title: 'News' },
+  { path:"people",  component: PeopleComponent, title: 'People' },
+  { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
+  { path:"chat",  component: ChatComponent, title: 'Chat', children: [
+      { path:"politics", component: ChatBoxComponent, title: 'Chat > Politics' },
+      { path:"people", component: ChatBoxComponent, title: 'Chat > People' },
+      { path:"speed-running", component: ChatBoxComponent, title: 'Chat > Speed Running' },
+      { path:"general", component: ChatBoxComponent, title: 'Chat > General' },
     ]
   },
   {

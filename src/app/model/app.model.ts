@@ -99,8 +99,17 @@ export class Size {
   public width: number = 0;
   public height: number = 0;
 
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+  constructor() {
+  }
+
+  public static default() {
+    return new Size();
+  }
+
+  public static from(width: number, height: number){
+    let result = new Size();
+    result.width = width;
+    result.height = height;
+    return result;
   }
 }
