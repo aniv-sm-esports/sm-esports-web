@@ -79,7 +79,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 10000
+            "port": 10000,
+            "host": "sm-esports-web-zpnb"
           }
         },
         "extract-i18n": {
