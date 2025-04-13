@@ -6,7 +6,7 @@
     "build": "ng build --configuration development",
     "start": "ng serve --configuration development",
     "test": "ng test",
-    "serve:ssr:sm-esports-web": "node dist/sm-esports-web/server/server.mjs --port=10000"
+    "serve:ssr:sm-esports-web": "node dist/sm-esports-web/server/server.mjs"
   },
   "private": true,
   "dependencies": {
