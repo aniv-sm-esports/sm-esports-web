@@ -240,12 +240,9 @@ app.use('/**', (req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url)) {
-  //const port = process?.env['PORT'] || '4200';
-  //const host = process?.env['HOST'] || 'localhost';
-  const port = 80;
-  const host = 'localhost';
-  app.listen(host + ":" + port, () => {
-    console.log(`Node Express server listening on ${host}:${port}`);
+  const port = process?.env['PORT'] || '4200';
+  app.listen(port, () => {
+    console.log(`Node Express server listening on port ${port}`);
   });
 }
 

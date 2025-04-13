@@ -77,10 +77,6 @@
               "buildTarget": "sm-esports-web:build:development"
             }
           },
-          "options": {
-            "host": "smesportsdev.org",
-            "port": 3000
-          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
