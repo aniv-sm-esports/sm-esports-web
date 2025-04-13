@@ -80,7 +80,7 @@
           "defaultConfiguration": "development",
           "options": {
             "port": 10000,
-            "host": "sm-esports-web-zpnb"
+            "host": "0.0.0.0"
           }
         },
         "extract-i18n": {
