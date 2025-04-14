@@ -12,6 +12,8 @@ import {noop} from 'rxjs';
 import {AuthHandler} from '../model/handler.model';
 import {UserCreation} from '../model/user-creation.model';
 import {ApiResponseType} from '../model/app.model';
+import {NotifyComponent} from './control/notify.component';
+import {NotifySeverity, NotifyType} from '../model/notify.model';
 
 @Component({
   selector: 'create-account',
@@ -20,7 +22,8 @@ import {ApiResponseType} from '../model/app.model';
     BasicButtonComponent,
     BasicCheckboxComponent,
     NgStyle,
-    NgIf
+    NgIf,
+    NotifyComponent
   ],
   templateUrl: './template/create-account.component.html'
 })
@@ -109,4 +112,7 @@ export class CreateAccountComponent implements AuthHandler {
         }
       });
   }
+
+  protected readonly NotifyType = NotifyType;
+  protected readonly NotifySeverity = NotifySeverity;
 }

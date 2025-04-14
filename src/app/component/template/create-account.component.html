@@ -4,6 +4,10 @@
     margin: 0px !important;
   }
 
+  .login-container .notify-container {
+    margin:20px;
+  }
+
   .login-container .body-container {
     display:flex;
   }
@@ -199,6 +203,14 @@
     </div>
 
     <div class="legal-body">
+
+      <div class="notify-container">
+        <notify [name]="'Developer Preview Only!'"
+                [type]="NotifyType.Permanent"
+                [severity]="NotifySeverity.Error"
+                [message]="'This is a developer preview only! Any data entered is not guaranteed to be secured! This (demo) is intended for development purposes only; and may be overwritten or destroyed at any time.'" />
+      </div>
+
       <div class="board-policy">
         <h3>Site Policy</h3>
         <ul>
@@ -230,7 +242,7 @@
         </ul>
       </div>
       <div class="terms-and-conditions">
-        <h3>Legal Conditions</h3>
+        <h3>Legal Conditions (NOT OFFICIAL!)</h3>
         <p>
           (DEAR BOARD) These need to be worked out for a number of details:  Copyright (Nintendo, Twitch, Youtube, etc..);
           PAYPAL AND OTHER MONEY RELATED LINKS MUST BE HANDLED HERE!!! There could be legal ramifications to donations; and

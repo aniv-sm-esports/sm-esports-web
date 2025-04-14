@@ -5,6 +5,6 @@ import {Injectable} from '@angular/core';
 })
 export class NotifyService {
 
-
+  // TODO: Probably not needed until the DB deployment
 
 }
