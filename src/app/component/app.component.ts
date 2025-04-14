@@ -6,7 +6,7 @@ import {AuthService} from '../service/auth.service';
 import {UserJWT} from '../model/user-logon.model';
 import {AuthHandler} from '../model/handler.model';
 import moment from 'moment';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faTwitch } from '@fortawesome/free-brands-svg-icons';
 import {
   ActivatedRoute, ActivatedRouteSnapshot,
@@ -35,6 +35,7 @@ export class AppComponent implements AuthHandler {
 
   // Font Awesome
   public faBars = faBars;
+  public faCircle = faCircle;
 
   // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
   //                      would then be the "user's service"

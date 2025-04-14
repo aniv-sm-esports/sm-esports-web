@@ -16,22 +16,23 @@ import {PeopleBoardComponent} from '../component/people-board.component';
 import {PeopleSearchComponent} from '../component/people-search.component';
 import {Tab} from '../model/tab.model';
 import {ContactComponent} from '../component/contact.component';
+import {OnlineComponent} from '../component/online.component';
 
 export const routes: Routes = [
   { path:"login",  component: LoginComponent, title: 'Login'},
   { path:"create-account",  component: CreateAccountComponent, title: 'Create Account' },
 
   { path:"home", component: HomeComponent, title: 'Home',
-    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+    data: [Tab.from('Online', 'home/online'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
 
-  { path:"home/live",  component: LiveComponent, title: 'Home (Live)',
-    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+  { path:"home/live",  component: OnlineComponent, title: 'Home (Online)',
+    data: [Tab.from('Online', 'home/online'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
 
   { path:"home/schedule",  component: ScheduleComponent, title: 'Home (Schedule)',
-    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+    data: [Tab.from('Online', 'home/online'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
 
   { path:"home/agenda",  component: AgendaComponent, title: 'Home (Agenda)',
-    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+    data: [Tab.from('Online', 'home/online'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
 
   { path:"news",  component: NewsComponent, title: 'News' },
 
@@ -56,6 +57,7 @@ export const routes: Routes = [
     ]
   },
   { path:"contact",  component: ContactComponent, title: 'Contact' },
+  { path:"live",  component: LiveComponent, title: 'Live' },
   {
     path: '**', redirectTo: 'home'
   }

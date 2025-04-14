@@ -119,6 +119,12 @@
     background-color: #FFFFFF;
     color: rgba(100, 100, 255, 1);
   }
+  /* "Live" */
+  .banner fa-icon#liveDot {
+    color: red;
+    font-size: 0.9em;
+    margin:5px;
+  }
 
   .sidenav-container-left {
     position: absolute;
@@ -481,6 +487,7 @@
     <a class="banner-item russo-one-regular" routerLink="/people" routerLinkActive="active">People</a>
     <a class="banner-item russo-one-regular" routerLink="/chat/politics" routerLinkActive="active">Chat</a>
     <a class="banner-item russo-one-regular aniv" routerLink="/contact" routerLinkActive="active">Contact</a>
+    <a class="banner-item russo-one-regular live" routerLink="/live" routerLinkActive="active">Live<fa-icon id="liveDot" [icon]="faCircle"></fa-icon></a>
 
     <div class="logo">
       <div class="sidenav-right-opener">
