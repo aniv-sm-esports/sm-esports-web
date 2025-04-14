@@ -25,7 +25,7 @@ export const routes: Routes = [
   { path:"home", component: HomeComponent, title: 'Home',
     data: [Tab.from('Online', 'home/online'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
 
-  { path:"home/live",  component: OnlineComponent, title: 'Home (Online)',
+  { path:"home/online",  component: OnlineComponent, title: 'Home (Online)',
     data: [Tab.from('Online', 'home/online'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
 
   { path:"home/schedule",  component: ScheduleComponent, title: 'Home (Schedule)',
