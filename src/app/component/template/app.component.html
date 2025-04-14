@@ -323,6 +323,13 @@
       font-size: 0.80em;
     }
 
+    .banner a.banner-item.aniv {
+      background-image: url("../../../../public/samus-styalized-invert.jpg");
+      background-size: 80px 80px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
     .sidenav-left-opener > button {
       width: 40px;
       height: 40px;
@@ -343,11 +350,19 @@
 
     .sidenav-left-opener > button:active {
       background-color: rgba(0, 0, 0, 0.3);
-      background-image: url("../../../../public/metroid.png");
+      background-image: url("../../../../public/metroid-angle-right.png");
     }
   }
 
   @media screen and (min-width: 1400px) {
+
+    .banner a.banner-item.aniv {
+      background-image: url("../../../../public/samus-styalized-invert.jpg");
+      background-size: 120px 120px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
     .sidenav-left-opener > button {
       width: 52px;
       height: 52px;
@@ -368,7 +383,7 @@
 
     .sidenav-left-opener > button:active {
       background-color: rgba(0, 0, 0, 0.3);
-      background-image: url("../../../../public/metroid.png");
+      background-image: url("../../../../public/metroid-angle-right.png");
     }
   }
 
@@ -377,7 +392,7 @@
 <main class="main">
 
   <!-- Side Nav Left -->
-  <div class="sidenav-container-left"
+  <div class="sidenav-container-left prevent-select"
        [ngClass]="{'expand': this.showSideNavLeft, 'collapse': !this.showSideNavLeft}"
        (clickOutside)="onSideNavOffClick()"
        [clickOutsideAttached]="this.showSideNavLeft">
@@ -385,9 +400,35 @@
       <h4>Super Metroid Esports</h4>
     </div>
     <div class="sidenav-content">
-      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/home" routerLinkActive="active">Home</a>
+
+      <!-- Home -->
+      <div class="sidenav-tree">
+        <div class="sidenav-tree-header" (click)="this.showHomeNavTree = !this.showHomeNavTree">
+          <a class="russo-one-regular">Home <span class="sidenav-tree-expander"
+                                                    [textContent]="!this.showHomeNavTree ? '+' : '-'"></span></a>
+        </div>
+        <div class="sidenav-tree-body" *ngIf="this.showHomeNavTree">
+            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/live" routerLinkActive="active">Live</a>
+            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/schedule" routerLinkActive="active">Schedule</a>
+            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/agenda" routerLinkActive="active">Agenda</a>
+        </div>
+      </div>
       <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/news" routerLinkActive="active">News</a>
-      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/people" routerLinkActive="active">People</a>
+
+      <!-- People -->
+      <div class="sidenav-tree">
+        <div class="sidenav-tree-header" (click)="this.showPeopleNavTree = !this.showPeopleNavTree">
+          <a class="russo-one-regular">People <span class="sidenav-tree-expander"
+                                                  [textContent]="!this.showPeopleNavTree ? '+' : '-'"></span></a>
+        </div>
+        <div class="sidenav-tree-body" *ngIf="this.showPeopleNavTree">
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/all" routerLinkActive="active">All</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/board" routerLinkActive="active">Board</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/search" routerLinkActive="active">Search</a>
+        </div>
+      </div>
+
+      <!-- Chat -->
       <div class="sidenav-tree">
         <div class="sidenav-tree-header" (click)="this.showChatNavTree = !this.showChatNavTree">
           <a class="russo-one-regular">Chat <span class="sidenav-tree-expander"
@@ -421,7 +462,7 @@
     </div>
   </div>
 
-  <div class="banner">
+  <div class="banner prevent-select">
 
     <div class="sidenav-left-opener">
       <button (click)="showSideNavLeft=true"></button>
@@ -431,6 +472,7 @@
     <a class="banner-item russo-one-regular" routerLink="/news" routerLinkActive="active">News</a>
     <a class="banner-item russo-one-regular" routerLink="/people" routerLinkActive="active">People</a>
     <a class="banner-item russo-one-regular" routerLink="/chat/politics" routerLinkActive="active">Chat</a>
+    <a class="banner-item russo-one-regular aniv" routerLink="/contact" routerLinkActive="active">Contact</a>
 
     <div class="logo">
       <div class="sidenav-right-opener">
@@ -446,7 +488,7 @@
                    'height': this.appService.getBodySize().height + 'px',
                    'margin': this.appService.bodyMargin + 'px'}">
 
-    <div class="app-body-header">
+    <div class="app-body-header prevent-select">
       <h1 class="russo-one-regular">{{this.routeTitle}}</h1>
 
       <!-- Optional Route Tabs (for child routes) -->

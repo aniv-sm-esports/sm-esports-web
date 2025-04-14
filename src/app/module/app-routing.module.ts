@@ -15,6 +15,7 @@ import {PeopleAllComponent} from '../component/people-all.component';
 import {PeopleBoardComponent} from '../component/people-board.component';
 import {PeopleSearchComponent} from '../component/people-search.component';
 import {Tab} from '../model/tab.model';
+import {ContactComponent} from '../component/contact.component';
 
 export const routes: Routes = [
   { path:"login",  component: LoginComponent, title: 'Login'},
@@ -54,6 +55,7 @@ export const routes: Routes = [
       { path:"general", component: ChatBoxComponent, title: 'Chat > General' },
     ]
   },
+  { path:"contact",  component: ContactComponent, title: 'Contact' },
   {
     path: '**', redirectTo: 'home'
   }

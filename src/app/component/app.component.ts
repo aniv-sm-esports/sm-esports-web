@@ -46,6 +46,8 @@ export class AppComponent implements AuthHandler {
   public showSideNavRight: boolean = false;
   public showSideNavLeft: boolean = false;
   public showChatNavTree: boolean = false;
+  public showPeopleNavTree: boolean = false;
+  public showHomeNavTree: boolean = false;
 
   // Activated Routes:  Need some information about what to display
   //
