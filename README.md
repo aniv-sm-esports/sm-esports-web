@@ -2,6 +2,9 @@
 
 This is a proof of concept website for a possible future collaboration backbone for Super Metroid Esports.
 
+(Development Preview)
+
+https://sm-esports-web-zpnb.onrender.com/
 
 # Disclaimer
 This is not a currently active project. This is a proof of concept for a autonomous SM speed running esport group
