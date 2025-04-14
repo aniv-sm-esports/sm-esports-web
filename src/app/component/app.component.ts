@@ -8,9 +8,18 @@ import {AuthHandler} from '../model/handler.model';
 import moment from 'moment';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { faTwitch } from '@fortawesome/free-brands-svg-icons';
-import {ActivatedRoute, Data, NavigationEnd, Router} from '@angular/router';
+import {
+  ActivatedRoute, ActivatedRouteSnapshot,
+  Data,
+  DefaultTitleStrategy,
+  NavigationEnd,
+  ResolveFn,
+  Router,
+  TitleStrategy
+} from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {filter, switchMap} from 'rxjs';
+import {concatAll, filter, map, switchMap, takeLast} from 'rxjs';
+import {Tab} from '../model/tab.model';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +51,10 @@ export class AppComponent implements AuthHandler {
   //
   private readonly destroyRef = inject(DestroyRef);
   public routeTitle:string = '';
+  public routeTabs:Tab[] = [];
+
+  // App.Spec (TODO! Keep this!)
+  public title = 'sm-esports-web';
 
   constructor(router:Router, activatedRoute:ActivatedRoute, appService: AppService, userService: UserService, authService: AuthService) {
 
@@ -63,14 +76,35 @@ export class AppComponent implements AuthHandler {
     // Wait for logon event
     this.primaryUserLoggedOn = false;
 
+    // Reset route tabs
+    this.routeTabs = [];
+
     // Get route title from router-outlet component
     this.router.events.pipe(
       takeUntilDestroyed(this.destroyRef),
       filter(e => e instanceof NavigationEnd),
-      switchMap(() => this.activatedRoute.firstChild ? this.activatedRoute.firstChild.title : this.activatedRoute.title),
-    ).subscribe((title) => {
-      this.routeTitle = title || '';
-    })
+      map(() => {
+        let route: ActivatedRoute = this.router.routerState.root;
+        while (route!.firstChild) {
+          route = route.firstChild;
+        }
+        return route;
+      }),
+    ).subscribe((activatedRoute) => {
+      this.routeTitle = activatedRoute.snapshot.title || '';
+      this.routeTabs = [];
+
+      // Add tabs to the route (banner)
+      if (activatedRoute.routeConfig?.data){
+
+        Object.keys(activatedRoute.routeConfig.data).map((value, index, next) =>{
+          if (activatedRoute.routeConfig?.data![value]){
+            let tab = activatedRoute.routeConfig?.data![value] as Tab;
+            this.routeTabs.push(tab);
+          }
+        });
+      }
+    });
   }
 
   onLoginChanged(value: UserJWT){

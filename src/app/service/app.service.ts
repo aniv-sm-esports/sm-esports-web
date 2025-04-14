@@ -14,6 +14,11 @@ export class AppService {
   private lastSize: Size = Size.default();
   private lastBodySize: Size = Size.default();
 
+  private readonly clientSizeBase: Size = Size.from(1200, 600);
+  private readonly videoSizeBase: Size = Size.from(640, 320);
+  private sizeMultiplier:number = 1;
+
+
   public mediaLarge: number = 1400;
   public bodyMargin: number = 20;
   public bannerHeightSmall: number = 48.6;
@@ -29,6 +34,18 @@ export class AppService {
 
   getBodySize(){
     return this.lastBodySize;
+  }
+
+  // TODO: Finish media queries; and add size enumeration
+  getVideoSize(){
+
+    // Get last cached size
+    let size = this.getSize();
+
+    if (size)
+      this.sizeMultiplier = size.width / this.clientSizeBase.width;
+
+    return Size.from(this.videoSizeBase.width * this.sizeMultiplier, this.videoSizeBase.height * this.sizeMultiplier);
   }
 
   getBannerHeight(){

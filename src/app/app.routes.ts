@@ -7,13 +7,31 @@ import {ChatBoxComponent} from './component/chatbox.component';
 import {PersonalComponent} from './component/personal.component';
 import {LoginComponent} from './component/login.component';
 import {CreateAccountComponent} from './component/create-account.component';
+import {LiveComponent} from './component/live.component';
+import {ScheduleComponent} from './component/schedule.component';
+import {AgendaComponent} from './component/agenda.component';
+import {PeopleAllComponent} from './component/people-all.component';
+import {PeopleBoardComponent} from './component/people-board.component';
+import {PeopleSearchComponent} from './component/people-search.component';
+import {RouteData} from './model/route-data.model';
+import {Tab} from './model/tab.model';
 
+/*
 export const routes: Routes = [
-  { path:"login",  component: LoginComponent, title: 'Login' },
+  { path:"login",  component: LoginComponent, title: 'Login'},
   { path:"create-account",  component: CreateAccountComponent, title: 'Create Account' },
-  { path:"home",  component: HomeComponent, title: 'Super Metroid Esports!' },
+  { path:"home",  component: HomeComponent, title: 'Super Metroid Esports!',
+    children: [
+      { path:"live",  component: LiveComponent, title: 'Live' },
+      { path:"schedule",  component: ScheduleComponent, title: 'Schedule' },
+      { path:"agenda",  component: AgendaComponent, title: 'Agenda' },
+    ] },
   { path:"news",  component: NewsComponent, title: 'News' },
-  { path:"people",  component: PeopleComponent, title: 'People' },
+  { path:"people",  component: PeopleComponent, title: 'People', children:[
+      { path:"all",  component: PeopleAllComponent, title: 'All' },
+      { path:"board",  component: PeopleBoardComponent, title: 'Board' },
+      { path:"search",  component: PeopleSearchComponent, title: 'Search' },
+    ] },
   { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
   { path:"chat",  component: ChatComponent, title: 'Chat', children: [
       { path:"politics", component: ChatBoxComponent, title: 'Chat > Politics' },
@@ -25,4 +43,4 @@ export const routes: Routes = [
   {
     path: '**', redirectTo: 'home'
   }
-];
+];*/

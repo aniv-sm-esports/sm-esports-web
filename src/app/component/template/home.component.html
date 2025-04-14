@@ -42,10 +42,6 @@
 
 <div class="container">
 
-  <div class="body"
-       [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
-                   'height': this.appService.getBodySize().height + 'px'}">
-
-  </div>
+  <router-outlet />
 
 </div>

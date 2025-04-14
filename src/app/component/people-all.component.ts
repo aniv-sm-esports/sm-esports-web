@@ -1,18 +1,21 @@
 import {Component} from '@angular/core';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
+import {NgForOf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../service/app.service';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
-  selector: 'people',
+  selector: 'people-all',
   imports: [
-    RouterLink,
-    RouterOutlet
+    NgForOf,
+    NgOptimizedImage,
+    NgStyle,
+    RouterLink
   ],
-  templateUrl: './template/people.component.html'
+  templateUrl: './template/people-all.component.html'
 })
-export class PeopleComponent {
+export class PeopleAllComponent {
 
   protected readonly appService: AppService;
   private readonly userService: UserService;
@@ -25,10 +28,11 @@ export class PeopleComponent {
     this.userService = userService;
     this.router = router;
     this.userList = [];
-
-    router.navigate(['people/all']);
   }
 
   ngOnInit() {
+    this.userService.getAll().subscribe(response => {
+      this.userList = response.data || [];
+    });
   }
 }

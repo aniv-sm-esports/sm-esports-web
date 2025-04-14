@@ -1,0 +1,32 @@
+<style>
+  .live-container {
+    width:100%;
+    height:100%;
+    background-image: url("../../../../public/zoom-meeting-placeholder.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .live-container .live-container-video {
+    background:black;
+  }
+
+  .live-container .live-container-chat {
+    flex:100%;
+  }
+
+</style>
+
+<div class="live-container">
+
+  <!--div class="live-container-video">
+    <img [ngStyle]="{'width': this.appService.getVideoSize().width + 'px',
+                     'height': this.appService.getVideoSize().height + 'px'}"
+         [src]="'zoom-meeting-placeholder.png'"
+         alt="zoom-meeting-placeholder.png" />
+  </div>
+
+  <div class="live-container-chat">
+    <chatbox />
+  </div-->
+
+</div>

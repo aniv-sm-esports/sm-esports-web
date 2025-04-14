@@ -23,6 +23,7 @@
     "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@zoom/meetingsdk": "^3.12.0",
     "angular-in-memory-web-api": "^0.19.0",
     "crypto-js": "^4.2.0",
     "deep-strict-equal": "^0.2.0",

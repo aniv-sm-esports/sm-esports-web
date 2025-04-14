@@ -1,11 +1,20 @@
-import {Chat} from './chat.model';
-
 export class Tab {
   name: string;
   route: string;
 
-  constructor(theName: string, theRoute: string) {
-    this.name = theName;
-    this.route = theRoute;
+  public constructor(){
+    this.name = '';
+    this.route = '';
+  }
+
+  public static default() {
+    return new Tab();
+  }
+
+  public static from(theName: string, theRoute: string) {
+    let result = new Tab();
+    result.name = theName;
+    result.route = theRoute;
+    return result;
   }
 }

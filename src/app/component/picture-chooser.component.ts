@@ -47,7 +47,7 @@ export class PictureChooserComponent {
 
     try {
 
-      let file = new FileModel(element.files[0].name, '');
+      let file = FileModel.from(element.files[0].name, '');
       file.fileData = element.files[0];
 
       // Upload File -> Emit Change Event

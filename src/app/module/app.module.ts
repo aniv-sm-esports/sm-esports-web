@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NgZone } from '@angular/core';
 import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +19,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {AuthInterceptor} from '../interceptor/auth.interceptor';
 import {ClickOutsideDirective} from '../directive/click-outside.directive';
 import {LoginComponent} from '../component/login.component';
+import {ZoomService} from '../service/zoom.service';
+import {DefaultTitleStrategy} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import {LoginComponent} from '../component/login.component';
     HttpClient,
     UserService,
     NewsService,
-    AppService
+    AppService,
+    ZoomService,
+    DefaultTitleStrategy
   ],
   bootstrap: [AppComponent]
 })

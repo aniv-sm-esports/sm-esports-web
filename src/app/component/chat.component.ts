@@ -41,7 +41,7 @@ export class ChatComponent {
 
           // Add tabs from response
           response.data?.forEach(room => {
-            this.chatTabs.push(new Tab(room.name, room.urlRoute));
+            this.chatTabs.push(Tab.from(room.name, room.urlRoute));
           });
         });
   }

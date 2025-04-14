@@ -8,13 +8,44 @@ import {ChatBoxComponent} from '../component/chatbox.component';
 import {PersonalComponent} from '../component/personal.component';
 import {LoginComponent} from '../component/login.component';
 import {CreateAccountComponent} from '../component/create-account.component';
+import {LiveComponent} from '../component/live.component';
+import {ScheduleComponent} from '../component/schedule.component';
+import {AgendaComponent} from '../component/agenda.component';
+import {PeopleAllComponent} from '../component/people-all.component';
+import {PeopleBoardComponent} from '../component/people-board.component';
+import {PeopleSearchComponent} from '../component/people-search.component';
+import {Tab} from '../model/tab.model';
 
-const routes: Routes = [
-  { path:"login",  component: LoginComponent, title: 'Login' },
+export const routes: Routes = [
+  { path:"login",  component: LoginComponent, title: 'Login'},
   { path:"create-account",  component: CreateAccountComponent, title: 'Create Account' },
-  { path:"home",  component: HomeComponent, title: 'Super Metroid Esports!' },
+
+  { path:"home", component: HomeComponent, title: 'Home',
+    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+
+  { path:"home/live",  component: LiveComponent, title: 'Home (Live)',
+    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+
+  { path:"home/schedule",  component: ScheduleComponent, title: 'Home (Schedule)',
+    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+
+  { path:"home/agenda",  component: AgendaComponent, title: 'Home (Agenda)',
+    data: [Tab.from('Live', 'home/live'), Tab.from('Schedule', 'home/schedule'), Tab.from('Agenda', 'home/agenda')]},
+
   { path:"news",  component: NewsComponent, title: 'News' },
-  { path:"people",  component: PeopleComponent, title: 'People' },
+
+  { path:"people",  component: PeopleComponent, title: 'People',
+    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
+
+  { path:"people/all",  component: PeopleAllComponent, title: 'People (All)',
+    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
+
+  { path:"people/board",  component: PeopleBoardComponent, title: 'People (Board)',
+    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
+
+  { path:"people/search",  component: PeopleSearchComponent, title: 'People (Search)',
+    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
+
   { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
   { path:"chat",  component: ChatComponent, title: 'Chat', children: [
       { path:"politics", component: ChatBoxComponent, title: 'Chat > Politics' },

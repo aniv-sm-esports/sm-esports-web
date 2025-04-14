@@ -48,6 +48,32 @@
     margin:10px;
     display: inline-block;
     font-size: 2.0em;
+    float:left;
+  }
+
+  .app-body-container .app-body-header .tab-container {
+    float: right;
+    display:flex;
+  }
+
+  .app-body-container .app-body-header .tab-container .tab-item-container {
+    align-content: center;
+    padding: 20px;
+    color:dimgray;
+    background-color:transparent;
+    cursor:pointer;
+  }
+  .app-body-container .app-body-header .tab-container .tab-item-container:last-child {
+    border-radius:0 10px 0 0;
+    -webkit-border-radius: 0 10px 0 0;
+  }
+  .app-body-container .app-body-header .tab-container .tab-item-container.active {
+    background-color:rgba(255,255,255,0.8);
+    color: rgba(134,134,255,1);
+  }
+
+  .app-body-container .app-body-header .tab-container .tab-item-container:hover {
+    background-color:rgba(255,255,255,0.8);
   }
 
   .link {
@@ -117,10 +143,12 @@
   .sidenav-container-right.expand {
     transition: opacity 0.15s ease-in-out;
     opacity: 1;
+    display: block;
   }
   .sidenav-container-right.collapse {
     transition: opacity 0.15s ease-in-out;
     opacity: 0;
+    display:none;
   }
 
   .sidenav-container-left div.logo {
@@ -417,8 +445,22 @@
        [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
                    'height': this.appService.getBodySize().height + 'px',
                    'margin': this.appService.bodyMargin + 'px'}">
+
     <div class="app-body-header">
       <h1 class="russo-one-regular">{{this.routeTitle}}</h1>
+
+      <!-- Optional Route Tabs (for child routes) -->
+      <div class="tab-container">
+        <div class="tab-item-container russo-one-regular"
+             [routerLinkActive]="'active'"
+             [routerLink]="tab.route"
+             *ngFor="let tab of this.routeTabs">
+          {{tab.name}}
+        </div>
+      </div>
+
+      <div class="clear-fix"></div>
+
     </div>
 
     <div class="app-body"
