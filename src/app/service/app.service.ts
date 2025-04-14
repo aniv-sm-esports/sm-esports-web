@@ -18,7 +18,6 @@ export class AppService {
   private readonly videoSizeBase: Size = Size.from(640, 320);
   private sizeMultiplier:number = 1;
 
-
   public mediaLarge: number = 1400;
   public bodyMargin: number = 20;
   public bannerHeightSmall: number = 48.6;

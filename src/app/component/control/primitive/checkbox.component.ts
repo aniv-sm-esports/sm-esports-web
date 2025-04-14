@@ -11,7 +11,7 @@ import {NgClass} from '@angular/common';
     FormsModule,
     NgClass
   ],
-  templateUrl: './template/checkbox.component.html'
+  templateUrl: '../../template/control/primitive/checkbox.component.html'
 })
 export class BasicCheckboxComponent {
 

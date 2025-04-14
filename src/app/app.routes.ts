@@ -5,7 +5,7 @@ import {PeopleComponent} from './component/people.component';
 import {ChatComponent} from './component/chat.component';
 import {ChatBoxComponent} from './component/chatbox.component';
 import {PersonalComponent} from './component/personal.component';
-import {LoginComponent} from './component/login.component';
+import {LoginComponent} from './component/control/login.component';
 import {CreateAccountComponent} from './component/create-account.component';
 import {LiveComponent} from './component/live.component';
 import {ScheduleComponent} from './component/schedule.component';

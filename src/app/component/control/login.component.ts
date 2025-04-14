@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {UserCredentials, UserJWT} from '../model/user-logon.model';
-import {AuthService} from '../service/auth.service';
-import {UserService} from '../service/user.service';
+import {UserCredentials, UserJWT} from '../../model/user-logon.model';
+import {AuthService} from '../../service/auth.service';
+import {UserService} from '../../service/user.service';
 import {FormsModule} from '@angular/forms';
-import {BasicButtonComponent} from './button.component';
+import {BasicButtonComponent} from './primitive/button.component';
 import {NgIf, NgStyle} from '@angular/common';
-import {AppService} from '../service/app.service';
+import {AppService} from '../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {noop} from 'rxjs';
-import {AuthHandler} from '../model/handler.model';
+import {AuthHandler} from '../../model/handler.model';
 
 @Component({
   selector: 'login',
@@ -17,7 +17,7 @@ import {AuthHandler} from '../model/handler.model';
     BasicButtonComponent,
     RouterLink
   ],
-  templateUrl: './template/login.component.html'
+  templateUrl: '../template/control/login.component.html'
 })
 export class LoginComponent implements AuthHandler {
 

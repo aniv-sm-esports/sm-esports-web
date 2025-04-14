@@ -6,7 +6,7 @@ import {User} from '../model/user.model';
 import {formatDate, NgClass, NgForOf} from '@angular/common';
 import {Chat} from '../model/chat.model';
 import {noop} from 'rxjs';
-import {BasicButtonComponent} from './button.component';
+import {BasicButtonComponent} from './control/primitive/button.component';
 import {UserService} from '../service/user.service';
 import {ApiResponseType} from '../model/app.model';
 import {AuthService} from '../service/auth.service';

@@ -23,6 +23,14 @@
     color: darkgray;
   }
 
+  main {
+    display: block;
+  }
+
+  main.loading {
+    display: none;
+  }
+
   .app-body-container {
     background-color: rgba(0,0,0,0.70);
     -webkit-border-radius: 10px;
@@ -389,7 +397,7 @@
 
 </style>
 
-<main class="main">
+<main class="main" [ngClass]="{'loading': this.loading}">
 
   <!-- Side Nav Left -->
   <div class="sidenav-container-left prevent-select"

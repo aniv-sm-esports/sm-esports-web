@@ -18,7 +18,7 @@ import {AppService} from '../service/app.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {AuthInterceptor} from '../interceptor/auth.interceptor';
 import {ClickOutsideDirective} from '../directive/click-outside.directive';
-import {LoginComponent} from '../component/login.component';
+import {LoginComponent} from '../component/control/login.component';
 import {ZoomService} from '../service/zoom.service';
 import {DefaultTitleStrategy} from '@angular/router';
 

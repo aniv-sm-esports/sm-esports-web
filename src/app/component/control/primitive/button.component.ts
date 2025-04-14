@@ -1,7 +1,7 @@
 import {Component, Directive, ElementRef, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {NgClass, NgForOf} from '@angular/common';
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from '@angular/router';
-import {} from '../extensions/app.global'
+import {} from '../../../extensions/app.global'
 
 /**
  * @title Basic buttons
@@ -13,7 +13,7 @@ import {} from '../extensions/app.global'
     RouterLink,
     NgClass
   ],
-  templateUrl: './template/button.component.html'
+  templateUrl: '../../template/control/primitive/button.component.html'
 })
 export class BasicButtonComponent {
 

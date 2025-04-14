@@ -57,6 +57,7 @@ export class AppComponent implements AuthHandler {
 
   // App.Spec (TODO! Keep this!)
   public title = 'sm-esports-web';
+  public loading: boolean = false;
 
   constructor(router:Router, activatedRoute:ActivatedRoute, appService: AppService, userService: UserService, authService: AuthService) {
 
@@ -74,6 +75,9 @@ export class AppComponent implements AuthHandler {
   }
 
   ngOnInit() {
+
+    // Loading... (see Angular lifecycle)
+    this.loading = true;
 
     // Wait for logon event
     this.primaryUserLoggedOn = false;
@@ -107,6 +111,16 @@ export class AppComponent implements AuthHandler {
         });
       }
     });
+  }
+
+  ngAfterViewInit() {
+
+    // Must lift this off the call stack to avoid life-cycle clash
+    //
+    setTimeout(() => {
+      this.loading = false;
+    });
+
   }
 
   onLoginChanged(value: UserJWT){
