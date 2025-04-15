@@ -3,10 +3,11 @@ import {User} from '../../app/model/user.model';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
-import {ApiResponse} from '../../app/model/app.model';
+import {ApiRequest, ApiResponse} from '../../app/model/app.model';
 import {UserCreation} from '../../app/model/user-creation.model';
 import {UserCredentials} from '../../app/model/user-logon.model';
 import {PageData} from '../../app/model/page.model';
+import {SearchModel} from '../../app/model/search.model';
 
 export class UserController extends BaseController {
 
@@ -39,7 +40,7 @@ export class UserController extends BaseController {
 
   // POST -> /api/users/getPage
   //
-  getPage(request: Request<{}, ApiResponse<User[]>, PageData, ParsedQs, Record<string, any>>,
+  getPage(request: Request<{}, ApiResponse<User[]>, ApiRequest<User>, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
     // Pre-work settings
@@ -47,24 +48,26 @@ export class UserController extends BaseController {
 
     try {
 
+      // TODO: BUG! Map<string, string> Serialization
+      let filteredUsers = this.serverDb.applyFilter(request.body.search || SearchModel.default<User>(), this.serverDb.users);
       let users:User[] = [];
 
-      let indexStart = (request.body.pageNumber - 1) * request.body.pageSize;
-      let indexEnd = request.body.pageNumber * request.body.pageSize;
+      let indexStart = ((request.body.pageData?.pageNumber || 0) - 1) * (request.body.pageData?.pageSize || 0);
+      let indexEnd = (request.body.pageData?.pageNumber || 0) * (request.body.pageData?.pageSize || 0);
 
       for (let index = indexStart; index < indexEnd; index++) {
 
         // No More Users
-        if (index >= this.serverDb.users.length) {
+        if (index >= filteredUsers.length) {
           break;
         }
         else {
-          users.push(this.serverDb.users[index]);
+          users.push(filteredUsers[index]);
         }
       }
 
       // Success
-      this.sendSuccess(response, users, PageData.fromResponse(1, request.body.pageSize, this.serverDb.users.length));
+      this.sendSuccess(response, users, PageData.fromResponse(1, (request.body.pageData?.pageSize || 0), this.serverDb.users.length));
     }
     catch(error) {
       console.log(error);

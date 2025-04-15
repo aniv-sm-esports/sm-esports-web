@@ -1,6 +1,7 @@
 import {UserJWT} from './user-logon.model';
 import {User} from './user.model';
 import {PageData} from './page.model';
+import {SearchModel} from './search.model';
 
 export enum ApiResponseType {
   None = 'None',
@@ -9,6 +10,44 @@ export enum ApiResponseType {
   PermissionRequired = 'Permission Required',
   InputDataError = 'Input Data Error',
   ServerError = 'Server Error'
+}
+
+export class ApiRequest<T> {
+  public pageData:PageData | undefined;
+  public data: T | undefined;
+  public search: SearchModel<T> | undefined;
+
+  public constructor() {
+  }
+
+  public static simple<T>() {
+    return new ApiRequest<T>();
+  }
+
+  public static postBody<T>(data:T) {
+    let result: ApiRequest<T> = new ApiRequest<T>();
+    result.data = data;
+    return result;
+  }
+
+  public static paged<T>(pageData:PageData, search:SearchModel<T>) {
+    let result: ApiRequest<T> = new ApiRequest<T>();
+    result.pageData = pageData;
+    result.search = search;
+    return result;
+  }
+
+  public static full<T>(data:T, pageData:PageData, search:SearchModel<T>) {
+    let result: ApiRequest<T> = new ApiRequest<T>();
+    result.data = data;
+    result.pageData = pageData;
+    result.search = search;
+    return result;
+  }
+
+  public static default<T>() {
+    return new ApiRequest<T>();
+  }
 }
 
 export class ApiResponse<T>  {

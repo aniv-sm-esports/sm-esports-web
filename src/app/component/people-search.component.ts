@@ -32,8 +32,8 @@ export class PeopleSearchComponent {
   }
 
   ngOnInit() {
-    this.userService.getPage(PageData.fromRequest(1, 25)).subscribe(response => {
-      this.userList = response.data || [];
-    });
+    //this.userService.getPage(PageData.fromRequest(1, 25)).subscribe(response => {
+    //  this.userList = response.data || [];
+    //});
   }
 }

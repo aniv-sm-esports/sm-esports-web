@@ -7,20 +7,17 @@
 
   .people-container {
     padding: 0px;
-    margin: 0px !important;
   }
 
-  .people-container > .body-container table {
-    width: 100%;
-  }
-
-  .people-container > .body-container > .user-container {
-  }
 
   /* People Entry */
   .people-container .user-container .user-content {
     margin:20px;
-    padding:0px;
+    margin-right:30px;
+    padding:0;
+  }
+  .people-container .user-container .user-content .user-info {
+    width:150px !important;
   }
 
   /* People Entry Banner */
@@ -37,12 +34,11 @@
     display: flex;
   }
   .people-container .user-container .user-info {
-    width: 200px;
     text-align: left;
   }
 
   /* People Entry Content -> User Info */
-  .people-container .user-container .user-info img {
+  .people-container .user-container .user-info .user-avatar {
     cursor:pointer;
   }
   .people-container .user-container .user-info h5 {
@@ -57,6 +53,9 @@
     font-size: 0.85em;
     color: #888;
     margin-top: 5px;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    cursor:pointer;
   }
 
   /* People Entry Content -> Long Description */
@@ -70,7 +69,25 @@
   }
 
 
-  /* People Entry Odd */
+  /* People Entry Odd -> Banner */
+  .people-container .user-container:nth-child(2n+1) .user-banner .user-name {
+    float: left;
+    padding:10px;
+  }
+  .people-container .user-container:nth-child(2n+1) .user-banner img {
+    float: left;
+    padding:5px;
+  }
+  .people-container .user-container:nth-child(2n+1) .user-banner .user-descr-short {
+    float: right;
+    padding:10px;
+    margin-right:15px;
+  }
+
+  /* People Entry Odd -> User Content */
+  .people-container .user-container:nth-child(2n+1) .user-content .user-info .user-avatar {
+    text-align: left;
+  }
   .people-container .user-container:nth-child(2n+1) .user-content .user-info {
     text-align: left;
   }
@@ -78,7 +95,25 @@
     margin-left: 20px;
   }
 
-  /* People Entry Even */
+  /* People Entry Even -> Banner */
+  .people-container .user-container:nth-child(2n) .user-banner .user-name {
+    float: right;
+    padding:10px;
+  }
+  .people-container .user-container:nth-child(2n) .user-banner img {
+    float: right;
+    padding:5px;
+    margin-right:15px;
+  }
+  .people-container .user-container:nth-child(2n) .user-banner .user-descr-short {
+    float: left;
+    padding:10px;
+  }
+
+  /* People Entry Even -> User Content */
+  .people-container .user-container:nth-child(2n) .user-content .user-info .user-avatar {
+    text-align: right;
+  }
   .people-container .user-container:nth-child(2n) .user-content .user-info {
     text-align: right;
   }
@@ -100,26 +135,24 @@
 
         <div class="user-banner">
           <h3 class="russo-one-regular">
-            <span class="user-descr-short" [ngStyle]="{'float': 'right', 'padding': '5px 5px 5px 10px'}">{{user.shortDescription}}</span>
-            <img [ngStyle]="{'float': 'left'}"
-                 src="metroid/metroid-angle-right.png"
+            <span class="user-descr-short">{{user.shortDescription}}</span>
+            <img src="metroid/metroid-angle-right.png"
                  alt="metroid/metroid-angle-right.png"
                  width="36" height="36" />
-            <span class="user-name" [ngStyle]="{'float': 'left', 'padding': '5px 5px 5px 15px'}">{{user.name}}</span>
+            <span class="user-name">{{user.name}}</span>
             <div class="clear-fix"></div>
           </h3>
         </div>
 
         <ul class="user-content">
           <li class="user-info">
-            <img width="150"
-                 height="200"
-                 [ngSrc]="user.pictureUrl"
-                 [routerLink]="'/personal/' + user.name"/>
+            <div class="user-avatar">
+              <sm-esports-avatar [user]="user" [size]="AvatarSize.Large" />
+            </div>
             <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
             <h5 class="user-email">{{user.email}}</h5>
           </li>
-          <li class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
+          <li class="user-descr-long">
             <p>{{user.longDescription}}</p>
           </li>
         </ul>
@@ -128,25 +161,23 @@
 
         <div class="user-banner">
           <h3 class="russo-one-regular">
-            <img [ngStyle]="{'float': 'right', 'padding': '5px 5px 5px 5px'}"
-                 src="metroid/metroid-angle-left.png"
+            <img src="metroid/metroid-angle-left.png"
                  alt="metroid/metroid-angle-left.png"
                  width="36" height="36" />
-            <span class="user-name" [ngStyle]="{'float': 'right', 'padding': '10px'}">{{user.name}}</span>
-            <span class="user-descr-short" [ngStyle]="{'float': 'left', 'padding': '10px'}">{{user.shortDescription}}</span>
+            <span class="user-name">{{user.name}}</span>
+            <span class="user-descr-short">{{user.shortDescription}}</span>
             <div class="clear-fix"></div>
           </h3>
         </div>
 
         <ul class="user-content">
-          <li class="user-descr-long"  [ngStyle]="{'width': (this.appService.getSize()?.width || 0) - 250}">
+          <li class="user-descr-long">
             <p>{{user.longDescription}}</p>
           </li>
           <li class="user-info">
-            <img width="150"
-                 height="200"
-                 [ngSrc]="user.pictureUrl"
-                 [routerLink]="'/personal/' + user.name"/>
+            <div class="user-avatar">
+              <sm-esports-avatar [user]="user" [size]="AvatarSize.Large" />
+            </div>
             <h5 class="person-role">{{user.roleInfo.personRole}}</h5>
             <h5 class="user-email">{{user.email}}</h5>
           </li>

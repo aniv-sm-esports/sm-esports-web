@@ -1,8 +1,11 @@
-# Super Metroid Esports Website (Proof of Concept)
+# Super Metroid Esports (Development Preview)
 
 This is a proof of concept website for a possible future collaboration backbone for Super Metroid Esports.
 
-(Development Preview)
+# Development Preview
+
+Disclaimer:  This is only a development preview site! There is no live site at the moment. So, if you use any
+of the features on the site (below), it is only to be a part of this development project. Thank you.
 
 https://sm-esports-web-zpnb.onrender.com/
 
@@ -19,14 +22,11 @@ to use to collaborate about the Super Metroid Esport; and DOES NOT have any affi
 # Chat (Development Preview)
 ![screenshot](public/screenshot/chat-preview.png)
 
-# People 1 (Development Preview)
-![screenshot](public/screenshot/screenshot-people-1.png)
+# People (Development Preview)
+![screenshot](public/screenshot/people-all.png)
 
-# People 2 (Development Preview)
+# People (Board) (Development Preview)
 ![screenshot](public/screenshot/screenshot-people-2.png)
-
-# People 3 (Development Preview)
-![screenshot](public/screenshot/screenshot-people-3.png)
 
 # People Aniv (Development Preview)
 ![screenshot](public/screenshot/screenshot-people-aniv.png)

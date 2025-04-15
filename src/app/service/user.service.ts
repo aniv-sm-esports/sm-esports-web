@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {User} from '../model/user.model';
 import {firstValueFrom, Observable} from 'rxjs';
-import {ApiResponse} from '../model/app.model';
+import {ApiRequest, ApiResponse} from '../model/app.model';
 import {UserCreation} from '../model/user-creation.model';
 import {Chat} from '../model/chat.model';
 import {PageData} from '../model/page.model';
+import {SearchModel} from '../model/search.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,8 @@ export class UserService {
     return this.http.get<ApiResponse<User>>(this.urlGet.replace(':userName', userName));
   }
 
-  getPage(pageData: PageData) {
-    return this.http.post<ApiResponse<User[]>>(this.urlGetPage, pageData, {
+  getPage(pageData: PageData, searchModel:SearchModel<User>) {
+    return this.http.post<ApiResponse<User[]>>(this.urlGetPage, ApiRequest.paged<User>(pageData, searchModel), {
       headers: this.headers
     });
   }

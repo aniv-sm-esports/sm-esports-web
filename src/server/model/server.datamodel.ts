@@ -9,6 +9,8 @@ import {UserCredentials, UserJWTPayload} from '../../app/model/user-logon.model'
 import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
 import {FileModel} from '../../app/model/file.model';
 import * as fs from 'node:fs';
+import { SearchModel } from '../../app/model/search.model';
+import {stringify} from 'node:querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +61,8 @@ export class DataModel {
       user.pictureUrl = 'user/' + user.name.toLowerCase() + '.png';   // CASE SENSITIVE (?!)
       user.email = user.name + "@nomail.com";
       user.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+      user.userRole = UserRoleType.Editor;
+      user.personRole = PersonRoleType.BoardMember;
 
       this.users.push(user);
     });
@@ -92,7 +96,9 @@ export class DataModel {
       user.isMockAccount = true;
       user.shortDescription = `A Short Description of ${user.name}`;
       user.longDescription = this.fillLoremIpsumShort();
-      user.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.GeneralUser);
+      user.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
+      user.userRole = UserRoleType.General;
+      user.personRole = PersonRoleType.GeneralUser;
 
       this.users.push(user);
     }
@@ -181,6 +187,29 @@ export class DataModel {
         });
       }
 
+    });
+  }
+
+  applyFilter<T>(search:SearchModel<T>, array:Array<T>){
+
+    if (search == SearchModel.default<T>())
+      return array;
+
+    return array.filter((item:T) => {
+
+      let success = true;
+
+      Object.getOwnPropertyNames(item).forEach(key => {
+
+        let theKey = key as keyof typeof item;
+
+        // Property Search Defined  // TODO: Serialization not working for the functions. Probably need interface (?)
+        if (!!search.searchMap[key]) {
+          success = success && (search.searchMap[key] == item[theKey]);   // TODO: toString
+        }
+      });
+
+      return success;
     });
   }
 

@@ -1,21 +1,22 @@
 import {Component} from '@angular/core';
 import {UserService} from '../service/user.service';
 import {User} from '../model/user.model';
-import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {AppService} from '../service/app.service';
-import {Router, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 import {AvatarComponent, AvatarSize} from './control/avatar.component';
 import {PageData} from '../model/page.model';
+import {SearchModel} from '../model/search.model';
+import {ApiResponseType} from '../model/app.model';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'people-all',
   imports: [
     NgForOf,
-    NgOptimizedImage,
-    NgStyle,
-    RouterLink,
-    NgIf,
-    AvatarComponent
+    AvatarComponent,
+    FaIconComponent
   ],
   templateUrl: './template/people-all.component.html'
 })
@@ -25,20 +26,38 @@ export class PeopleAllComponent {
   private readonly userService: UserService;
   private readonly router: Router;
 
-  protected userList: User[];
+  protected peopleBoard: User[] = [];
+  protected peopleGeneral: User[] = [];
+
+  protected readonly faCircle = faCircle;
+
+  protected readonly AvatarSize = AvatarSize;
+  protected pageSize:number = 25;
 
   constructor(appService:AppService, userService: UserService, router: Router) {
     this.appService = appService;
     this.userService = userService;
     this.router = router;
-    this.userList = [];
   }
 
   ngOnInit() {
-    this.userService.getPage(PageData.fromRequest(1, 25)).subscribe(response => {
-      this.userList = response.data || [];
+    let searchBoard: SearchModel<User> = new SearchModel<User>();
+    let searchGeneral: SearchModel<User> = new SearchModel<User>();
+
+    searchBoard.set('personRole', 'Board Member');
+
+    // Fetch Board (this will need tuning later) (have to do pre-queries for the paging)
+    this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchBoard).subscribe(response => {
+
+      if (response.response == ApiResponseType.Success) {
+        this.peopleBoard = response.data || [];
+      }
+    });
+
+    searchGeneral.set('personRole', 'General User');
+
+    this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchGeneral).subscribe(response => {
+      this.peopleGeneral = response.data || [];
     });
   }
-
-  protected readonly AvatarSize = AvatarSize;
 }

@@ -40,7 +40,9 @@ export class User {
   pictureUrl: string;
   shortDescription: string;
   longDescription: string;
-  roleInfo: UserRole;
+  roleInfo: UserRole;           // TODO: Generic type search with api request (un-flatten user role)
+  personRole: PersonRoleType;
+  userRole: UserRoleType;
   isMockAccount: boolean;
 
   links: UserLink[];
@@ -57,6 +59,8 @@ export class User {
     this.isMockAccount = true;
     this.links = [];
     this.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
+    this.personRole = PersonRoleType.GeneralUser;
+    this.userRole = UserRoleType.General;
   }
 
   public static from(userId:number, userName:string, email:string){
