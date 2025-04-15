@@ -30,9 +30,9 @@ export class AuthController extends BaseController {
       let user= this.serverDb.getUserByName(request.body.userName || '');
 
       // User Found
-      if (user && this.serverDb.credentials.has(user.id)) {
+      if (user && this.serverDb.credentials.some(userCred => userCred.userName == user.name)) {
 
-        let userCredentials = this.serverDb.credentials.get(user?.id || 0);
+        let userCredentials = this.serverDb.credentials.find(userCred => userCred.userName == user.name);
 
         // Failure
         if (request.body.password != userCredentials?.password) {
@@ -49,7 +49,7 @@ export class AuthController extends BaseController {
         let userJWT = this.authService.logon(userCredentials);
 
         // Success -> Send JWT Token
-        this.sendSuccess(response, userJWT);
+        this.sendSuccess(response, userJWT, undefined);
       }
 
       // User Not Found
@@ -75,7 +75,7 @@ export class AuthController extends BaseController {
 
       // Success -> Send JWT Token
       if (!this.requestJWT.isDefault())
-        this.sendSuccess(response, this.requestJWT);
+        this.sendSuccess(response, this.requestJWT, undefined);
 
       // User Not Found
       else {

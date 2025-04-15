@@ -3,6 +3,8 @@ import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import {BaseController} from './base.controller';
 import {Article} from '../../app/model/article.model';
+import {ApiResponse} from '../../app/model/app.model';
+import {PageData} from '../../app/model/page.model';
 
 export class NewsController extends BaseController {
 
@@ -17,12 +19,12 @@ export class NewsController extends BaseController {
     try {
 
       // Success
-      if (this.serverDb.news.has(Number(request.params.newsId))) {
+      if (this.serverDb.news.some(news => news.id == Number(request.params.newsId))) {
 
-        let news = this.serverDb.news.get(Number(request.params.newsId)) || new Article();
+        let news = this.serverDb.news.find(x => x.id == Number(request.params.newsId)) || new Article();
 
         // Send during try/catch
-        this.sendSuccess(response, news);
+        this.sendSuccess(response, news, undefined);
         return;
       }
 
@@ -37,9 +39,9 @@ export class NewsController extends BaseController {
     }
   }
 
-  // GET -> /api/news/getAll
+  // POST -> /api/news/getPage
   //
-  getAll(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
+  getPage(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
     // Pre-work settings
@@ -53,7 +55,7 @@ export class NewsController extends BaseController {
       })
 
       // Success
-      this.sendSuccess(response, newsItems);
+      this.sendSuccess(response, newsItems, PageData.fromResponse(1, 50, this.serverDb.news.length));
       return;
     }
     catch(error) {
@@ -64,7 +66,7 @@ export class NewsController extends BaseController {
 
   // POST -> /api/news/create
   //
-  create(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
+  create(request: Request<{}, ApiResponse<Article>, Article, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
     // Pre-work settings
@@ -85,16 +87,16 @@ export class NewsController extends BaseController {
       if (!success)
         return;
 
-      let newsId = this.serverDb.news.size;
+      let news = Object.assign({}, request.body);
 
-      // Set Id
-      request.body.id = newsId;
+      // Assign Id
+      news.id = this.serverDb.news.length;
 
       // Add News to database
-      this.serverDb.news.set(newsId, request.body);
+      this.serverDb.news.push(news);
 
       // Success
-      this.sendSuccess(response, request.body);
+      this.sendSuccess(response, news, undefined);
     }
     catch(error) {
       console.log(error);

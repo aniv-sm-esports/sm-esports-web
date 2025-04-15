@@ -26,7 +26,7 @@ export class FileController extends BaseController {
       });
 
       // Send during try/catch
-      this.sendSuccess(response, file);
+      this.sendSuccess(response, file, undefined);
       return;
     }
     catch(error) {
@@ -82,7 +82,7 @@ export class FileController extends BaseController {
                if (success) {
                  let file = FileModel.from(request.body.name, request.body.directory);
                  this.serverDb.files.push(file);
-                 this.sendSuccess(response, 'File uploaded successfully!');
+                 this.sendSuccess(response, 'File uploaded successfully!', undefined);
                }
 
                // Failure

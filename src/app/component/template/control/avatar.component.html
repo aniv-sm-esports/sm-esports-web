@@ -1,0 +1,27 @@
+<style>
+  .avatar canvas {
+    background-color: rgba(255,255,255,0.75);
+  }
+</style>
+
+<div class="avatar"
+     [ngStyle]="{'width': this.getSize().width + 'px',
+                 'height': this.getSize().height + 'px'}">
+
+    @if (!this.user.isMockAccount) {
+      <img [width]="this.getSize().width"
+           [height]="this.getSize().height"
+           [ngSrc]="this.user.pictureUrl"
+           [routerLink]="'/personal/' + this.user.name"/>
+    }
+    @else {
+      <canvas waCanvas2d
+              [width]="this.getSize().width"
+              [height]="this.getSize().height">
+        <canvas-path [path]="this.mockUserPath2D"
+                     [fillStyle]="this.mockUserColor"
+                     [ngStyle]="{'color': this.mockUserColor}" />
+      </canvas>
+    }
+
+</div>

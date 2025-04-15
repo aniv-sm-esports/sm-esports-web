@@ -41,6 +41,7 @@ export class User {
   shortDescription: string;
   longDescription: string;
   roleInfo: UserRole;
+  isMockAccount: boolean;
 
   links: UserLink[];
 
@@ -53,6 +54,7 @@ export class User {
     this.pictureUrl = '';
     this.shortDescription = '';
     this.longDescription = '';
+    this.isMockAccount = true;
     this.links = [];
     this.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
   }

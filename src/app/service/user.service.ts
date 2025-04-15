@@ -5,6 +5,7 @@ import {firstValueFrom, Observable} from 'rxjs';
 import {ApiResponse} from '../model/app.model';
 import {UserCreation} from '../model/user-creation.model';
 import {Chat} from '../model/chat.model';
+import {PageData} from '../model/page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,60 +16,33 @@ export class UserService {
 
   // Users -> Post -> Create User
   urlGet = "/api/users/get/:userName";
-  urlGetAll = "/api/users/getAll";
+  urlGetPage = "/api/users/getPage";
   urlExists = "/api/users/exists/:userName";
   urlCreate = "/api/users/create";
+
+  private readonly headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(httpClient: HttpClient) {
     this.http = httpClient;
   }
 
   getUser(userName: string) {
-
-    let httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('content-type', 'application/json');
-
-    let options = {
-      headers: httpHeaders
-    };
-
-    return this.http.get<ApiResponse<User>>(this.urlGet.replace(':userName', userName), options);
+    return this.http.get<ApiResponse<User>>(this.urlGet.replace(':userName', userName));
   }
 
-  getAll() {
-    let httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('content-type', 'application/json');
-
-    let options = {
-      headers: httpHeaders
-    };
-
-    return this.http.get<ApiResponse<User[]>>(this.urlGetAll, options);
+  getPage(pageData: PageData) {
+    return this.http.post<ApiResponse<User[]>>(this.urlGetPage, pageData, {
+      headers: this.headers
+    });
   }
 
   userExists(userName: string) {
-
-    let httpHeaders = new HttpHeaders();
-
-    httpHeaders.append('content-type', 'application/json');
-
-    let options = {
-      headers: httpHeaders,
-      withCredentials: true,
-      transferCache: {
-        includeHeaders: ['content-type', 'accept', '*'],
-        includePostRequests: true,
-        includeRequestsWithAuthHeaders: true
-      }
-    };
-
-    return this.http.get<ApiResponse<User>>(this.urlExists.replace(':userName', userName), options);
+    return this.http.get<ApiResponse<User>>(this.urlExists.replace(':userName', userName));
   }
 
   createUser(userCreation: UserCreation) : Observable<ApiResponse<UserCreation>> {
-
-    return this.http.post<ApiResponse<UserCreation>>(this.urlCreate, userCreation);
+    return this.http.post<ApiResponse<UserCreation>>(this.urlCreate, userCreation, {
+      headers: this.headers
+    });
   }
 }

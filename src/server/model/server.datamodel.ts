@@ -1,11 +1,12 @@
 import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/user.model';
-import {BannerLinkType, Article} from '../../app/model/article.model';
+import {Article, BannerLinkType} from '../../app/model/article.model';
 import {ChatRoom} from '../../app/model/chat-room.model';
 import {Chat} from '../../app/model/chat.model';
 import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
-import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/user-logon.model';
+import {UserCredentials, UserJWTPayload} from '../../app/model/user-logon.model';
+import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
 import {FileModel} from '../../app/model/file.model';
 import * as fs from 'node:fs';
 
@@ -17,10 +18,10 @@ export class DataModel {
   public readonly publicFolder: string = 'public';
 
   chatRoomUserMap: ChatRoomUserMap;
-  chatRooms: Map<number, ChatRoom>;
-  users: Map<number, User>;
-  news: Map<number, Article>;
-  credentials: Map<number, UserCredentials>;
+  chatRooms: ChatRoom[];
+  users: User[];
+  news: Article[];
+  credentials: UserCredentials[];
   files: FileModel[];
 
   // Auth Service (this may move to separate auth server)
@@ -29,12 +30,12 @@ export class DataModel {
 
   constructor() {
 
-    this.users = new Map();
-    this.news = new Map();
-    this.chatRooms = new Map();
+    this.chatRooms = [];
+    this.users = [];
     this.chatRoomUserMap = new ChatRoomUserMap();
-    this.credentials = new Map();
+    this.credentials = [];
     this.files = [];
+    this.news = [];
     this.userTokenMap = new Map<string, string>();
     this.tokenMap = new Map<string, UserJWTPayload>();
 
@@ -48,54 +49,53 @@ export class DataModel {
     let nevdi = User.from(4, 'Nevdi', 'nevdi@nomail.com');
     let arealcutie = User.from(5, 'ARealCutie', 'arealcutie@nomail.com');
 
-    zoasty.shortDescription = 'A Short Description of Zoasty';
-    zeni.shortDescription = 'A Short Description of ShinyZeni';
-    oatsngoats.shortDescription = 'A Short Description of Oatsngoats';
-    eddie.shortDescription = 'A Short Description of Eddie';
-    nevdi.shortDescription = 'A Short Description of Nevdi';
-    arealcutie.shortDescription = 'A Short Description of ARealCutie';
+    let developmentUsers:User[] = [zoasty, zeni, oatsngoats, eddie, nevdi, arealcutie];
 
-    zoasty.longDescription = this.fillLoremIpsumShort();
-    zeni.longDescription = this.fillLoremIpsumShort();
-    oatsngoats.longDescription = this.fillLoremIpsumShort();
-    eddie.longDescription = this.fillLoremIpsumShort();
-    nevdi.longDescription = this.fillLoremIpsumShort();
-    arealcutie.longDescription = this.fillLoremIpsumShort();
+    developmentUsers.forEach((user, index, array) => {
 
-    zoasty.pictureUrl = 'zoasty.png';
-    zeni.pictureUrl = 'shinyzeni.png';
-    oatsngoats.pictureUrl = 'oatsngoats.png';
-    eddie.pictureUrl = 'eddie.png';
-    nevdi.pictureUrl = 'nevdi.png';
-    arealcutie.pictureUrl = 'arealcutie.png';
+      user.isMockAccount = false;
+      user.shortDescription = `A Short Description of ${user.name}`;
+      user.longDescription = this.fillLoremIpsumShort();
+      user.pictureUrl = 'user/' + user.name.toLowerCase() + '.png';   // CASE SENSITIVE (?!)
+      user.email = user.name + "@nomail.com";
+      user.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
 
-    zoasty.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
-    zeni.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
-    oatsngoats.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
-    eddie.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
-    nevdi.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
-    arealcutie.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
+      this.users.push(user);
+    });
 
     let aniv = User.from(6, 'AnivSmEsports', 'aniv-sm-esports@nomail.com');
 
-    aniv.pictureUrl = 'aniv.png';
+    aniv.pictureUrl = 'user/aniv.png';
     aniv.shortDescription = 'i am aniv!';
-    aniv.longDescription = 'Hey Evenyone! I am aniv! #freeaniv! Thanks for joining me at this celebratory inaugural test-edition of Super Metroid Esports!';
+    aniv.longDescription = 'Hey Evenyone! I am aniv! Thanks for joining me at this celebratory inaugural test-edition of Super Metroid Esports! (#freeaniv)';
+    aniv.isMockAccount = false;
     aniv.roleInfo = UserRole.from(UserRoleType.Admin, PersonRoleType.GeneralUser);
 
-    this.users.set(0, zoasty);
-    this.users.set(1, zeni);
-    this.users.set(2, oatsngoats);
-    this.users.set(3, eddie);
-    this.users.set(4, nevdi);
-    this.users.set(5, arealcutie);
-    this.users.set(6, aniv);
+    this.users.push(aniv);
 
     // User Credentials - (using 'test' as password for every test user)
     //
     this.users.forEach((user: User) => {
-      this.credentials.set(user.id, UserCredentials.fromLogon(user.name, 'test'));
+      this.credentials.push(UserCredentials.fromLogon(user.name, 'test'));
     });
+
+    // User Mock Account(s):  (Using: unique-names-generator)
+    const config: Config = {
+      dictionaries: [names]
+    }
+
+    for (let index:number = 0; index < 1000; index++ ) {
+
+      let uniqueName: string = uniqueNamesGenerator(config);
+      let user:User = User.from(-1, uniqueName, uniqueName + "@nomail.com");
+
+      user.isMockAccount = true;
+      user.shortDescription = `A Short Description of ${user.name}`;
+      user.longDescription = this.fillLoremIpsumShort();
+      user.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.GeneralUser);
+
+      this.users.push(user);
+    }
 
     // Chat Rooms
     let chatPolitics = ChatRoom.from(0,
@@ -122,10 +122,10 @@ export class DataModel {
       'general',
       'Please be respectful to others. How would you want to be treated?');
 
-    this.chatRooms.set(0, chatPolitics);
-    this.chatRooms.set(1, chatPeople);
-    this.chatRooms.set(2, chatSpeedRunning);
-    this.chatRooms.set(3, chatGeneral);
+    this.chatRooms.push(chatPolitics);
+    this.chatRooms.push(chatPeople);
+    this.chatRooms.push(chatSpeedRunning);
+    this.chatRooms.push(chatGeneral);
 
     // News
     let newsWelcome = Article.from(0,
@@ -159,9 +159,9 @@ export class DataModel {
       "\n" +
       "Released in April 1994, Super Metroid was the eagerly anticipated third game in the Metroid series. Samus Aran returns to the planet Zebes to once again fight the space pirates and Mother Brain who have taken the metroid hatchling.</p>";
 
-    this.news.set(0, newsWelcome);
-    this.news.set(1, newsGDQ);
-    this.news.set(2, newsGDQZoasty);
+    this.news.push(newsWelcome);
+    this.news.push(newsGDQ);
+    this.news.push(newsGDQZoasty);
 
     // MOCK CHAT DATA
     this.chatRooms.forEach(chatRoom => {

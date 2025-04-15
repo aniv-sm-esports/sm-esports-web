@@ -18,7 +18,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import {AuthController} from './server/controller/auth.controller';
 import {FileController} from './server/controller/file.controller';
-import fs from 'node:fs';
 import {AuthService} from './server/service/auth.service';
 
 // Some server constants
@@ -166,9 +165,9 @@ app.route('/api/users/get/:userName').get(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.get(request, response);
 });
-app.route('/api/users/getAll').get(expressAuth, (request, response) =>{
+app.route('/api/users/getPage').post(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
-  userController.getAll(request, response);
+  userController.getPage(request, response);
 });
 app.route('/api/users/exists/:userName').get(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
@@ -184,9 +183,9 @@ app.route('/api/news/get/:newsId').get(expressAuth, (request, response) =>{
   newsController.authenticate(request, response);
   newsController.get(request, response);
 });
-app.route('/api/news/getAll').get(expressAuth, (request, response) =>{
+app.route('/api/news/getPage').post(expressAuth, (request, response) =>{
   newsController.authenticate(request, response);
-  newsController.getAll(request, response);
+  newsController.getPage(request, response);
 });
 app.route('/api/news/create').post(expressAuth, (request, response) =>{
   newsController.authenticate(request, response);
@@ -202,7 +201,7 @@ app.route('/api/chat/getRoom/:chatRoomRoute').get(expressAuth, (request, respons
   chatController.authenticate(request, response);
   chatController.getChatRoom(request, response);
 });
-app.route('/api/chat/getChats/:chatRoomId').get(expressAuth, (request, response) =>{
+app.route('/api/chat/getChats/:chatRoomId').post(expressAuth, (request, response) =>{
   chatController.authenticate(request, response);
   chatController.getChats(request, response);
 });

@@ -33,7 +33,7 @@ export class PictureChooserComponent {
   // ********
   //
   ngOnInit() {
-    this.pictureFile = "picture-placeholder.png";
+    this.pictureFile = "/placeholder/picture-placeholder.png";
   }
 
   onFileChanged($event: Event) {

@@ -6,6 +6,7 @@ import {FormsModule} from '@angular/forms';
 import {AppService} from '../service/app.service';
 import {Size} from '../model/app.model';
 import {YouTubePlayer} from '@angular/youtube-player';
+import {PageData} from '../model/page.model';
 
 @Component({
   selector: 'news',
@@ -69,7 +70,7 @@ export class NewsComponent {
 
   load() {
     this.newsService
-        .getAll()
+        .getPage(PageData.fromRequest(1, 25))
         .subscribe(result => {
 
         // Get -> NewsService ->

@@ -6,6 +6,8 @@ import {Article} from '../../app/model/article.model';
 import {Chat} from '../../app/model/chat.model';
 import {ChatRoom} from '../../app/model/chat-room.model';
 import {ApiResponse} from '../../app/model/app.model';
+import {PageData} from '../../app/model/page.model';
+import {User} from '../../app/model/user.model';
 
 export class ChatController extends BaseController {
 
@@ -31,7 +33,7 @@ export class ChatController extends BaseController {
       });
 
       // Success
-      this.sendSuccess(response, chatRooms);
+      this.sendSuccess(response, chatRooms, undefined);
       return;
     }
     catch(error) {
@@ -63,7 +65,7 @@ export class ChatController extends BaseController {
 
       // Success
       if (result) {
-        this.sendSuccess(response, result);
+        this.sendSuccess(response, result, undefined);
         return;
       }
     }
@@ -73,25 +75,49 @@ export class ChatController extends BaseController {
     }
   }
 
-  // GET -> /api/chat/getChats/:chatRoomId
+  // POST -> /api/chat/getChats/:chatRoomId
   //
-  getChats(request: Request<{chatRoomId:string}, any, any, ParsedQs, Record<string, any>>,
+  getChats(request: Request<{chatRoomId:string}, ApiResponse<Chat[]>, PageData, ParsedQs, Record<string, any>>,
            response: Response<any, Record<string, any>, number>){
 
     // Pre-work settings
     this.setLogonRequired(true);
 
     try {
+
       let roomId = Number(request.params.chatRoomId);
 
       // Failure
-      if (!this.serverDb.chatRooms.has(roomId)){
+      if (!this.serverDb.chatRooms.some(room => room.id == roomId)){
         this.sendDataError(response,Chat.default(),  `Chat room does not exist: ${request.params.chatRoomId}`);
         return;
       }
 
+      let chats:Chat[] = [];
+      let room = this.serverDb.chatRooms.find(room => room.id == roomId) || ChatRoom.default();
+      let indexStart = (request.body.pageNumber - 1) * request.body.pageSize;
+      let indexEnd = request.body.pageNumber * request.body.pageSize;
+
+      for (let index = indexStart; index < indexEnd; index++) {
+
+        // No More Chats
+        if (index <= room.chats.length) {
+          break;
+        }
+        else {
+          chats.push(room.chats[index]);
+        }
+      }
+
+      // Update Page Data
+      let pageData = Object.assign({}, request.body);
+
+      // Client may not have data for total records (yet)
+      pageData.totalPages = room.chats.length / pageData.totalPages;
+      pageData.totalRecords = room.chats.length;
+
       // Success
-      this.sendSuccess(response, this.serverDb.chatRooms.get(roomId)?.chats);
+      this.sendSuccess(response, chats, pageData);
       return;
     }
     catch(error) {
@@ -119,12 +145,12 @@ export class ChatController extends BaseController {
       let roomId = Number(request.params.chatRoomId);
 
       // Failure
-      if (!this.serverDb.chatRooms.has(roomId)) {
+      if (!this.serverDb.chatRooms.some(room => room.id == roomId)) {
         this.sendDataError(response,Chat.default(),  `Chat room does not exist: ${request.params.chatRoomId}`);
         return;
       }
 
-      let chatRoom = this.serverDb.chatRooms.get(roomId);
+      let chatRoom = this.serverDb.chatRooms.find(room => room.id == roomId);
 
       // Set Id
       let chat:Chat = request.body;
@@ -137,7 +163,7 @@ export class ChatController extends BaseController {
       chatRoom?.chats.push(chat);
 
       // Success
-      this.sendSuccess(response, chat);
+      this.sendSuccess(response, chat, undefined);
     }
     catch(error) {
       console.log(error);

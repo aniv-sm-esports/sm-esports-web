@@ -8,6 +8,7 @@ import {User} from '../../app/model/user.model';
 
 import CryptoJS from 'crypto-js';
 import {AuthService} from '../service/auth.service';
+import {PageData} from '../../app/model/page.model';
 
 
 export class BaseController {
@@ -32,7 +33,7 @@ export class BaseController {
     this.logonRequired = value;
   }
 
-  private initApiResponse<T>() {
+  private initApiResponse<T>(pageData:PageData | undefined) {
 
     let apiResponse: ApiResponse<T>;
 
@@ -41,6 +42,7 @@ export class BaseController {
       apiResponse =
         ApiResponse
           .initLogonRequired<T>()
+          .setPageData<T>(pageData)
           .loggedOn<T>(this.requestJWT || UserJWT.default());
     }
 
@@ -49,6 +51,7 @@ export class BaseController {
       apiResponse =
         ApiResponse
           .initLogonRequired<T>()
+          .setPageData<T>(pageData)
           .notLoggedOn<T>();
     }
 
@@ -57,6 +60,7 @@ export class BaseController {
       apiResponse =
         ApiResponse
           .initLogonNotRequired<T>()
+          .setPageData<T>(pageData)
           .loggedOn<T>(this.requestJWT || UserJWT.default());
     }
 
@@ -65,6 +69,7 @@ export class BaseController {
       apiResponse =
         ApiResponse
           .initLogonNotRequired<T>()
+          .setPageData<T>(pageData)
           .notLoggedOn<T>();
     }
 
@@ -173,12 +178,12 @@ export class BaseController {
 
   // Sends Response: This will send one ApiResponse<T> for the controller
   //
-  protected sendSuccess<T>(response: Response<any, Record<string, any>, number>, data:T) {
+  protected sendSuccess<T>(response: Response<any, Record<string, any>, number>, data:T, pageData:PageData | undefined) {
 
     console.log('Server Response: Success');
 
     // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>();
+    let apiResponse = this.initApiResponse<T>(pageData);
 
     // Logon Required
     if (!apiResponse.logonMet())
@@ -193,7 +198,7 @@ export class BaseController {
     console.log('Server Response: Logon Required');
 
     // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>();
+    let apiResponse = this.initApiResponse<T>(undefined);
 
     // Logon Required
     response.send(apiResponse.logonRequired());
@@ -203,7 +208,7 @@ export class BaseController {
     console.log('Server Response: Permission Required');
 
     // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>();
+    let apiResponse = this.initApiResponse<T>(undefined);
 
     // Permission Required
     response.send(apiResponse.permissionRequired());
@@ -213,7 +218,7 @@ export class BaseController {
     console.log('Server Response: Input Data Error');
 
     // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>();
+    let apiResponse = this.initApiResponse<T>(undefined);
 
     // Input Data Error
     response.send(apiResponse.inputDataError(data, message));
@@ -223,7 +228,7 @@ export class BaseController {
     console.log('Server Response: Server Error');
 
     // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>();
+    let apiResponse = this.initApiResponse<T>(undefined);
 
     // Send success
     response.send(apiResponse.serverError(message));

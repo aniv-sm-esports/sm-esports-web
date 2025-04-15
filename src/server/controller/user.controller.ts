@@ -6,6 +6,7 @@ import {BaseController} from './base.controller';
 import {ApiResponse} from '../../app/model/app.model';
 import {UserCreation} from '../../app/model/user-creation.model';
 import {UserCredentials} from '../../app/model/user-logon.model';
+import {PageData} from '../../app/model/page.model';
 
 export class UserController extends BaseController {
 
@@ -23,7 +24,7 @@ export class UserController extends BaseController {
 
       // Success
       if (user) {
-        this.sendSuccess(response, user || User.default());
+        this.sendSuccess(response, user || User.default(), undefined);
         return;
       }
       else {
@@ -36,23 +37,34 @@ export class UserController extends BaseController {
     }
   }
 
-  // GET -> /api/users/getAll
+  // POST -> /api/users/getPage
   //
-  getAll(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
+  getPage(request: Request<{}, ApiResponse<User[]>, PageData, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
 
     // Pre-work settings
     this.setLogonRequired(false);
 
     try {
+
       let users:User[] = [];
 
-      this.serverDb.users.forEach((user:User) => {
-        users.push(user);
-      })
+      let indexStart = (request.body.pageNumber - 1) * request.body.pageSize;
+      let indexEnd = request.body.pageNumber * request.body.pageSize;
+
+      for (let index = indexStart; index < indexEnd; index++) {
+
+        // No More Users
+        if (index >= this.serverDb.users.length) {
+          break;
+        }
+        else {
+          users.push(this.serverDb.users[index]);
+        }
+      }
 
       // Success
-      this.sendSuccess(response, users);
+      this.sendSuccess(response, users, PageData.fromResponse(1, request.body.pageSize, this.serverDb.users.length));
     }
     catch(error) {
       console.log(error);
@@ -195,17 +207,17 @@ export class UserController extends BaseController {
         return;
       }
 
-      let userId = this.serverDb.users.size;
-      let credentialsId = this.serverDb.credentials.size;
+      let userId = this.serverDb.users.length;
+      let credentialsId = this.serverDb.credentials.length;
 
       // User
-      this.serverDb.users.set(userId, User.from(userId, request.body.userName, request.body.email));
+      this.serverDb.users.push(User.from(userId, request.body.userName, request.body.email));
 
       // User Credentials
-      this.serverDb.credentials.set(credentialsId, UserCredentials.fromLogon(request.body.userName, request.body.password));
+      this.serverDb.credentials.push(UserCredentials.fromLogon(request.body.userName, request.body.password));
 
       // Success
-      this.sendSuccess(response, request.body);
+      this.sendSuccess(response, request.body, undefined);
     }
     catch(error) {
       console.log(error);
@@ -254,7 +266,7 @@ export class UserController extends BaseController {
     }
 
     if (success) {
-      this.sendSuccess(response, result);
+      this.sendSuccess(response, result, undefined);
     }
     else {
       this.sendError(response, message);

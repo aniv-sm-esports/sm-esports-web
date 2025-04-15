@@ -1,5 +1,6 @@
 import {UserJWT} from './user-logon.model';
 import {User} from './user.model';
+import {PageData} from './page.model';
 
 export enum ApiResponseType {
   None = 'None',
@@ -15,6 +16,7 @@ export class ApiResponse<T>  {
   public data: T | undefined;
   public response: ApiResponseType;
   public message: string;
+  public pageData: PageData | undefined;
 
   // JWT Session Data (property names)
   public userInfo: UserJWT;
@@ -37,6 +39,11 @@ export class ApiResponse<T>  {
     let result = new ApiResponse<T>();
     result.loginNotRequired = true;
     return result;
+  }
+
+  public setPageData<T>(pageData:PageData | undefined)   {
+    this.pageData = pageData;
+    return this;
   }
 
   public loggedOn<T>(user: UserJWT) : ApiResponse<T> {
@@ -110,6 +117,13 @@ export class Size {
     let result = new Size();
     result.width = width;
     result.height = height;
+    return result;
+  }
+
+  public static scaled(width: number, height: number, multiplier:number){
+    let result = new Size();
+    result.width = width * multiplier;
+    result.height = height * multiplier;
     return result;
   }
 }

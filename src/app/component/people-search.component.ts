@@ -4,6 +4,7 @@ import {User} from '../model/user.model';
 import {NgForOf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../service/app.service';
 import {Router, RouterLink} from '@angular/router';
+import {PageData} from '../model/page.model';
 
 @Component({
   selector: 'people-search',
@@ -31,7 +32,7 @@ export class PeopleSearchComponent {
   }
 
   ngOnInit() {
-    this.userService.getAll().subscribe(response => {
+    this.userService.getPage(PageData.fromRequest(1, 25)).subscribe(response => {
       this.userList = response.data || [];
     });
   }

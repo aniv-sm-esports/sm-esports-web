@@ -48,8 +48,7 @@ import {DefaultTitleStrategy} from '@angular/router';
     UserService,
     NewsService,
     AppService,
-    ZoomService,
-    DefaultTitleStrategy
+    ZoomService
   ],
   bootstrap: [AppComponent]
 })
