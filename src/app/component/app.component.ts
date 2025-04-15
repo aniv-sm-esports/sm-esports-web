@@ -6,8 +6,8 @@ import {AuthService} from '../service/auth.service';
 import {UserJWT} from '../model/user-logon.model';
 import {AuthHandler} from '../model/handler.model';
 import moment from 'moment';
-import { faBars, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { faTwitch } from '@fortawesome/free-brands-svg-icons';
+import {faBars, faCircle, faEnvelope} from '@fortawesome/free-solid-svg-icons';
+import {faGithub, faTwitch} from '@fortawesome/free-brands-svg-icons';
 import {
   ActivatedRoute, ActivatedRouteSnapshot,
   Data,
@@ -49,6 +49,8 @@ export class AppComponent implements AuthHandler {
   public showChatNavTree: boolean = false;
   public showPeopleNavTree: boolean = false;
   public showHomeNavTree: boolean = false;
+  public showCollabNavTree: boolean = false;
+  public showLandscapeNavTree: boolean = false;
 
   // Activated Routes:  Need some information about what to display
   //
@@ -165,4 +167,6 @@ export class AppComponent implements AuthHandler {
   }
 
   protected readonly moment = moment;
+  protected readonly faGithub = faGithub;
+  protected readonly faEnvelope = faEnvelope;
 }

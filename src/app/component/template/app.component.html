@@ -145,6 +145,15 @@
     background: #FFF;
   }
 
+  .sidenav-container-left a:first-child fa-icon {
+    color: lawngreen;
+    font-size: 0.65em;
+    margin-left:5px;
+  }
+  .sidenav-container-left fa-icon {
+    margin-right:10px;
+  }
+
   .sidenav-container-left.expand {
     transition: left 0.15s ease-in-out;
     left: 0;
@@ -415,6 +424,12 @@
     </div>
     <div class="sidenav-content">
 
+      <!-- Live -->
+      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/live" routerLinkActive="active">Live<fa-icon [icon]="faCircle"></fa-icon></a>
+
+      <!-- Login -->
+      <a class="russo-one-regular" (click)="this.showSideNavLeft = false; this.showSideNavRight = true;" >Login</a>
+
       <!-- Home -->
       <div class="sidenav-tree">
         <div class="sidenav-tree-header" (click)="this.showHomeNavTree = !this.showHomeNavTree">
@@ -422,12 +437,11 @@
                                                     [textContent]="!this.showHomeNavTree ? '+' : '-'"></span></a>
         </div>
         <div class="sidenav-tree-body" *ngIf="this.showHomeNavTree">
-            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/live" routerLinkActive="active">Live</a>
+            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/news" routerLinkActive="active">News</a>
             <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/schedule" routerLinkActive="active">Schedule</a>
-            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/agenda" routerLinkActive="active">Agenda</a>
+            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/online" routerLinkActive="active">Online</a>
         </div>
       </div>
-      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/news" routerLinkActive="active">News</a>
 
       <!-- People -->
       <div class="sidenav-tree">
@@ -439,6 +453,32 @@
           <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/all" routerLinkActive="active">All</a>
           <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/board" routerLinkActive="active">Board</a>
           <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/search" routerLinkActive="active">Search</a>
+        </div>
+      </div>
+
+      <!-- Collab -->
+      <div class="sidenav-tree">
+        <div class="sidenav-tree-header" (click)="this.showCollabNavTree = !this.showCollabNavTree">
+          <a class="russo-one-regular">Collab <span class="sidenav-tree-expander"
+                                                    [textContent]="!this.showCollabNavTree ? '+' : '-'"></span></a>
+        </div>
+        <div class="sidenav-tree-body" *ngIf="this.showCollabNavTree">
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/collab/statement" routerLinkActive="active">Statement</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/collab/guide" routerLinkActive="active">Guide</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/collab/documents" routerLinkActive="active">Documents</a>
+        </div>
+      </div>
+
+      <!-- Landscape -->
+      <div class="sidenav-tree">
+        <div class="sidenav-tree-header" (click)="this.showLandscapeNavTree = !this.showLandscapeNavTree">
+          <a class="russo-one-regular">Landscape <span class="sidenav-tree-expander"
+                                                    [textContent]="!this.showLandscapeNavTree ? '+' : '-'"></span></a>
+        </div>
+        <div class="sidenav-tree-body" *ngIf="this.showLandscapeNavTree">
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/landscape/media" routerLinkActive="active">Media</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/landscape/wiki" routerLinkActive="active">Landscape</a>
+          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/landscape/links" routerLinkActive="active">Links</a>
         </div>
       </div>
 
@@ -455,6 +495,11 @@
           <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/general" routerLinkActive="active">General</a>
         </div>
       </div>
+
+      <!-- Contact -->
+      <a class="russo-one-regular" href="http://github.com/aniv-sm-esports/sm-esports-web" target="_blank" ><fa-icon [icon]="faGithub"></fa-icon>Project Github</a>
+      <a class="russo-one-regular" href="mailto:aniv.sm.esports@gmail.com"><fa-icon [icon]="faEnvelope"></fa-icon>Project Email</a>
+
     </div>
   </div>
 
