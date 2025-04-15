@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {NgOptimizedImage, NgStyle} from '@angular/common';
 import { AppService } from '../service/app.service';
-import {ChatBoxComponent} from './chatbox.component';
+import {ChatBoxComponent} from './control/chatbox.component';
 
 @Component({
   selector: "live",

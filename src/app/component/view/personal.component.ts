@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {UserService} from '../service/user.service';
-import {User} from '../model/user.model';
+import {UserService} from '../../service/user.service';
+import {User} from '../../model/user.model';
 import {NgOptimizedImage, NgStyle} from '@angular/common';
-import {AppService} from '../service/app.service';
+import {AppService} from '../../service/app.service';
 import {ActivatedRoute, RouterLink, RouterLinkActive} from '@angular/router';
-import {ChatBoxComponent} from './chatbox.component';
+import {ChatBoxComponent} from '../control/chatbox.component';
 
 @Component({
   selector: 'personal',
@@ -15,7 +15,7 @@ import {ChatBoxComponent} from './chatbox.component';
     RouterLinkActive,
     ChatBoxComponent
   ],
-  templateUrl: './template/personal.component.html'
+  templateUrl: '../template/view/personal.component.html'
 })
 export class PersonalComponent {
 

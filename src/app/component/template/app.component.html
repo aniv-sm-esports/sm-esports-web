@@ -121,8 +121,8 @@
   }
   /* "Live" */
   .banner fa-icon#liveDot {
-    color: red;
-    font-size: 0.9em;
+    color: lawngreen;
+    font-size: 0.8em;
     margin:5px;
   }
 
@@ -483,17 +483,18 @@
     </div>
 
     <a class="banner-item russo-one-regular" routerLink="/home" routerLinkActive="active">Home</a>
-    <a class="banner-item russo-one-regular" routerLink="/news" routerLinkActive="active">News</a>
     <a class="banner-item russo-one-regular" routerLink="/people" routerLinkActive="active">People</a>
-    <a class="banner-item russo-one-regular" routerLink="/chat/politics" routerLinkActive="active">Chat</a>
+    <a class="banner-item russo-one-regular" routerLink="/collab" routerLinkActive="active">Collab</a>
+    <a class="banner-item russo-one-regular" routerLink="/landscape" routerLinkActive="active">Landscape</a>
     <a class="banner-item russo-one-regular aniv" routerLink="/contact" routerLinkActive="active">Contact</a>
+    <a class="banner-item russo-one-regular" routerLink="/chat/politics" routerLinkActive="active">Chat</a>
     <a class="banner-item russo-one-regular live" routerLink="/live" routerLinkActive="active">Live<fa-icon id="liveDot" [icon]="faCircle"></fa-icon></a>
 
     <div class="logo">
       <div class="sidenav-right-opener">
         <button (click)="showSideNavRight=!showSideNavRight"><fa-icon [icon]="faBars"></fa-icon></button>
       </div>
-      <h1 class="russo-one-regular animate">Super Metroid Esports (DEVELOPER PREVIEW)</h1>
+      <h1 class="russo-one-regular animate">Super Metroid Esports</h1>
     </div>
 
   </div>

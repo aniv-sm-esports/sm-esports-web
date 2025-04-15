@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {UserService} from '../service/user.service';
-import {User} from '../model/user.model';
-import {AppService} from '../service/app.service';
+import {UserService} from '../../../service/user.service';
+import {User} from '../../../model/user.model';
+import {AppService} from '../../../service/app.service';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 
 @Component({
@@ -10,7 +10,7 @@ import {Router, RouterLink, RouterOutlet} from '@angular/router';
     RouterLink,
     RouterOutlet
   ],
-  templateUrl: './template/people.component.html'
+  templateUrl: '../../template/view/people/people.component.html'
 })
 export class PeopleComponent {
 

@@ -1,12 +1,12 @@
 import {afterNextRender, Component, inject} from '@angular/core';
-import {BannerLinkType, Article} from '../model/article.model';
-import {NewsService} from '../service/news.service';
+import {BannerLinkType, Article} from '../../../model/article.model';
+import {NewsService} from '../../../service/news.service';
 import {NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {AppService} from '../service/app.service';
-import {Size} from '../model/app.model';
+import {AppService} from '../../../service/app.service';
+import {Size} from '../../../model/app.model';
 import {YouTubePlayer} from '@angular/youtube-player';
-import {PageData} from '../model/page.model';
+import {PageData} from '../../../model/page.model';
 
 @Component({
   selector: 'news',
@@ -17,9 +17,9 @@ import {PageData} from '../model/page.model';
     YouTubePlayer,
     NgStyle
   ],
-  templateUrl: './template/news.component.html'
+  templateUrl: '../../template/view/home/home-news.component.html'
 })
-export class NewsComponent {
+export class HomeNewsComponent {
 
   protected readonly appService: AppService;
   private readonly newsService: NewsService;

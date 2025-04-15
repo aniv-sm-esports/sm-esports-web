@@ -1,8 +1,8 @@
 import {Component, Inject, NgZone} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {DOCUMENT, NgStyle} from '@angular/common';
-import {AppService} from '../service/app.service';
-import {ZoomComponent} from './zoom.component';
+import {AppService} from '../../../service/app.service';
+import {ZoomComponent} from '../../zoom.component';
 
 @Component({
   selector: 'home',
@@ -12,7 +12,7 @@ import {ZoomComponent} from './zoom.component';
     ZoomComponent,
     RouterOutlet
   ],
-  templateUrl: './template/home.component.html'
+  templateUrl: '../../template/view/home/home.component.html'
 })
 export class HomeComponent {
 

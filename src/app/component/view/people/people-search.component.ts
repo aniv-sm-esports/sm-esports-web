@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {UserService} from '../service/user.service';
-import {User} from '../model/user.model';
+import {UserService} from '../../../service/user.service';
+import {User} from '../../../model/user.model';
 import {NgForOf, NgOptimizedImage, NgStyle} from '@angular/common';
-import {AppService} from '../service/app.service';
+import {AppService} from '../../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
-import {PageData} from '../model/page.model';
+import {PageData} from '../../../model/page.model';
 
 @Component({
   selector: 'people-search',
@@ -14,7 +14,7 @@ import {PageData} from '../model/page.model';
     NgStyle,
     RouterLink
   ],
-  templateUrl: './template/people-search.component.html'
+  templateUrl: '../../template/view/people/people-search.component.html'
 })
 export class PeopleSearchComponent {
 

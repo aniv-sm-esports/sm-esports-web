@@ -1,18 +1,18 @@
 import {Component} from '@angular/core';
 import {NgOptimizedImage, NgStyle} from '@angular/common';
-import { AppService } from '../service/app.service';
-import {ChatBoxComponent} from './chatbox.component';
+import { AppService } from '../../../service/app.service';
+import {ChatBoxComponent} from '../../control/chatbox.component';
 
 @Component({
   selector: "online",
-  templateUrl: "./template/online.component.html",
+  templateUrl: "../../template/view/home/home-online.component.html",
   imports: [
     NgOptimizedImage,
     NgStyle,
     ChatBoxComponent
   ]
 })
-export class OnlineComponent {
+export class HomeOnlineComponent {
 
   constructor(protected readonly appService: AppService) {
 

@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {NgForOf} from '@angular/common';
-import {Tab} from '../model/tab.model';
+import {Tab} from '../../../model/tab.model';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {ChatService} from '../service/chat.service';
-import {BasicButtonComponent} from './control/primitive/button.component';
+import {ChatService} from '../../../service/chat.service';
+import {BasicButtonComponent} from '../../control/primitive/button.component';
 
 @Component({
   selector: 'chat',
@@ -14,7 +14,7 @@ import {BasicButtonComponent} from './control/primitive/button.component';
     RouterLinkActive,
     BasicButtonComponent
   ],
-  templateUrl: './template/chat.component.html'
+  templateUrl: '../../template/chat/chat.component.html'
 })
 export class ChatComponent {
 

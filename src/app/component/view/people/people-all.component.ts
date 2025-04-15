@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
-import {UserService} from '../service/user.service';
-import {User} from '../model/user.model';
+import {UserService} from '../../../service/user.service';
+import {User} from '../../../model/user.model';
 import {NgForOf} from '@angular/common';
-import {AppService} from '../service/app.service';
+import {AppService} from '../../../service/app.service';
 import {Router} from '@angular/router';
-import {AvatarComponent, AvatarSize} from './control/avatar.component';
-import {PageData} from '../model/page.model';
-import {SearchModel} from '../model/search.model';
-import {ApiResponseType} from '../model/app.model';
+import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
+import {PageData} from '../../../model/page.model';
+import {SearchModel} from '../../../model/search.model';
+import {ApiResponseType} from '../../../model/app.model';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
@@ -18,7 +18,7 @@ import {FaIconComponent} from '@fortawesome/angular-fontawesome';
     AvatarComponent,
     FaIconComponent
   ],
-  templateUrl: './template/people-all.component.html'
+  templateUrl: '../../template/view/people/people-all.component.html'
 })
 export class PeopleAllComponent {
 

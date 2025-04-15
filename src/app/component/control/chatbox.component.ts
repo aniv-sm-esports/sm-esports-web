@@ -1,17 +1,17 @@
 import {Component, Input, SimpleChanges} from '@angular/core';
-import {ChatService} from '../service/chat.service';
-import {ChatRoom} from '../model/chat-room.model';
+import {ChatService} from '../../service/chat.service';
+import {ChatRoom} from '../../model/chat-room.model';
 import {FormsModule} from '@angular/forms';
-import {User} from '../model/user.model';
+import {User} from '../../model/user.model';
 import {formatDate, NgClass, NgForOf} from '@angular/common';
-import {Chat} from '../model/chat.model';
+import {Chat} from '../../model/chat.model';
 import {noop} from 'rxjs';
-import {BasicButtonComponent} from './control/primitive/button.component';
-import {UserService} from '../service/user.service';
-import {ApiResponseType} from '../model/app.model';
-import {AuthService} from '../service/auth.service';
-import {AuthHandler} from '../model/handler.model';
-import {UserJWT} from '../model/user-logon.model';
+import {BasicButtonComponent} from './primitive/button.component';
+import {UserService} from '../../service/user.service';
+import {ApiResponseType} from '../../model/app.model';
+import {AuthService} from '../../service/auth.service';
+import {AuthHandler} from '../../model/handler.model';
+import {UserJWT} from '../../model/user-logon.model';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -22,7 +22,7 @@ import {ActivatedRoute, Router} from '@angular/router';
     NgClass,
     BasicButtonComponent
   ],
-  templateUrl: './template/chatbox.component.html'
+  templateUrl: '../template/control/chatbox.component.html'
 })
 export class ChatBoxComponent implements AuthHandler {
 
