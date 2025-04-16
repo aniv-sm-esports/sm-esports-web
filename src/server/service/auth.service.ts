@@ -1,5 +1,5 @@
 import {DataModel} from '../model/server.datamodel';
-import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/user-logon.model';
+import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/repository/user-logon.model';
 import moment from 'moment/moment';
 import CryptoJS from 'crypto-js';
 import fs from 'node:fs';

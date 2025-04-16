@@ -1,12 +1,12 @@
 import {afterNextRender, Component, inject} from '@angular/core';
-import {BannerLinkType, Article} from '../../../model/article.model';
+import {BannerLinkType, Article} from '../../../model/repository/article.model';
 import {NewsService} from '../../../service/news.service';
 import {NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AppService} from '../../../service/app.service';
-import {Size} from '../../../model/app.model';
+import {Size} from '../../../model/service/app.model';
 import {YouTubePlayer} from '@angular/youtube-player';
-import {PageData} from '../../../model/page.model';
+import {PageData} from '../../../model/service/page.model';
 
 @Component({
   selector: 'news',
@@ -77,7 +77,7 @@ export class HomeNewsComponent {
         console.log("News Fetched From Server: ", result);
 
         this.clearNews();
-        this.loadNews(result.data || []);
+        this.loadNews(result.apiData.dataSet || []);
     });
   }
 

@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/user.model';
+import {User} from '../../../model/repository/user.model';
 import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
-import {PageData} from '../../../model/page.model';
-import {SearchModel} from '../../../model/search.model';
-import {ApiResponseType} from '../../../model/app.model';
+import {PageData} from '../../../model/service/page.model';
+import {SearchModel} from '../../../model/service/search.model';
+import {ApiResponseType} from '../../../model/service/app.model';
 
 @Component({
   selector: 'people-board',
@@ -45,7 +45,7 @@ export class PeopleBoardComponent {
     this.userService.getPage(PageData.fromRequest(1, 25), searchBoard).subscribe(response => {
 
       if (response.response == ApiResponseType.Success) {
-        this.userList = response.data || [];
+        this.userList = response.apiData.dataSet || [];
       }
     });
   }

@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgOptimizedImage} from '@angular/common';
 import {FileService} from '../../service/file.service';
-import {FileModel} from '../../model/file.model';
-import {ApiResponseType} from '../../model/app.model';
+import {FileModel} from '../../model/repository/file.model';
+import {ApiResponseType} from '../../model/service/app.model';
 
 @Component({
   selector: 'picture-chooser',

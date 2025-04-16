@@ -1,6 +1,57 @@
 <style>
 
+  .people-search .search-bar {
+    display:flex;
+    flex-direction: row-reverse;
+    background: rgba(134,134,255, 0.3);
+  }
+
+  .people-search .search-bar label {
+    font-size:1.2em;
+    margin:10px;
+  }
+
+  .people-search input#searchInput {
+    width: 210px;
+    margin: 5px;
+    color: #888;
+    padding:10px;
+    border: none;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+  }
+
+  .people-search input#searchInput:focus {
+    outline: 3px solid rgba(134, 134, 255, 0.5);
+  }
+
+  .people-search input#searchInput::placeholder {
+    color: rgba(150,150,150,0.5);
+  }
+
+  .people-search sm-esports-select {
+    width:240px;
+    margin:5px;
+  }
+  .people-search sm-esports-button {
+    margin:5px 5px 5px 0px;
+  }
+
+
 </style>
-<div>
-  PEOPLE > SEARCH
+<div class="people-search">
+  <div class="search-bar">
+    <sm-esports-button [text]="'Search'" [disabled]="!this.searchValue" (clicked)="search(this.searchValue)" />
+    <input id="searchInput" placeholder="Enter Search..." [type]="this.searchType" [(ngModel)]="this.searchValue" />
+    <sm-esports-select [items]="this.searchFields" [model]="this.selectedField" />
+    <label class="russo-one-regular">Search</label>
+  </div>
+
+  <div class="search-result-container">
+    <div class="search-result-item"
+         *ngFor="let user of userList">
+      
+    </div>
+  </div>
+
 </div>

@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import { AppService } from '../../../service/app.service';
 
 @Component({
-  selector: "landscape",
+  selector: "landscape-wiki",
   templateUrl: "../../template/view/landscape/landscape-wiki.component.html",
   imports: [
   ]

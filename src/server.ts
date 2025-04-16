@@ -19,6 +19,7 @@ import bodyParser from 'body-parser';
 import {AuthController} from './server/controller/auth.controller';
 import {FileController} from './server/controller/file.controller';
 import {AuthService} from './server/service/auth.service';
+import {ChatRoomController} from './server/controller/chat-room.controller';
 
 // Some server constants
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -42,8 +43,9 @@ const authService = new AuthService(serverDb);
 const authController = new AuthController(serverDb, authService);
 const userController = new UserController(serverDb, authService);
 const newsController = new NewsController(serverDb, authService);
-const chatController = new ChatController(serverDb, authService);
 const fileController = new FileController(serverDb, authService);
+const chatRoomController = new ChatRoomController(serverDb, authService);
+const chatControllers = new Map<number, ChatController>();
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -169,13 +171,13 @@ app.route('/api/users/getPage').post(expressAuth, (request, response) =>{
   userController.authenticate(request, response);
   userController.getPage(request, response);
 });
-app.route('/api/users/exists/:userName').get(expressAuth, (request, response) =>{
-  userController.authenticate(request, response);
-  userController.exists(request, response);
+app.route('/api/auth/exists/:userName').get(expressAuth, (request, response) =>{
+  authController.authenticate(request, response);
+  authController.exists(request, response);
 });
-app.route('/api/users/create').post(expressAuth, (request, response) =>{
-  userController.authenticate(request, response);
-  userController.create(request, response);
+app.route('/api/auth/create').post(expressAuth, (request, response) =>{
+  authController.authenticate(request, response);
+  authController.create(request, response);
 });
 
 // API: News
@@ -193,19 +195,37 @@ app.route('/api/news/create').post(expressAuth, (request, response) =>{
 });
 
 // API: Chat
-app.route('/api/chat/getRooms').get(expressAuth, (request, response) =>{
-  chatController.authenticate(request, response);
-  chatController.getChatRooms(request, response);
+app.route('/api/chatRoom/getRooms').get(expressAuth, (request, response) =>{
+  chatRoomController.authenticate(request, response);
+  chatRoomController.getChatRooms(request, response);
 });
-app.route('/api/chat/getRoom/:chatRoomRoute').get(expressAuth, (request, response) =>{
-  chatController.authenticate(request, response);
-  chatController.getChatRoom(request, response);
+app.route('/api/chatRoom/getRoom/:chatRoomRoute').get(expressAuth, (request, response) =>{
+  chatRoomController.authenticate(request, response);
+  chatRoomController.getChatRoom(request, response);
 });
 app.route('/api/chat/getChats/:chatRoomId').post(expressAuth, (request, response) =>{
+
+  let chatRoomId = Number(request.params.chatRoomId);
+  let chatController = chatControllers.get(chatRoomId) || new ChatController(chatRoomId, serverDb, authService);
+
+  // New chat controller
+  if (!chatControllers.get(chatRoomId)) {
+    chatControllers.set(chatRoomId, new ChatController(chatRoomId, serverDb, authService));
+  }
+
   chatController.authenticate(request, response);
   chatController.getChats(request, response);
 });
 app.route('/api/chat/postChat/:chatRoomId').post(expressAuth, (request, response) =>{
+
+  let chatRoomId = Number(request.params.chatRoomId);
+  let chatController = chatControllers.get(chatRoomId) || new ChatController(chatRoomId, serverDb, authService);
+
+  // New chat controller
+  if (!chatControllers.get(chatRoomId)) {
+    chatControllers.set(chatRoomId, new ChatController(chatRoomId, serverDb, authService));
+  }
+
   chatController.authenticate(request, response);
   chatController.postChat(request, response);
 });

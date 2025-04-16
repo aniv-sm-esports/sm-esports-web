@@ -1,10 +1,10 @@
 import {afterNextRender, Component, DestroyRef, HostListener, inject} from '@angular/core';
 import {UserService} from '../service/user.service';
-import {ApiResponseType, Size} from '../model/app.model';
+import {ApiResponseType, Size} from '../model/service/app.model';
 import {AppService} from '../service/app.service';
 import {AuthService} from '../service/auth.service';
-import {UserJWT} from '../model/user-logon.model';
-import {AuthHandler} from '../model/handler.model';
+import {UserJWT} from '../model/repository/user-logon.model';
+import {AuthHandler} from '../model/service/handler.model';
 import moment from 'moment';
 import {faBars, faCircle, faEnvelope} from '@fortawesome/free-solid-svg-icons';
 import {faGithub, faTwitch} from '@fortawesome/free-brands-svg-icons';
@@ -19,7 +19,7 @@ import {
 } from '@angular/router';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {concatAll, filter, map, switchMap, takeLast} from 'rxjs';
-import {Tab} from '../model/tab.model';
+import {Tab} from '../model/view/tab.model';
 
 @Component({
   selector: 'app-root',

@@ -2,10 +2,10 @@ import {Component, Input} from '@angular/core';
 import {NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
 import { AppService } from '../../service/app.service';
 import {ChatBoxComponent} from './chatbox.component';
-import {User} from '../../model/user.model';
+import {User} from '../../model/repository/user.model';
 import {RouterLink} from '@angular/router';
 import {WaCanvas2d, WaCanvasFillStrokeStyles, WaCanvasPath, WaCanvasPath2d} from '@ng-web-apis/canvas';
-import {Size} from '../../model/app.model';
+import {Size} from '../../model/service/app.model';
 import {Config, colors, uniqueNamesGenerator} from 'unique-names-generator';
 
 export enum AvatarSize {

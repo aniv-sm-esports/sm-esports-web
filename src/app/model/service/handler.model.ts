@@ -1,4 +1,4 @@
-import {UserJWT} from './user-logon.model';
+import {UserJWT} from '../repository/user-logon.model';
 import {Moment} from 'moment';
 
 export interface AuthHandler {
@@ -8,3 +8,5 @@ export interface AuthHandler {
 export interface TimeHandler {
   onReady: (value: Moment) => void  //defining the callback
 }
+
+export type Predicate<T> = (item: T) => boolean;

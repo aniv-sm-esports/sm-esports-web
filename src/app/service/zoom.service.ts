@@ -1,6 +1,6 @@
 import {Inject, Injectable, NgZone, PLATFORM_ID} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import {ZoomInfo} from '../model/zoom.model';
+import {ZoomInfo} from '../model/view/zoom.model';
 
 @Injectable({
   providedIn: 'root'

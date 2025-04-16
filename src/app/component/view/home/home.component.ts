@@ -17,6 +17,6 @@ import {ZoomComponent} from '../../zoom.component';
 export class HomeComponent {
 
   constructor(protected readonly router:Router) {
-    router.navigate(['home/online']);
+    router.navigate(['home/news']);
   }
 }

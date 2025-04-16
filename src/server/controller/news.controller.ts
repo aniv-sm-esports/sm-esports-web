@@ -1,17 +1,31 @@
 import {Injectable} from '@angular/core';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
-import {BaseController} from './base.controller';
-import {Article} from '../../app/model/article.model';
-import {ApiResponse} from '../../app/model/app.model';
-import {PageData} from '../../app/model/page.model';
+import { RepositoryController} from './repository.controller';
+import {Article} from '../../app/model/repository/article.model';
+import {ApiData, ApiRequest, ApiResponse} from '../../app/model/service/app.model';
+import {PageData} from '../../app/model/service/page.model';
+import {Repository} from '../../app/model/repository/repository.model';
+import {DataModel} from '../model/server.datamodel';
+import {AuthService} from '../service/auth.service';
 
-export class NewsController extends BaseController {
+export class NewsController extends RepositoryController<Article> {
+
+  private repository: Repository<Article> = new Repository<Article>('News Repository');
+
+  constructor(serverDb: DataModel, authService: AuthService) {
+    super(serverDb, authService);
+    this.initialize();
+  }
+
+  protected override initialize() {
+    this.repository = this.serverDb.news;
+  }
 
   // GET -> /api/news/get/:newsId
   //
-  get(request: Request<{newsId:string}, any, any, ParsedQs, Record<string, any>>,
-      response: Response<any, Record<string, any>, number>) {
+  get(request: Request<{newsId:string}, ApiResponse<Article>, ApiRequest<Article>, ParsedQs, Record<string, any>>,
+      response: Response<ApiResponse<Article>, Record<string, any>, number>) {
 
     // Pre-work settings
     this.setLogonRequired(false);
@@ -19,18 +33,19 @@ export class NewsController extends BaseController {
     try {
 
       // Success
-      if (this.serverDb.news.some(news => news.id == Number(request.params.newsId))) {
+      if (this.repository.has(Number(request.params.newsId))) {
 
-        let news = this.serverDb.news.find(x => x.id == Number(request.params.newsId)) || new Article();
+        let news = this.repository.get(Number(request.params.newsId)) || Article.default();
+        let apiData = ApiData.fromSingle(news);
 
         // Send during try/catch
-        this.sendSuccess(response, news, undefined);
+        this.sendSuccess(response, apiData, undefined);
         return;
       }
 
       // Data Error
       else {
-        this.sendDataError(response, Article.default(), 'News not found:  ${request.params.newsId}');
+        this.sendDataError(response, 'News not found:  ${request.params.newsId}');
       }
     }
     catch(error) {
@@ -41,21 +56,19 @@ export class NewsController extends BaseController {
 
   // POST -> /api/news/getPage
   //
-  getPage(request: Request<{}, any, any, ParsedQs, Record<string, any>>,
-         response: Response<any, Record<string, any>, number>){
+  getPage(request: Request<{}, ApiResponse<Article>, ApiRequest<Article>, ParsedQs, Record<string, any>>,
+          response: Response<ApiResponse<Article>, Record<string, any>, number>){
 
     // Pre-work settings
     this.setLogonRequired(false);
 
     try {
-      let newsItems:Article[] = [];
 
-      this.serverDb.news.forEach((news:Article) => {
-        newsItems.push(news);
-      })
+      let pageData = request.body.pageData || PageData.firstPage(25);
+      let newsItems:Article[] = this.repository.getPage(pageData) || [];
 
       // Success
-      this.sendSuccess(response, newsItems, PageData.fromResponse(1, 50, this.serverDb.news.length));
+      this.sendSuccess(response, ApiData.fromSet(newsItems), pageData);
       return;
     }
     catch(error) {
@@ -66,37 +79,43 @@ export class NewsController extends BaseController {
 
   // POST -> /api/news/create
   //
-  create(request: Request<{}, ApiResponse<Article>, Article, ParsedQs, Record<string, any>>,
-         response: Response<any, Record<string, any>, number>){
+  create(request: Request<{}, ApiResponse<Article>, ApiRequest<Article>, ParsedQs, Record<string, any>>,
+         response: Response<ApiResponse<Article>, Record<string, any>, number>){
 
     // Pre-work settings
     this.setLogonRequired(true);
 
+    // Validation
+    if (!request.body.data) {
+      this.sendDataError(response, 'An Error has occurred: Must include news article with request body');
+      return;
+    }
+
     try {
 
       let success = true;
+      let article = request.body.data as Article;
 
-      // Exists
-      this.serverDb.news.forEach((news:Article) => {
-        if (news.title.trim() == request.body.title.trim()) {
-          success = false;
-          this.sendDataError(response, Article.default(), 'News article (of the same title) already exists');
-        }
-      });
-
-      if (!success)
+      // Exists by id
+      if (this.repository.has(article.id)) {
+        this.sendDataError(response, `An Error has occurred: News article with id ${article.id} already exists`);
         return;
+      }
 
-      let news = Object.assign({}, request.body);
+      // Exists by title
+      if (this.repository.any(item => item.title === article.title)) {
+        this.sendDataError(response, `An Error has occurred: News article with title ${article.title} already exists`);
+        return;
+      }
 
       // Assign Id
-      news.id = this.serverDb.news.length;
+      article.id = this.repository.getSize();
 
       // Add News to database
-      this.serverDb.news.push(news);
+      this.repository.append(article);
 
       // Success
-      this.sendSuccess(response, news, undefined);
+      this.sendSuccess(response, ApiData.fromSingle(article), undefined);
     }
     catch(error) {
       console.log(error);

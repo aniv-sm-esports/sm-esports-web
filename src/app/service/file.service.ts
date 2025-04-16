@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ApiResponse} from '../model/app.model';
-import {FileModel} from '../model/file.model';
+import {ApiResponse} from '../model/service/app.model';
+import {FileModel} from '../model/repository/file.model';
 
 @Injectable({
   providedIn: 'root'

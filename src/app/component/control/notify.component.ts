@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Inject, Input, NgZone, Output, SimpleChanges} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {AppService} from '../../service/app.service';
-import {NotifySeverity, NotifyType} from '../../model/notify.model';
+import {NotifySeverity, NotifyType} from '../../model/service/notify.model';
 import moment, {Moment} from 'moment';
 import {TimeService} from '../../service/time.service';
-import {TimeHandler} from '../../model/handler.model';
+import {TimeHandler} from '../../model/service/handler.model';
 import {NgClass} from '@angular/common';
 
 @Component({

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {UserJWT} from '../model/user-logon.model';
+import {UserJWT} from '../model/repository/user-logon.model';
 import {AuthService} from '../service/auth.service';
 import {UserService} from '../service/user.service';
 import {FormsModule} from '@angular/forms';
@@ -9,11 +9,11 @@ import {NgIf, NgStyle} from '@angular/common';
 import {AppService} from '../service/app.service';
 import {Router} from '@angular/router';
 import {noop} from 'rxjs';
-import {AuthHandler} from '../model/handler.model';
-import {UserCreation} from '../model/user-creation.model';
-import {ApiResponseType} from '../model/app.model';
+import {AuthHandler} from '../model/service/handler.model';
+import {UserCreation} from '../model/view/user-creation.model';
+import {ApiResponseType} from '../model/service/app.model';
 import {NotifyComponent} from './control/notify.component';
-import {NotifySeverity, NotifyType} from '../model/notify.model';
+import {NotifySeverity, NotifyType} from '../model/service/notify.model';
 
 @Component({
   selector: 'create-account',
@@ -96,19 +96,20 @@ export class CreateAccountComponent implements AuthHandler {
       .createUser(this.userCreation)    // Emitted value
       .subscribe(response => {
 
-        if (response.data)
-          this.userCreation.update(response.data);
+        this.userCreation.update(response);
 
         // Success
-        if (response.response == ApiResponseType.Success){
+        if (response.passwordInvalid ||
+            response.emailInvalid ||
+            response.userNameInvalid){
           this.userCreationGeneralError = false;
           this.userCreationGeneralErrorMessage = '';
 
-          this.authService.logon(response.data?.userName || '', response.data?.password || '');
+          this.authService.logon(response.userName, response.password);
         }
         else {
-          this.userCreationGeneralError = !response.data?.userNameInvalid && !response.data?.passwordInvalid && !response.data?.emailInvalid;
-          this.userCreationGeneralErrorMessage = response.message;
+          this.userCreationGeneralError = !response.userNameInvalid && !response.passwordInvalid && !response.emailInvalid;
+          this.userCreationGeneralErrorMessage = 'General Error: Please contact admin';
         }
       });
   }

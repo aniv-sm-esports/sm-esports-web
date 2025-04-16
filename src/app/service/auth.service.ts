@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ApiResponse, ApiResponseType} from '../model/app.model';
-import {UserCredentials, UserJWT} from '../model/user-logon.model';
-import {AuthHandler} from '../model/handler.model'
+import {ApiResponse, ApiResponseType} from '../model/service/app.model';
+import {UserCredentials, UserJWT} from '../model/repository/user-logon.model';
+import {AuthHandler} from '../model/service/handler.model'
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +27,9 @@ export class AuthService {
   }
 
   logon(userName:string, password:string) {
-    return this.http.post<ApiResponse<UserJWT>>(this.urlLogon, UserCredentials.fromLogon(userName, password))
-                    .subscribe(response =>
-                    {
-                        this.setSession(UserJWT.from(response?.data));
+    return this.http.post<UserJWT>(this.urlLogon, UserCredentials.fromLogon(userName, password))
+                    .subscribe(response => {
+                        this.setSession(UserJWT.from(response));
                     });
   }
 
@@ -82,10 +81,10 @@ export class AuthService {
   //
   public refreshSession(){
 
-    return this.http.get<ApiResponse<UserJWT>>(this.urlGetSession)
+    return this.http.get<UserJWT>(this.urlGetSession)
                     .subscribe(response =>
                     {
-                      this.setSession(UserJWT.from(response?.data));
+                      this.setSession(UserJWT.from(response));
                     });
   }
 }

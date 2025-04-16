@@ -1,16 +1,18 @@
-import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/user.model';
-import {Article, BannerLinkType} from '../../app/model/article.model';
-import {ChatRoom} from '../../app/model/chat-room.model';
-import {Chat} from '../../app/model/chat.model';
-import {ChatRoomUserMap} from '../../app/model/chat-room-user-map.model';
+import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/repository/user.model';
+import {Article, BannerLinkType} from '../../app/model/repository/article.model';
+import {ChatRoom} from '../../app/model/repository/chat-room.model';
+import {Chat} from '../../app/model/repository/chat.model';
+import {ChatRoomUserMap} from '../../app/model/repository/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
-import {UserCredentials, UserJWTPayload} from '../../app/model/user-logon.model';
+import {UserCredentials, UserJWTPayload} from '../../app/model/repository/user-logon.model';
 import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
-import {FileModel} from '../../app/model/file.model';
+import {FileModel} from '../../app/model/repository/file.model';
 import * as fs from 'node:fs';
-import { SearchModel } from '../../app/model/search.model';
+import { SearchModel } from '../../app/model/service/search.model';
 import {stringify} from 'node:querystring';
+import {Repository} from '../../app/model/repository/repository.model';
+import {RepositoryState} from '../../app/model/repository/repository-state.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +21,12 @@ export class DataModel {
 
   public readonly publicFolder: string = 'public';
 
-  chatRoomUserMap: ChatRoomUserMap;
-  chatRooms: ChatRoom[];
-  users: User[];
-  news: Article[];
   credentials: UserCredentials[];
-  files: FileModel[];
+  chatRoomUserMap: ChatRoomUserMap;
+  chatRooms: Repository<ChatRoom>;
+  users: Repository<User>;
+  news: Repository<Article>;
+  files: Repository<FileModel>;
 
   // Auth Service (this may move to separate auth server)
   userTokenMap: Map<string, string>;
@@ -32,16 +34,20 @@ export class DataModel {
 
   constructor() {
 
-    this.chatRooms = [];
-    this.users = [];
+    this.chatRooms = new Repository<ChatRoom>('Chat Room Repository');
+    this.users = new Repository<User>('User Repository');
     this.chatRoomUserMap = new ChatRoomUserMap();
     this.credentials = [];
-    this.files = [];
-    this.news = [];
+    this.files = new Repository<FileModel>('File Repository');
+    this.news = new Repository<Article>('News Article Repository');
     this.userTokenMap = new Map<string, string>();
     this.tokenMap = new Map<string, UserJWTPayload>();
 
     // Server Application Defaults
+    let chatRooms = new Array<ChatRoom>();
+    let users = new Array<User>();
+    let news = new Array<Article>();
+    let files = new Array<FileModel>();
 
     // Users
     let zoasty = User.from(0, 'zoasty', 'zoasty@nomail.com');
@@ -64,7 +70,7 @@ export class DataModel {
       user.userRole = UserRoleType.Editor;
       user.personRole = PersonRoleType.BoardMember;
 
-      this.users.push(user);
+      users.push(user);
     });
 
     let aniv = User.from(6, 'AnivSmEsports', 'aniv-sm-esports@nomail.com');
@@ -75,11 +81,11 @@ export class DataModel {
     aniv.isMockAccount = false;
     aniv.roleInfo = UserRole.from(UserRoleType.Admin, PersonRoleType.GeneralUser);
 
-    this.users.push(aniv);
+    users.push(aniv);
 
     // User Credentials - (using 'test' as password for every test user)
     //
-    this.users.forEach((user: User) => {
+    users.forEach((user: User) => {
       this.credentials.push(UserCredentials.fromLogon(user.name, 'test'));
     });
 
@@ -93,6 +99,7 @@ export class DataModel {
       let uniqueName: string = uniqueNamesGenerator(config);
       let user:User = User.from(-1, uniqueName, uniqueName + "@nomail.com");
 
+      user.id = index + users.length;
       user.isMockAccount = true;
       user.shortDescription = `A Short Description of ${user.name}`;
       user.longDescription = this.fillLoremIpsumShort();
@@ -100,7 +107,7 @@ export class DataModel {
       user.userRole = UserRoleType.General;
       user.personRole = PersonRoleType.GeneralUser;
 
-      this.users.push(user);
+      users.push(user);
     }
 
     // Chat Rooms
@@ -128,10 +135,10 @@ export class DataModel {
       'general',
       'Please be respectful to others. How would you want to be treated?');
 
-    this.chatRooms.push(chatPolitics);
-    this.chatRooms.push(chatPeople);
-    this.chatRooms.push(chatSpeedRunning);
-    this.chatRooms.push(chatGeneral);
+    chatRooms.push(chatPolitics);
+    chatRooms.push(chatPeople);
+    chatRooms.push(chatSpeedRunning);
+    chatRooms.push(chatGeneral);
 
     // News
     let newsWelcome = Article.from(0,
@@ -165,78 +172,36 @@ export class DataModel {
       "\n" +
       "Released in April 1994, Super Metroid was the eagerly anticipated third game in the Metroid series. Samus Aran returns to the planet Zebes to once again fight the space pirates and Mother Brain who have taken the metroid hatchling.</p>";
 
-    this.news.push(newsWelcome);
-    this.news.push(newsGDQ);
-    this.news.push(newsGDQZoasty);
+    news.push(newsWelcome);
+    news.push(newsGDQ);
+    news.push(newsGDQZoasty);
 
     // MOCK CHAT DATA
-    this.chatRooms.forEach(chatRoom => {
+    chatRooms.forEach(chatRoom => {
       chatRoom.chats.push(Chat.from(0, 'AnivSmEsports', this.helloMessage()));
     });
 
 
     // FILES
-    fs.readdir(this.publicFolder, (error, files) => {
+    fs.readdir(this.publicFolder, (error, dirFiles) => {
 
       if (error){
         console.log(error);
       }
       else{
-        files.forEach((item) => {
-          this.files.push(FileModel.from(item, this.publicFolder));
+        let index = 0;
+        dirFiles.forEach((item) => {
+          files.push(FileModel.from(index++, item, this.publicFolder));
         });
       }
 
     });
-  }
 
-  applyFilter<T>(search:SearchModel<T>, array:Array<T>){
-
-    if (search == SearchModel.default<T>())
-      return array;
-
-    return array.filter((item:T) => {
-
-      let success = true;
-
-      Object.getOwnPropertyNames(item).forEach(key => {
-
-        let theKey = key as keyof typeof item;
-
-        // Property Search Defined  // TODO: Serialization not working for the functions. Probably need interface (?)
-        if (!!search.searchMap[key]) {
-          success = success && (search.searchMap[key] == item[theKey]);   // TODO: toString
-        }
-      });
-
-      return success;
-    });
-  }
-
-  getUserByName(name: string, ignoreCase:boolean = false) {
-
-    let result:User = User.default();
-
-    this.users.forEach((user) => {
-
-      if (!ignoreCase) {
-        if(user.name == name) {
-          result = user;
-          return;
-        }
-      }
-      else {
-        if (user.name.toLowerCase() == name.toLowerCase()) {
-          if(user.name == name) {
-            result = user;
-            return;
-          }
-        }
-      }
-
-    });
-
-    return result;
+    // ~REPOSITORY INITIALIZE!~
+    this.chatRooms.fullInitialize(chatRooms, SearchModel.default());
+    this.users.fullInitialize(users, SearchModel.default());
+    this.files.fullInitialize(files, SearchModel.default());
+    this.news.fullInitialize(news, SearchModel.default());
   }
 
   helloMessage() {

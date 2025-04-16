@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Chat} from '../model/chat.model';
-import {ApiResponse} from '../model/app.model';
-import {ChatRoom} from '../model/chat-room.model';
+import {Chat} from '../model/repository/chat.model';
+import {ApiResponse} from '../model/service/app.model';
+import {ChatRoom} from '../model/repository/chat-room.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class ChatService {
 
   // Chat API
   //
-  urlGetChatRooms = "/api/chat/getRooms";
-  urlGetChatRoom = "/api/chat/getRoom/:chatRoomRoute";
+  urlGetChatRooms = "/api/chatRoom/getRooms";
+  urlGetChatRoom = "/api/chatRoom/getRoom/:chatRoomRoute";
   urlGetChats = "/api/chat/getChats/:chatRoomId";
   urlPostChat = "/api/chat/postChat/:chatRoomId";
 
@@ -25,7 +25,7 @@ export class ChatService {
   }
 
   getChatRooms() {
-    return this.http.get<ApiResponse<ChatRoom[]>>(this.urlGetChatRooms);
+    return this.http.get<ApiResponse<ChatRoom>>(this.urlGetChatRooms);
   }
 
   getChatRoom(chatRoomRoute: string) {
@@ -35,7 +35,7 @@ export class ChatService {
   }
 
   getChats(chatRoomId: number) {
-    return this.http.get<ApiResponse<Chat[]>>(this.urlGetChats.replace(':chatRoomId', chatRoomId.toString()), {
+    return this.http.get<ApiResponse<Chat>>(this.urlGetChats.replace(':chatRoomId', chatRoomId.toString()), {
       headers: this.headers
     });
   }

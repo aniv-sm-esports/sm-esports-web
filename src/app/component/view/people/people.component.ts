@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/user.model';
+import {User} from '../../../model/repository/user.model';
 import {AppService} from '../../../service/app.service';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 

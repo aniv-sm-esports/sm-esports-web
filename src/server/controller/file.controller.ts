@@ -1,24 +1,39 @@
 import {Injectable} from '@angular/core';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
-import {BaseController} from './base.controller';
-import {ApiResponse} from '../../app/model/app.model';
-import {FileModel} from '../../app/model/file.model';
+import { RepositoryController} from './repository.controller';
+import {ApiData, ApiRequest, ApiResponse} from '../../app/model/service/app.model';
+import {FileModel} from '../../app/model/repository/file.model';
 import * as fs from 'node:fs';
+import {Repository} from '../../app/model/repository/repository.model';
+import {DataModel} from '../model/server.datamodel';
+import {AuthService} from '../service/auth.service';
 
-export class FileController extends BaseController {
+export class FileController extends RepositoryController<FileModel> {
+
+  private repository: Repository<FileModel> = new Repository<FileModel>('File Repository');
+
+  constructor(serverDb: DataModel, authService: AuthService) {
+    super(serverDb, authService);
+    this.initialize();
+  }
+
+  protected override initialize() {
+    this.repository = this.serverDb.files;
+  }
 
   // GET -> /api/file/get/:fileName
   //
-  get(request: Request<{fileName:string}, FileModel, any, ParsedQs, Record<string, any>>,
-      response: Response<any, Record<string, any>, number>) {
+  get(request: Request<{fileName:string}, ApiResponse<FileModel>, ApiRequest<FileModel>, ParsedQs, Record<string, any>>,
+      response: Response<ApiResponse<FileModel>, Record<string, any>, number>) {
 
     // Pre-work settings
     this.setLogonRequired(true);
 
     try {
 
-      let file = FileModel.from(request.params.fileName, this.serverDb.publicFolder);
+      let fileId = this.repository.getSize();
+      let file = FileModel.from(fileId, request.params.fileName, this.serverDb.publicFolder);
 
       // Read file using node:fs
       fs.readFile(request.params.fileName, (err, data) => {
@@ -26,7 +41,7 @@ export class FileController extends BaseController {
       });
 
       // Send during try/catch
-      this.sendSuccess(response, file, undefined);
+      this.sendSuccess(response, ApiData.fromSingle(file), undefined);
       return;
     }
     catch(error) {
@@ -35,19 +50,19 @@ export class FileController extends BaseController {
     }
   }
 
-  // GET -> /api/chat/getRoom/:chatRoomRoute
+  // POST -> /api/file/getRoom/:chatRoomRoute
   //
-  post(request: Request<{}, ApiResponse<string>, FileModel, ParsedQs, Record<string, any>>,
-       response: Response<any, Record<string, any>, number>) {
+  post(request: Request<{}, ApiResponse<FileModel>, ApiRequest<FileModel>, ParsedQs, Record<string, any>>,
+       response: Response<ApiResponse<FileModel>, Record<string, any>, number>) {
 
     // Pre-work settings
     this.setLogonRequired(true);
 
     // Validate File
-    if (!request.body.name ||
-        !request.body.fileData ||
-        request.body.fileData.size == 0) {
-      this.sendDataError(response, FileModel.default(), 'File Invalid!');
+    if (!request.body.data?.name ||
+        !request.body.data?.fileData ||
+        request.body.data?.fileData.size == 0) {
+      this.sendDataError(response, 'File Invalid!');
       return;
     }
 
@@ -64,31 +79,32 @@ export class FileController extends BaseController {
       //
 
       // Blob -> Array Buffer -> Save Data
-      request.body
-             .fileData
-             .arrayBuffer()
-             .then(data => {
+      let file = request.body.data!;
+      file.fileData
+          .arrayBuffer()
+           .then(data => {
 
-               // Write File
-               fs.writeFile(request.body.name, new DataView(data),
-                 (error) => {
+             // Write File
+             fs.writeFile(file.name, new DataView(data),
+               (error) => {
 
-                 // Error Catch
-                 console.log(error);
-                 success = false;
-               });
+               // Error Catch
+               console.log(error);
+               success = false;
+             });
 
-               // Success
-               if (success) {
-                 let file = FileModel.from(request.body.name, request.body.directory);
-                 this.serverDb.files.push(file);
-                 this.sendSuccess(response, 'File uploaded successfully!', undefined);
-               }
+             // Success
+             if (success) {
+               let fileId = this.repository.getSize();
+               let fileModel = FileModel.from(fileId, file.name, file.directory);
+               this.repository.append(fileModel);
+               this.sendSuccess(response, ApiData.fromSingle(fileModel), undefined);
+             }
 
-               // Failure
-               else {
-                 this.sendError(response, 'There was an error saving the file to the server');
-               }
+             // Failure
+             else {
+               this.sendError(response, 'There was an error saving the file to the server');
+             }
       });
     }
     catch(error) {

@@ -1,5 +1,5 @@
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Size} from '../model/app.model';
+import {Size} from '../model/service/app.model';
 import {Injectable} from '@angular/core';
 
 @Injectable({

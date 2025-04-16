@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NgForOf} from '@angular/common';
-import {Tab} from '../../../model/tab.model';
+import {Tab} from '../../../model/view/tab.model';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {ChatService} from '../../../service/chat.service';
 import {BasicButtonComponent} from '../../control/primitive/button.component';
@@ -40,7 +40,7 @@ export class ChatComponent {
           this.chatTabs = [];
 
           // Add tabs from response
-          response.data?.forEach(room => {
+          response.apiData.dataSet?.forEach(room => {
             this.chatTabs.push(Tab.from(room.name, room.urlRoute));
           });
         });

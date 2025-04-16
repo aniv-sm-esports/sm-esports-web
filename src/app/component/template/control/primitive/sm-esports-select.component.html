@@ -1,0 +1,19 @@
+<style>
+  .sm-esports-select-container {
+    width:100%;
+  }
+  .sm-esports-select-container .ng-select-container {
+    border-radius: 20px !important;
+    -webkit-border-radius: 20px !important;
+    border:none;
+  }
+  .sm-esports-select-container .ng-dropdown-panel-items,
+  .sm-esports-select-container .ng-dropdown-panel {
+    border-radius: 10px !important;
+    -webkit-border-radius: 10px !important;
+  }
+</style>
+
+<div class="sm-esports-select-container">
+  <ng-select [items]="this.items" [(ngModel)]="this.model" (ngModelChange)="onChanged($event)" />
+</div>

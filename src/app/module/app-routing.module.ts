@@ -13,7 +13,7 @@ import {HomeScheduleComponent} from '../component/view/home/home-schedule.compon
 import {PeopleAllComponent} from '../component/view/people/people-all.component';
 import {PeopleBoardComponent} from '../component/view/people/people-board.component';
 import {PeopleSearchComponent} from '../component/view/people/people-search.component';
-import {Tab} from '../model/tab.model';
+import {Tab} from '../model/view/tab.model';
 import {ContactComponent} from '../component/contact.component';
 import {HomeOnlineComponent} from '../component/view/home/home-online.component';
 import { CollabComponent } from '../component/view/collab/collab.component';

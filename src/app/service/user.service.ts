@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {User} from '../model/user.model';
+import {User} from '../model/repository/user.model';
 import {firstValueFrom, Observable} from 'rxjs';
-import {ApiRequest, ApiResponse} from '../model/app.model';
-import {UserCreation} from '../model/user-creation.model';
-import {Chat} from '../model/chat.model';
-import {PageData} from '../model/page.model';
-import {SearchModel} from '../model/search.model';
+import {ApiRequest, ApiResponse} from '../model/service/app.model';
+import {UserCreation} from '../model/view/user-creation.model';
+import {Chat} from '../model/repository/chat.model';
+import {PageData} from '../model/service/page.model';
+import {SearchModel} from '../model/service/search.model';
+import {RepositoryState} from '../model/repository/repository-state.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +19,8 @@ export class UserService {
   // Users -> Post -> Create User
   urlGet = "/api/users/get/:userName";
   urlGetPage = "/api/users/getPage";
-  urlExists = "/api/users/exists/:userName";
-  urlCreate = "/api/users/create";
+  urlExists = "/api/auth/exists/:userName";
+  urlCreate = "/api/auth/create";
 
   private readonly headers = new HttpHeaders({'Content-Type': 'application/json'});
 
@@ -32,17 +33,17 @@ export class UserService {
   }
 
   getPage(pageData: PageData, searchModel:SearchModel<User>) {
-    return this.http.post<ApiResponse<User[]>>(this.urlGetPage, ApiRequest.paged<User>(pageData, searchModel), {
+    return this.http.post<ApiResponse<User>>(this.urlGetPage, ApiRequest.paged<User>(pageData, new RepositoryState<User>(0, searchModel)), {
       headers: this.headers
     });
   }
 
   userExists(userName: string) {
-    return this.http.get<ApiResponse<User>>(this.urlExists.replace(':userName', userName));
+    return this.http.get<User>(this.urlExists.replace(':userName', userName));
   }
 
-  createUser(userCreation: UserCreation) : Observable<ApiResponse<UserCreation>> {
-    return this.http.post<ApiResponse<UserCreation>>(this.urlCreate, userCreation, {
+  createUser(userCreation: UserCreation) : Observable<UserCreation> {
+    return this.http.post<UserCreation>(this.urlCreate, userCreation, {
       headers: this.headers
     });
   }

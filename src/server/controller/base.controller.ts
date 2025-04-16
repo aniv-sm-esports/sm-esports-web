@@ -1,17 +1,17 @@
 import { Request, Response} from 'express-serve-static-core';
-import {ApiResponse, ApiResponseType} from '../../app/model/app.model';
+import {ApiData, ApiResponse, ApiResponseType} from '../../app/model/service/app.model';
 import {DataModel} from '../model/server.datamodel';
 import {ParsedQs} from 'qs';
-import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/user-logon.model';
-import moment from 'moment';
-import {User} from '../../app/model/user.model';
+import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/repository/user-logon.model';
+import {User} from '../../app/model/repository/user.model';
 
-import CryptoJS from 'crypto-js';
 import {AuthService} from '../service/auth.service';
-import {PageData} from '../../app/model/page.model';
+import {PageData} from '../../app/model/service/page.model';
+import {RepositoryEntity} from '../../app/model/repository/repository-entity';
+import {SearchModel} from '../../app/model/service/search.model';
 
 
-export class BaseController {
+export abstract class BaseController {
 
   // *** Server-Wide JWT instance ***
   //
@@ -22,58 +22,20 @@ export class BaseController {
   // User for this request (or not defined if not stored with express-jwt)
   protected requestUser:User = User.default();
   protected requestJWT:UserJWT = UserJWT.default();
-  private logonRequired:boolean = false;
+  protected logonRequired:boolean = false;
 
   constructor(serverDb: DataModel, authService: AuthService) {
     this.authService = authService;
     this.serverDb = serverDb;
+
+    this.initialize();
   }
+
+  // Must call initialize from super class!
+  protected abstract initialize():void;
 
   protected setLogonRequired(value:boolean) {
     this.logonRequired = value;
-  }
-
-  private initApiResponse<T>(pageData:PageData | undefined) {
-
-    let apiResponse: ApiResponse<T>;
-
-    // Logon Required / User Authenticated
-    if (this.logonRequired && this.requestUser) {
-      apiResponse =
-        ApiResponse
-          .initLogonRequired<T>()
-          .setPageData<T>(pageData)
-          .loggedOn<T>(this.requestJWT || UserJWT.default());
-    }
-
-    // Logon Required / User NOT Authenticated
-    else if (this.logonRequired && !this.requestUser) {
-      apiResponse =
-        ApiResponse
-          .initLogonRequired<T>()
-          .setPageData<T>(pageData)
-          .notLoggedOn<T>();
-    }
-
-    // Logon Not Required / User Authenticated
-    else if (!this.logonRequired && this.requestUser) {
-      apiResponse =
-        ApiResponse
-          .initLogonNotRequired<T>()
-          .setPageData<T>(pageData)
-          .loggedOn<T>(this.requestJWT || UserJWT.default());
-    }
-
-    // Logon Not Required / User Not Authenticated
-    else {
-      apiResponse =
-        ApiResponse
-          .initLogonNotRequired<T>()
-          .setPageData<T>(pageData)
-          .notLoggedOn<T>();
-    }
-
-    return apiResponse;
   }
 
   // Middleware Pipeline ->
@@ -109,7 +71,7 @@ export class BaseController {
 
       // No Headers Present
       if (!request.headers.authorization ||
-           request.headers.authorization == 'Bearer undefined') {
+        request.headers.authorization == 'Bearer undefined') {
         return;
       }
 
@@ -127,7 +89,7 @@ export class BaseController {
 
         // SUCCESS
         else {
-          this.requestUser = this.serverDb.getUserByName(payload.userName);
+          this.requestUser = this.serverDb.users.getFirst(SearchModel.fromMap<User>({ "userName": payload.userName})) || User.default();
           this.requestJWT = UserJWT.fromLogon(payload.userName, request.headers.authorization || '',
             payload.loginTime,
             payload.expirationTime);
@@ -175,63 +137,4 @@ export class BaseController {
       console.log(error);
     }
   }
-
-  // Sends Response: This will send one ApiResponse<T> for the controller
-  //
-  protected sendSuccess<T>(response: Response<any, Record<string, any>, number>, data:T, pageData:PageData | undefined) {
-
-    console.log('Server Response: Success');
-
-    // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>(pageData);
-
-    // Logon Required
-    if (!apiResponse.logonMet())
-      response.send(apiResponse.logonRequired());
-
-    // Success
-    else
-      response.send(apiResponse.success(data));
-  }
-  protected sendLogonRequired<T>(response: Response<any, Record<string, any>, number>) {
-
-    console.log('Server Response: Logon Required');
-
-    // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>(undefined);
-
-    // Logon Required
-    response.send(apiResponse.logonRequired());
-  }
-  protected sendPermissionRequired<T>(response: Response<any, Record<string, any>, number>) {
-
-    console.log('Server Response: Permission Required');
-
-    // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>(undefined);
-
-    // Permission Required
-    response.send(apiResponse.permissionRequired());
-  }
-  protected sendDataError<T>(response: Response<any, Record<string, any>, number>, data:T | undefined, message:string) {
-
-    console.log('Server Response: Input Data Error');
-
-    // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>(undefined);
-
-    // Input Data Error
-    response.send(apiResponse.inputDataError(data, message));
-  }
-  protected sendError<T>(response: Response<any, Record<string, any>, number>, message:string) {
-
-    console.log('Server Response: Server Error');
-
-    // Set logon data for ApiResponse
-    let apiResponse = this.initApiResponse<T>(undefined);
-
-    // Send success
-    response.send(apiResponse.serverError(message));
-  }
-
 }

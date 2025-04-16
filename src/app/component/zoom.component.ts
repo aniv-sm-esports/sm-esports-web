@@ -2,7 +2,7 @@ import {Component, Inject, NgZone} from '@angular/core';
 import {DOCUMENT, NgStyle} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {ZoomService} from '../service/zoom.service';
-import {ZoomInfo} from '../model/zoom.model';
+import {ZoomInfo} from '../model/view/zoom.model';
 import {FormsModule} from '@angular/forms';
 
 @Component({

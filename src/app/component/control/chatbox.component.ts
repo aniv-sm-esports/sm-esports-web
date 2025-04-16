@@ -1,17 +1,17 @@
 import {Component, Input, SimpleChanges} from '@angular/core';
 import {ChatService} from '../../service/chat.service';
-import {ChatRoom} from '../../model/chat-room.model';
+import {ChatRoom} from '../../model/repository/chat-room.model';
 import {FormsModule} from '@angular/forms';
-import {User} from '../../model/user.model';
+import {User} from '../../model/repository/user.model';
 import {formatDate, NgClass, NgForOf} from '@angular/common';
-import {Chat} from '../../model/chat.model';
+import {Chat} from '../../model/repository/chat.model';
 import {noop} from 'rxjs';
 import {BasicButtonComponent} from './primitive/button.component';
 import {UserService} from '../../service/user.service';
-import {ApiResponseType} from '../../model/app.model';
+import {ApiResponseType} from '../../model/service/app.model';
 import {AuthService} from '../../service/auth.service';
-import {AuthHandler} from '../../model/handler.model';
-import {UserJWT} from '../../model/user-logon.model';
+import {AuthHandler} from '../../model/service/handler.model';
+import {UserJWT} from '../../model/repository/user-logon.model';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -121,7 +121,7 @@ export class ChatBoxComponent implements AuthHandler {
           .subscribe(response => {
 
             if (response.response == ApiResponseType.Success) {
-              this.chatRoom.update(response.data as ChatRoom);
+              this.chatRoom.update(response.apiData.data as ChatRoom);
 
               if (!this.userJWT.isDefault()) {
                 this.refreshChats();
@@ -145,7 +145,7 @@ export class ChatBoxComponent implements AuthHandler {
       .getChats(this.chatRoom.id)
       .subscribe(response => {
 
-        response.data?.forEach(chat => {
+        response.apiData.dataSet?.forEach(chat => {
 
           // Update
           if (this.chatRoom.containsChat(chat.id)) {

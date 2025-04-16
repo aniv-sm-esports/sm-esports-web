@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../service/user.service';
-import {User} from '../../model/user.model';
+import {User} from '../../model/repository/user.model';
 import {NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../service/app.service';
 import {ActivatedRoute, RouterLink, RouterLinkActive} from '@angular/router';
@@ -31,7 +31,7 @@ export class PersonalComponent {
       let userName:string = params['userName'];
 
       userService.getUser(userName).subscribe(response =>{
-        this.person = response.data || undefined;
+        this.person = response.apiData.data || undefined;
       });
     });
   }

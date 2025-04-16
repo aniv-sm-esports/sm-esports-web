@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import moment, {Moment} from 'moment';
 import {AsyncSubject, BehaviorSubject, Observable} from 'rxjs';
-import {TimeHandler} from '../model/handler.model';
+import {TimeHandler} from '../model/service/handler.model';
 
 @Injectable({
   providedIn: 'root'

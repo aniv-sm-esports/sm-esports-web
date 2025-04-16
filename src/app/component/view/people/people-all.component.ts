@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/user.model';
+import {User} from '../../../model/repository/user.model';
 import {NgForOf} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
-import {PageData} from '../../../model/page.model';
-import {SearchModel} from '../../../model/search.model';
-import {ApiResponseType} from '../../../model/app.model';
+import {PageData} from '../../../model/service/page.model';
+import {SearchModel} from '../../../model/service/search.model';
+import {ApiResponseType} from '../../../model/service/app.model';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
@@ -50,14 +50,14 @@ export class PeopleAllComponent {
     this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchBoard).subscribe(response => {
 
       if (response.response == ApiResponseType.Success) {
-        this.peopleBoard = response.data || [];
+        this.peopleBoard = response.apiData.dataSet || [];
       }
     });
 
     searchGeneral.set('personRole', 'General User');
 
     this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchGeneral).subscribe(response => {
-      this.peopleGeneral = response.data || [];
+      this.peopleGeneral = response.apiData.dataSet || [];
     });
   }
 }

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {UserCredentials, UserJWT} from '../../model/user-logon.model';
+import {UserCredentials, UserJWT} from '../../model/repository/user-logon.model';
 import {AuthService} from '../../service/auth.service';
 import {UserService} from '../../service/user.service';
 import {FormsModule} from '@angular/forms';
@@ -8,7 +8,7 @@ import {NgIf, NgStyle} from '@angular/common';
 import {AppService} from '../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {noop} from 'rxjs';
-import {AuthHandler} from '../../model/handler.model';
+import {AuthHandler} from '../../model/service/handler.model';
 
 @Component({
   selector: 'login',

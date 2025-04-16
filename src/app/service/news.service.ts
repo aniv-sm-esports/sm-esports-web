@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {firstValueFrom, Observable} from 'rxjs';
-import {Article} from '../model/article.model';
-import {ApiResponse} from '../model/app.model';
-import {PageData} from '../model/page.model';
+import {Article} from '../model/repository/article.model';
+import {ApiResponse} from '../model/service/app.model';
+import {PageData} from '../model/service/page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,8 @@ export class NewsService {
     });
   }
 
-  getPage(pageData:PageData): Observable<ApiResponse<Article[]>> {
-    return this.http.post<ApiResponse<Article[]>>(this.urlGetPage, pageData, {
+  getPage(pageData:PageData): Observable<ApiResponse<Article>> {
+    return this.http.post<ApiResponse<Article>>(this.urlGetPage, pageData, {
       headers: this.headers
     });
   }
