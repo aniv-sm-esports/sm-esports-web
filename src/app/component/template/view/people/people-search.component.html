@@ -1,6 +1,12 @@
 <style>
 
+  .people-search {
+  }
+
   .people-search .search-bar {
+    position:absolute;
+    left:20px;
+
     display:flex;
     flex-direction: row-reverse;
     background: rgba(134,134,255, 0.3);
@@ -37,21 +43,79 @@
     margin:5px 5px 5px 0px;
   }
 
+  .people-search .search-result-container {
+    display:inline-block;
+    margin-top:45px;
+    width:100%;
+    font-size:0.9em;
+  }
 
+  .people-search .search-result-container table {
+    display:block;
+    border-collapse: collapse;
+  }
+  .people-search .search-result-container table > tr {
+    background:rgba(0,0,0,0.3);
+    border:none;
+    padding:0;
+  }
+  .people-search .search-result-container table > tr > th {
+    position:sticky;
+    text-align:left;
+    padding:5px;
+  }
+  .people-search .search-result-container table > tr > th:first-child {
+    padding-left:10px;
+  }
+  .people-search .search-result-container table > tr > td {
+    width: auto;
+    text-wrap: nowrap;
+    padding:0;
+  }
+  .people-search .search-result-container table > tr > td:nth-child(3) {
+    width:100%;
+  }
+  .people-search .search-result-container table > tr > td:last-child {
+    padding-right:20px;
+  }
+  .people-search .search-result-container table > tr > td {
+    padding:5px 10px 5px 5px;
+  }
+  .people-search .search-result-container table > tr > td > fa-icon {
+    color: lawngreen;
+    font-size: 0.6em;
+    margin:5px;
+  }
 </style>
 <div class="people-search">
-  <div class="search-bar">
-    <sm-esports-button [text]="'Search'" [disabled]="!this.searchValue" (clicked)="search(this.searchValue)" />
-    <input id="searchInput" placeholder="Enter Search..." [type]="this.searchType" [(ngModel)]="this.searchValue" />
-    <sm-esports-select [items]="this.searchFields" [model]="this.selectedField" />
+
+  <div class="search-bar"
+       [ngStyle]="{'width': this.appService.getBodySize().width + 'px'}">
+    <!--sm-esports-select [items]="this.searchFields" [model]="this.selectedField" (change)="search(this.searchValue)" /-->
+    <input id="searchInput" placeholder="Enter Search..." [type]="this.searchType" [(ngModel)]="this.searchValue" (ngModelChange)="search(this.searchValue)" />
     <label class="russo-one-regular">Search</label>
   </div>
 
-  <div class="search-result-container">
-    <div class="search-result-item"
-         *ngFor="let user of userList">
-      
-    </div>
+  <div class="search-result-container ibm-plex-mono-medium"
+       [ngStyle]="{'width': this.appService.getBodySize().width + 'px'}">
+    <table *ngIf="this.userList.length > 0">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Description</th>
+        <th>Role</th>
+        <th>Security</th>
+      </tr>
+      <tr class="search-result-item"
+          *ngFor="let user of userList"
+          [ngStyle]="{'background-color': user.personRole === PersonRoleType.BoardMember ? 'rgba(134,134,255,0.2)' : 'rgba(255,225,255,0.1)'}">
+        <td><fa-icon [icon]="faCircle"></fa-icon>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.shortDescription}}</td>
+        <td [ngStyle]="{'color': user.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}">{{user.personRole}}</td>
+        <td>({{user.userRole}})</td>
+      </tr>
+    </table>
   </div>
 
 </div>

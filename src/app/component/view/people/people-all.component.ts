@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/repository/user.model';
+import {PersonRoleType, User} from '../../../model/repository/user.model';
 import {NgForOf} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router} from '@angular/router';
@@ -8,7 +8,7 @@ import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
 import {PageData} from '../../../model/service/page.model';
 import {SearchModel} from '../../../model/service/search.model';
 import {ApiResponseType} from '../../../model/service/app.model';
-import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import {faCircle} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -32,7 +32,7 @@ export class PeopleAllComponent {
   protected readonly faCircle = faCircle;
 
   protected readonly AvatarSize = AvatarSize;
-  protected pageSize:number = 25;
+  protected pageSize:number = 30;
 
   constructor(appService:AppService, userService: UserService, router: Router) {
     this.appService = appService;
@@ -44,7 +44,7 @@ export class PeopleAllComponent {
     let searchBoard: SearchModel<User> = new SearchModel<User>();
     let searchGeneral: SearchModel<User> = new SearchModel<User>();
 
-    searchBoard.set('personRole', 'Board Member');
+    searchBoard.set('personRole', PersonRoleType.BoardMember);
 
     // Fetch Board (this will need tuning later) (have to do pre-queries for the paging)
     this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchBoard).subscribe(response => {
@@ -54,10 +54,12 @@ export class PeopleAllComponent {
       }
     });
 
-    searchGeneral.set('personRole', 'General User');
+    searchGeneral.set('personRole', PersonRoleType.GeneralUser);
 
     this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchGeneral).subscribe(response => {
-      this.peopleGeneral = response.apiData.dataSet || [];
+      if (response.response == ApiResponseType.Success) {
+        this.peopleGeneral = response.apiData.dataSet || [];
+      }
     });
   }
 }

@@ -289,7 +289,7 @@ export class Repository<T extends RepositoryEntity> {
 
     // Fulfill Request (may be partial)
     //
-    for (let index= startIndex; index < endIndex && this.entities.length; index++) {
+    for (let index= startIndex; (index < endIndex) && (index < this.entities.length); index++) {
         result.push(this.entities[index]);
     }
 
@@ -359,8 +359,8 @@ export class Repository<T extends RepositoryEntity> {
       let regex = new RegExp(this.state.filter.searchMap[key]);
 
       // Filter Match
-      if (String(entity[theKey]).match(regex)) {
-        success = true;
+      if (!String(entity[theKey]).match(regex)) {
+        success = false;
       }
     });
 

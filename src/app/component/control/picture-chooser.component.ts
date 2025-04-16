@@ -46,7 +46,7 @@ export class PictureChooserComponent {
     }
 
     try {
-
+      /*
       let file = FileModel.from(element.files[0].name, '');
       file.fileData = element.files[0];
 
@@ -59,6 +59,8 @@ export class PictureChooserComponent {
         if (response.response == ApiResponseType.Success)
           this.pictureFileChanged.emit(this.pictureFile);
       });
+
+       */
     }
     catch (error){
       console.error(error);

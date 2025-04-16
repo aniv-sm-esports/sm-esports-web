@@ -7,6 +7,7 @@ import {AppService} from '../../../service/app.service';
 import {Size} from '../../../model/service/app.model';
 import {YouTubePlayer} from '@angular/youtube-player';
 import {PageData} from '../../../model/service/page.model';
+import moment from 'moment';
 
 @Component({
   selector: 'news',
@@ -91,7 +92,7 @@ export class HomeNewsComponent {
     news.forEach(item => {
 
       // TODO: Date being serialized as a string
-      item.date = new Date(item.date);
+      item.date = new Date(Date.parse(item.date.toString()));
 
       this.newsList.push(item);
     });

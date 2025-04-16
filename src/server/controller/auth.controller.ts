@@ -33,8 +33,7 @@ export class AuthController extends BaseController {
     // Validate User Data
     if (!request.body.userName ||
          request.body.userName.trim() == '') {
-      response.statusMessage = 'User name is not valid';
-      response.send(UserJWT.default());
+      response.status(401).send(UserJWT.default());
       return;
     }
 
@@ -63,18 +62,17 @@ export class AuthController extends BaseController {
         let userJWT = this.authService.logon(userCredentials);
 
         // Success -> Send JWT Token
-        response.send(userJWT);
+        response.status(200).send(userJWT);
       }
 
       // User Not Found
       else {
-        response.statusMessage = "User not found";
-        response.send();
+        response.status(200).send(UserJWT.default());
       }
     }
     catch(error) {
       console.log(error);
-      response.status(500).send('An Error has occurred: See server log for details');
+      response.status(500).send(UserJWT.default());
     }
   }
 
@@ -95,7 +93,7 @@ export class AuthController extends BaseController {
       // User Not Found
       else {
         response.statusMessage = 'User not found';
-        response.send('User not logged in!');
+        response.send(UserJWT.default());
       }
     }
     catch(error) {
