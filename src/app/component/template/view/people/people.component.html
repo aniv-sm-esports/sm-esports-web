@@ -1,9 +1,82 @@
 <style>
+  .people-container {
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    left:0;
+  }
+  .people-child-container {
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    left:0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .people-container .search-bar {
+    position:absolute;
+    left:0;
+    right:0;
+    display:flex;
+    flex-direction: row-reverse;
+    background: rgba(134,134,255, 0.5);
+    color:#888;
+    z-index:1;
+  }
 
+  .people-container .search-bar > label {
+    font-size:1.2em;
+    margin:10px;
+  }
+
+  .people-container .search-bar > input {
+    width: 210px;
+    margin: 5px;
+    color: #888;
+    padding:10px;
+    border: none;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+  }
+
+  .people-container .search-bar > input:focus {
+    outline: 3px solid rgba(134, 134, 255, 0.5);
+  }
+
+  .people-container .search-bar > input::placeholder {
+    color: rgba(150,150,150,0.5);
+  }
+
+  .people-container .search-bar > sm-esports-select {
+    width:240px;
+  }
+  .people-container .search-bar > sm-esports-button {
+  }
+  @media screen and (max-width: 1400px) {
+    .people-container {
+      top:42px;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .people-container {
+      top:52px;
+    }
+  }
 </style>
 
-<div class="people-container">
-  <div class="people-body-container">
+<div #peopleContainer class="people-container">
+
+  <div class="search-bar"
+       *ngIf="this.searchVisible">
+    <!--sm-esports-select [items]="this.searchFields" [model]="this.selectedField" (change)="search(this.searchValue)" /-->
+    <input placeholder="Enter Search..." [type]="this.searchType" [(ngModel)]="this.searchValue" (ngModelChange)="search(this.searchValue)" />
+    <label class="russo-one-regular">Search</label>
+  </div>
+
+  <div class="people-child-container" [ngStyle]="{'top': this.getContainerHeight() }">
     <router-outlet />
   </div>
 </div>

@@ -2,9 +2,6 @@ import {afterNextRender, Component, DestroyRef, HostListener, inject} from '@ang
 import {UserService} from '../service/user.service';
 import {ApiResponseType, Size} from '../model/service/app.model';
 import {AppService} from '../service/app.service';
-import {AuthService} from '../service/auth.service';
-import {UserJWT} from '../model/repository/user-logon.model';
-import {AuthHandler} from '../model/service/handler.model';
 import moment from 'moment';
 import {faBars, faCircle, faEnvelope} from '@fortawesome/free-solid-svg-icons';
 import {faGithub, faTwitch} from '@fortawesome/free-brands-svg-icons';
@@ -26,7 +23,7 @@ import {Tab} from '../model/view/tab.model';
   templateUrl: './template/app.component.html',
   standalone: false
 })
-export class AppComponent implements AuthHandler {
+export class AppComponent {
 
   protected readonly router:Router;
   protected readonly activatedRoute:ActivatedRoute;
@@ -36,21 +33,15 @@ export class AppComponent implements AuthHandler {
   // Font Awesome
   public faBars = faBars;
   public faCircle = faCircle;
-
-  // PRIMARY USER MODEL:  This should store user's data (could be relocated to user service.. which
-  //                      would then be the "user's service"
-  public primaryUserLogon: UserJWT;
-  public primaryUserLoggedOn: boolean;
+  protected readonly moment = moment;
+  protected readonly faGithub = faGithub;
+  protected readonly faEnvelope = faEnvelope;
 
   // The size of the body will be dynamically set during resize / load events
   //
-  public showSideNavRight: boolean = false;
+  public showUserDropdown: boolean = false;
   public showSideNavLeft: boolean = false;
-  public showChatNavTree: boolean = false;
-  public showPeopleNavTree: boolean = false;
-  public showHomeNavTree: boolean = false;
-  public showCollabNavTree: boolean = false;
-  public showLandscapeNavTree: boolean = false;
+  public showMenu: boolean = false;
 
   // Activated Routes:  Need some information about what to display
   //
@@ -62,28 +53,18 @@ export class AppComponent implements AuthHandler {
   public title = 'sm-esports-web';
   public loading: boolean = false;
 
-  constructor(router:Router, activatedRoute:ActivatedRoute, appService: AppService, userService: UserService, authService: AuthService) {
+  constructor(router:Router, activatedRoute:ActivatedRoute, appService: AppService, userService: UserService) {
 
     this.router = router;
     this.activatedRoute = activatedRoute;
     this.appService = appService;
-    this.primaryUserLogon = UserJWT.default();
-    this.primaryUserLoggedOn = false;
     this.userService = userService;
-
-    // User Logon Listener
-    //
-    authService.subscribeLogonChanged(this);
-    authService.refreshSession();
   }
 
   ngOnInit() {
 
     // Loading... (see Angular lifecycle)
     this.loading = true;
-
-    // Wait for logon event
-    this.primaryUserLoggedOn = false;
 
     // Reset route tabs
     this.routeTabs = [];
@@ -126,19 +107,6 @@ export class AppComponent implements AuthHandler {
 
   }
 
-  onLoginChanged(value: UserJWT){
-
-    if (!value) {
-      this.primaryUserLogon = UserJWT.default();
-      this.primaryUserLoggedOn = false;
-    }
-
-    else {
-      this.primaryUserLogon = value;
-      this.primaryUserLoggedOn = !value.isDefault();
-    }
-  }
-
   @HostListener('window:load', ['$event'])
   onLoad(event: Event) {
     if (!this.appService || !event || !event.currentTarget)
@@ -160,13 +128,4 @@ export class AppComponent implements AuthHandler {
     // AppService -> Observable / BehaviorSubscriber -> ...
     this.appService.updateClientSize(Size.from((event.target as Window).innerWidth, (event.target as Window).innerHeight));
   }
-
-  onSideNavOffClick() {
-    this.showSideNavLeft = false;
-    this.showSideNavRight = false;
-  }
-
-  protected readonly moment = moment;
-  protected readonly faGithub = faGithub;
-  protected readonly faEnvelope = faEnvelope;
 }

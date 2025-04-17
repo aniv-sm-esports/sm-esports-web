@@ -3,7 +3,7 @@ import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { BaseController } from './base.controller';
 import {ApiData, ApiRequest, ApiResponse} from '../../app/model/service/app.model';
-import {UserCredentials, UserJWT} from '../../app/model/repository/user-logon.model';
+import {UserCredentials, UserJWT} from '../../app/model/service/user-logon.model';
 import {Chat} from '../../app/model/repository/chat.model';
 import {User} from '../../app/model/repository/user.model';
 import {SearchModel} from '../../app/model/service/search.model';

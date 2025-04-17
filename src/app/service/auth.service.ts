@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ApiResponse, ApiResponseType} from '../model/service/app.model';
-import {UserCredentials, UserJWT} from '../model/repository/user-logon.model';
+import {UserCredentials, UserJWT} from '../model/service/user-logon.model';
 import {AuthHandler} from '../model/service/handler.model'
 
 @Injectable({

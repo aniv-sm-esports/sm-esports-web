@@ -3,8 +3,9 @@ import {RepositoryEntity} from './repository-entity';
 import {PageData} from '../service/page.model';
 import {SearchModel} from '../service/search.model';
 import moment, {Moment} from 'moment';
-import * as crypto from 'node:crypto';
 import {Predicate} from '../service/handler.model';
+import {BehaviorSubject} from 'rxjs';
+import { ApiData } from '../service/app.model';
 
 export enum RepositoryPageAvailability {
   Invalid = 0,
@@ -22,6 +23,11 @@ export class Repository<T extends RepositoryEntity> {
   private name:string;
   private initialized:boolean;
   private propertyNames:string[];
+
+  // Repository Changes
+  //
+  public repositoryChangeBehavior = new BehaviorSubject<ApiData<T>>(ApiData.default());
+  public repositoryChange$ = this.repositoryChangeBehavior.asObservable();
 
   constructor(name:string) {
     this.state = new RepositoryState<T>(0,SearchModel.default<T>());
@@ -64,21 +70,6 @@ export class Repository<T extends RepositoryEntity> {
     return repository;
   }
 
-  getFingerprint() {
-
-    // Date
-    let result:string = this.state.lastRepositoryChange.toString();
-
-    // Filters
-    result = result + this.state.filter.searchMap.toString();
-
-    // TODO: Extend global Object
-    return crypto
-      .createHash("sha256")
-      .update(result, "utf8")
-      .digest("hex" as crypto.BinaryToTextEncoding);
-  }
-
   // Initializes the repository with no-data; but the full set of config data, including filters.
   //
   emptyInitialize(state:RepositoryState<T>) {
@@ -88,6 +79,8 @@ export class Repository<T extends RepositoryEntity> {
     this.initialized = true;
 
     console.log(`Repository initialized:  ${this.name}`);
+
+    this.notifyAll();
   }
 
   // Initialize the repository with all records (server-side)
@@ -112,6 +105,8 @@ export class Repository<T extends RepositoryEntity> {
     this.initialized = true;
 
     console.log(`Repository initialized:  ${this.name}`);
+
+    this.notifyAll();
   }
 
   getSize() {
@@ -234,6 +229,9 @@ export class Repository<T extends RepositoryEntity> {
 
         // INVALIDATE
         this.state.lastRepositoryChange = moment();
+
+        // NOTIFY
+        this.notifySingle(entity);
     }
     else {
       console.log(`Error: Trying to set non-existing entity (by :id):  (${this.name})`);
@@ -260,6 +258,9 @@ export class Repository<T extends RepositoryEntity> {
       // INVALIDATE: Also resize the repository!
       this.state.lastRepositoryChange = moment();
       this.state.recordCapacity++;
+
+      // NOTIFY
+      this.notifySingle(entity);
     }
     else {
       console.log(`Error: Trying to set overwrite existing entity (by :id):  (${this.name})`);
@@ -297,7 +298,7 @@ export class Repository<T extends RepositoryEntity> {
   }
 
   // Updates Repository from page data from another repository (usually server -> client)
-  update(entities:Array<T>, pageData:PageData, lastRepositoryChange:Moment) {
+  update(entities:Array<T>, lastRepositoryChange:Moment) {
 
     if (!this.initialized) {
       console.log(`Repository refresh required:  ${this.name}`);
@@ -329,6 +330,30 @@ export class Repository<T extends RepositoryEntity> {
     }
 
     console.log(`Repository records added:  ${recordsAdded}`);
+
+    // NOTIFY
+    this.notifySet(entities);
+  }
+
+  private notifyAll(){
+    let apiData = ApiData.fromSet(this.entities);
+
+    // Notify Observers
+    this.repositoryChangeBehavior.next(apiData);
+  }
+
+  private notifySingle(data:T) {
+    let apiData = ApiData.fromSingle(data);
+
+    // Notify Observers
+    this.repositoryChangeBehavior.next(apiData);
+  }
+
+  private notifySet(data:T[]){
+    let apiData = ApiData.fromSet(data);
+
+    // Notify Observers
+    this.repositoryChangeBehavior.next(apiData);
   }
 
   private doesFilterPass(entity:T) {

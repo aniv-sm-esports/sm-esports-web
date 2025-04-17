@@ -1,4 +1,4 @@
-import {UserJWT} from '../repository/user-logon.model';
+import {UserJWT} from './user-logon.model';
 import {User} from '../repository/user.model';
 import {PageData} from './page.model';
 import {SearchModel} from './search.model';

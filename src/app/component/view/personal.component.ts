@@ -30,8 +30,8 @@ export class PersonalComponent {
     activatedRoute.params.subscribe(params => {
       let userName:string = params['userName'];
 
-      userService.getUser(userName).subscribe(response =>{
-        this.person = response.apiData.data || undefined;
+      userService.getUser(userName).then(user =>{
+        this.person = user;
       });
     });
   }

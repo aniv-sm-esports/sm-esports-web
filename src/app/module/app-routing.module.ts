@@ -29,53 +29,30 @@ export const routes: Routes = [
   { path:"login",  component: LoginComponent, title: 'Login'},
   { path:"create-account",  component: CreateAccountComponent, title: 'Create Account' },
 
-  { path:"home", component: HomeComponent, title: 'Home',
-    data: [Tab.from('News', 'home/news'), Tab.from('Schedule', 'home/schedule'), Tab.from('Online', 'home/online')]},
+  { path:"home", component: HomeComponent, title: 'Home', children: [
+      { path:"live",  component: LiveComponent, title: 'Live' },
+      { path:"news",  component: HomeNewsComponent, title: 'Home (News)'},
+      { path:"schedule",  component: HomeScheduleComponent, title: 'Home (Schedule)'},
+      { path:"online",  component: HomeOnlineComponent, title: 'Home (Online)'},
+    ]},
 
-  { path:"home/news",  component: HomeNewsComponent, title: 'Home (News)',
-    data: [Tab.from('News', 'home/news'), Tab.from('Schedule', 'home/schedule'), Tab.from('Online', 'home/online')]},
+  { path:"people",  component: PeopleComponent, title: 'People', children: [
+      { path:"all",  component: PeopleAllComponent, title: 'People (All)'},
+      { path:"board",  component: PeopleBoardComponent, title: 'People (Board)'},
+      { path:"search",  component: PeopleSearchComponent, title: 'People (Search)'}
+    ]},
 
-  { path:"home/schedule",  component: HomeScheduleComponent, title: 'Home (Schedule)',
-    data: [Tab.from('News', 'home/news'), Tab.from('Schedule', 'home/schedule'), Tab.from('Online', 'home/online')]},
+  { path:"collab",  component: CollabComponent, title: 'Collab', children: [
+    { path:"statement",  component: CollabStatementComponent, title: 'Collab'},
+    { path:"guide",  component: CollabGuideComponent, title: 'Collab'},
+    { path:"documents",  component: CollabDocumentsComponent, title: 'Collab'},
+  ]},
 
-  { path:"home/online",  component: HomeOnlineComponent, title: 'Home (Online)',
-    data: [Tab.from('News', 'home/news'), Tab.from('Schedule', 'home/schedule'), Tab.from('Online', 'home/online')]},
-
-  { path:"people",  component: PeopleComponent, title: 'People',
-    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
-
-  { path:"people/all",  component: PeopleAllComponent, title: 'People (All)',
-    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
-
-  { path:"people/board",  component: PeopleBoardComponent, title: 'People (Board)',
-    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
-
-  { path:"people/search",  component: PeopleSearchComponent, title: 'People (Search)',
-    data: [Tab.from('All', 'people/all'), Tab.from('Board', 'people/board'), Tab.from('Search', 'people/search')]},
-
-  { path:"collab",  component: CollabComponent, title: 'Collab',
-    data: [Tab.from('Statement', 'collab/statement'), Tab.from('Guide', 'collab/guide'), Tab.from('Documents', 'collab/documents')]},
-
-  { path:"collab/statement",  component: CollabStatementComponent, title: 'Collab',
-    data: [Tab.from('Statement', 'collab/statement'), Tab.from('Guide', 'collab/guide'), Tab.from('Documents', 'collab/documents')]},
-
-  { path:"collab/guide",  component: CollabGuideComponent, title: 'Collab',
-    data: [Tab.from('Statement', 'collab/statement'), Tab.from('Guide', 'collab/guide'), Tab.from('Documents', 'collab/documents')]},
-
-  { path:"collab/documents",  component: CollabDocumentsComponent, title: 'Collab',
-    data: [Tab.from('Statement', 'collab/statement'), Tab.from('Guide', 'collab/guide'), Tab.from('Documents', 'collab/documents')]},
-
-  { path:"landscape",  component: LandscapeComponent, title: 'Landscape',
-    data: [Tab.from('Media', 'landscape/media'), Tab.from('Wiki', 'landscape/wiki'), Tab.from('Links', 'landscape/links')]},
-
-  { path:"landscape/media",  component: LandscapeMediaComponent, title: 'Media',
-    data: [Tab.from('Media', 'landscape/media'), Tab.from('Wiki', 'landscape/wiki'), Tab.from('Links', 'landscape/links')]},
-
-  { path:"landscape/wiki",  component: LandscapeWikiComponent, title: 'Wiki',
-    data: [Tab.from('Media', 'landscape/media'), Tab.from('Wiki', 'landscape/wiki'), Tab.from('Links', 'landscape/links')]},
-
-  { path:"landscape/links",  component: LandscapeLinksComponent, title: 'Links',
-    data: [Tab.from('Media', 'landscape/media'), Tab.from('Wiki', 'landscape/wiki'), Tab.from('Links', 'landscape/links')]},
+  { path:"landscape",  component: LandscapeComponent, title: 'Landscape', children: [
+      { path:"media",  component: LandscapeMediaComponent, title: 'Media'},
+      { path:"wiki",  component: LandscapeWikiComponent, title: 'Wiki'},
+      { path:"links",  component: LandscapeLinksComponent, title: 'Links'},
+    ]},
 
   { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
   { path:"chat",  component: ChatComponent, title: 'Chat', children: [
@@ -86,9 +63,8 @@ export const routes: Routes = [
     ]
   },
   { path:"contact",  component: ContactComponent, title: 'Contact' },
-  { path:"live",  component: LiveComponent, title: 'Live' },
   {
-    path: '**', redirectTo: 'home'
+    path: '**', redirectTo: '/home/news'
   }
 ];
 

@@ -1,4 +1,5 @@
 import {SafeResourceUrl} from '@angular/platform-browser';
+import {RepositoryEntity} from './repository-entity';
 
 export enum BannerLinkType {
   None = 'none',
@@ -6,9 +7,8 @@ export enum BannerLinkType {
   YoutubeVideo = 'youtube-video',
 }
 
-export class Article {
+export class Article extends RepositoryEntity {
 
-  public id: number = -1;
   public date: Date = new Date();
   public title: string = "News Article";
   public description: string = "News Atricle Description";
@@ -18,6 +18,7 @@ export class Article {
   public bannerLinkType: BannerLinkType = BannerLinkType.None;
 
   constructor() {
+    super();
   }
 
   public static default() {

@@ -1,13 +1,13 @@
+import {RepositoryEntity} from './repository-entity';
 
-export class FileModel {
-  public id:number = -1;
+export class FileModel extends RepositoryEntity{
   public name:string = '';
   public directory:string = '';
   public fileData:Blob = new Blob([]);
   public isLoaded:boolean = false;
 
   constructor() {
-    this.id = -1;
+    super();
     this.name = '';
     this.directory = '';
     this.fileData = new Blob([]);

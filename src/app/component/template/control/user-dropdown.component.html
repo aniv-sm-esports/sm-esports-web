@@ -1,0 +1,91 @@
+<style>
+  .user-dropdown-container {
+    position: absolute;
+    opacity: 0;
+    top: 50px;
+    right: 16px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    background: #FFF;
+  }
+  .user-dropdown-container.expand {
+    transition: opacity 0.15s ease-in-out;
+    opacity: 1;
+    display: block;
+  }
+  .user-dropdown-container.collapse {
+    transition: opacity 0.15s ease-in-out;
+    opacity: 0;
+    display:none;
+  }
+  .user-dropdown-container div.logo {
+    display:block;
+    background-image: url("../../../../../public/metroid/metroid-inactive.png");
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position-x: 222px;
+    background-position-y: 5px;
+  }
+  .user-dropdown-container div.logo > h4 {
+    margin: 0px;
+    padding: 10px;
+
+  }
+  .user-dropdown-container .primary-user-logon {
+    font-style: italic;
+    text-align:right;
+    padding: 10px;
+    margin: 20px 0 20px 0;
+    background: rgba(134,134,255,0.3);
+  }
+  .user-dropdown-container .primary-user-logon h5 {
+    color: #888;
+    margin: 0;
+    padding:0;
+  }
+
+  .user-dropdown-container .primary-user-logon > h5 > .primary-user-name {
+    font-style: normal;
+    color: #555;
+  }
+
+  .user-dropdown-container .primary-user-logon h5:first-child {
+    margin-bottom:10px;
+  }
+
+  .user-dropdown-container .user-dropdown-content a {
+    display: block;
+    text-decoration: none;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left:10px;
+    color: #B5B5B5;
+  }
+
+
+
+  .user-dropdown-container .user-dropdown-content a:hover,
+  .user-dropdown-container .user-dropdown-content .sidenav-tree-header:hover {
+    color: #888888 !important;
+    background-color: rgba(134,134,255,0.3);
+  }
+</style>
+
+<div class="user-dropdown-container"
+     [ngClass]="{'expand': this.showDropdown, 'collapse': !this.showDropdown}"
+     (clickOutside)="onOffClick()"
+     [clickOutsideAttached]="this.showDropdown">
+
+    <div class="user-dropdown-content">
+
+      <!-- Primary UserLogon -->
+      <div class="primary-user-logon" *ngIf="this.appService.primaryUserLoggedOn">
+        <h5>Logged on as <span class="primary-user-name link" [routerLink]="'/personal/' + this.appService.primaryUserLogon.userName">{{this.appService.primaryUserLogon.userName}}</span></h5>
+        <h5>{{moment(this.appService.primaryUserLogon.loggedinAt).format('YYYY-MM-DD h:mm:ss a')}}</h5>
+      </div>
+
+      <login *ngIf="!this.appService.primaryUserLoggedOn" (formFinished)="this.showDropdown = false" />
+
+    </div>
+</div>

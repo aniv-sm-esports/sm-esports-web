@@ -1,11 +1,13 @@
 import {Component} from '@angular/core';
 import { AppService } from '../../../service/app.service';
+import {RouterOutlet} from "@angular/router";
 
 @Component({
   selector: "landscape",
   templateUrl: "../../template/view/landscape/landscape.component.html",
-  imports: [
-  ]
+    imports: [
+        RouterOutlet
+    ]
 })
 export class LandscapeComponent {
 

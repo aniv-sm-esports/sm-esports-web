@@ -11,7 +11,7 @@ import {UserService} from '../../service/user.service';
 import {ApiResponseType} from '../../model/service/app.model';
 import {AuthService} from '../../service/auth.service';
 import {AuthHandler} from '../../model/service/handler.model';
-import {UserJWT} from '../../model/repository/user-logon.model';
+import {UserJWT} from '../../model/service/user-logon.model';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({

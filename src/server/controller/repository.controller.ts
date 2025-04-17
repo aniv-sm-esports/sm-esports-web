@@ -1,7 +1,7 @@
 import { Request, Response} from 'express-serve-static-core';
 import {ApiData, ApiResponse, ApiResponseType} from '../../app/model/service/app.model';
 import {DataModel} from '../model/server.datamodel';
-import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/repository/user-logon.model';
+import {UserCredentials, UserJWT, UserJWTPayload} from '../../app/model/service/user-logon.model';
 
 import {AuthService} from '../service/auth.service';
 import {PageData} from '../../app/model/service/page.model';

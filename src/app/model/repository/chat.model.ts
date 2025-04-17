@@ -1,8 +1,8 @@
-import {UserJWT} from './user-logon.model';
+import {UserJWT} from '../service/user-logon.model';
+import {RepositoryEntity} from './repository-entity';
 
-export class Chat {
+export class Chat extends RepositoryEntity {
 
-  id: number;
   userName: string;
   text: string;
   date: Date;
@@ -10,7 +10,7 @@ export class Chat {
   flagComments: string;
 
   constructor() {
-    this.id = -1;
+    super();
     this.userName = '';
     this.text = '';
     this.date = new Date();

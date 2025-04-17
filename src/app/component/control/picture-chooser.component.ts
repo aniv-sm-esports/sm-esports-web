@@ -11,7 +11,7 @@ import {ApiResponseType} from '../../model/service/app.model';
     FormsModule,
     NgOptimizedImage
   ],
-  templateUrl: './picture-chooser.component.html'
+  templateUrl: '../template/control/picture-chooser.component.html'
 })
 export class PictureChooserComponent {
 

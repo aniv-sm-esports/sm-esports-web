@@ -1,10 +1,9 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {UserCredentials, UserJWT} from '../../model/repository/user-logon.model';
+import {UserCredentials, UserJWT} from '../../model/service/user-logon.model';
 import {AuthService} from '../../service/auth.service';
 import {UserService} from '../../service/user.service';
 import {FormsModule} from '@angular/forms';
 import {BasicButtonComponent} from './primitive/button.component';
-import {NgIf, NgStyle} from '@angular/common';
 import {AppService} from '../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {noop} from 'rxjs';
@@ -68,7 +67,7 @@ export class LoginComponent implements AuthHandler {
     // Redirect -> Home
     //
     if (this.userLoggedOn && this.router) {
-      this.router.navigate(['home']);
+      this.router.navigate(['home/live']);
     }
   }
 

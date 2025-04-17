@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {UserJWT} from '../model/repository/user-logon.model';
+import {UserJWT} from '../model/service/user-logon.model';
 import {AuthService} from '../service/auth.service';
 import {UserService} from '../service/user.service';
 import {FormsModule} from '@angular/forms';
@@ -65,7 +65,7 @@ export class CreateAccountComponent implements AuthHandler {
     // Redirect -> Home
     //
     if (!value.isDefault() && this.router) {
-      this.router.navigate(['home']);
+      this.router.navigate(['home/live']);
     }
   }
 

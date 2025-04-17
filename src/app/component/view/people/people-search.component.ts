@@ -1,18 +1,17 @@
-import {Component, ElementRef, HostListener, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 import {UserService} from '../../../service/user.service';
 import {PersonRoleType, User} from '../../../model/repository/user.model';
 import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
-import {PageData} from '../../../model/service/page.model';
-import {SearchModel} from '../../../model/service/search.model';
-import {ApiResponseType, Size} from '../../../model/service/app.model';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {FormsModule} from '@angular/forms';
 import {BasicCheckboxComponent} from '../../control/primitive/sm-esports-select';
 import {BasicButtonComponent} from '../../control/primitive/button.component';
 import {faCircle} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
+import {PageData} from '../../../model/service/page.model';
+import {SearchModel} from '../../../model/service/search.model';
 
 @Component({
   selector: 'people-search',
@@ -35,43 +34,34 @@ export class PeopleSearchComponent {
   protected readonly appService: AppService;
   private readonly userService: UserService;
 
-  protected userList: User[];
-
   protected readonly faCircle = faCircle;
+  protected readonly PersonRoleType = PersonRoleType;
 
-  protected searchType:string = '';
-  protected searchValue:string = '';
-  protected searchFields:string[] = [
-    'name',
-    'email',
-    'personRole'
-  ];
   protected selectedField:string = '';
+  protected people: User[] = [];
 
   constructor(appService:AppService, userService: UserService, router: Router) {
     this.appService = appService;
     this.userService = userService;
-    this.userList = [];
-  }
 
-  ngOnInit() {
-    this.search("");
-  }
+    this.userService.resetSearch();
 
-  search(searchInput: string) {
-
-    let search: SearchModel<User> = SearchModel.default<User>();
-
-    search.set("name", searchInput);
-
-    // Fetch Board (this will need tuning later) (have to do pre-queries for the paging)
-    this.userService.getPage(PageData.fromRequest(1, 50), search).subscribe(response => {
-
-      if (response.response == ApiResponseType.Success) {
-        this.userList = response.apiData.dataSet || [];
-      }
+    // Set a watch on the user name
+    userService.onSearchChanged().subscribe(() => {
+      this.reload();
     });
+
+    // Filtering is set up as a public member of UserService
+    this.reload();
   }
 
-  protected readonly PersonRoleType = PersonRoleType;
+  reload() {
+    this.userService.getUserPage(PageData.firstPage(50))
+      .then(users => {
+        this.people = users;
+      });
+  }
+  loadPage(page:number) {
+
+  }
 }

@@ -10,56 +10,61 @@ import {SearchModel} from '../../../model/service/search.model';
 import {ApiResponseType} from '../../../model/service/app.model';
 import {faCircle} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
+import {UserSearchPipe} from '../../../pipe/user-search.pipe';
 
 @Component({
   selector: 'people-all',
   imports: [
     NgForOf,
     AvatarComponent,
-    FaIconComponent
+    FaIconComponent,
+    UserSearchPipe
   ],
   templateUrl: '../../template/view/people/people-all.component.html'
 })
 export class PeopleAllComponent {
 
   protected readonly appService: AppService;
-  private readonly userService: UserService;
+  protected userService: UserService;
   private readonly router: Router;
-
-  protected peopleBoard: User[] = [];
-  protected peopleGeneral: User[] = [];
 
   protected readonly faCircle = faCircle;
 
   protected readonly AvatarSize = AvatarSize;
   protected pageSize:number = 30;
 
-  constructor(appService:AppService, userService: UserService, router: Router) {
+  // "Injected" Data
+  //
+  protected people:User[] = [];
+  protected peopleBoardSearch:SearchModel<User>;
+  protected peopleGeneralSearch:SearchModel<User>;
+
+  constructor(appService:AppService, router: Router, userService:UserService) {
     this.appService = appService;
     this.userService = userService;
     this.router = router;
+    this.peopleBoardSearch = SearchModel.fromMap({ "personRole": PersonRoleType.BoardMember });
+    this.peopleGeneralSearch = SearchModel.fromMap({ "personRole": PersonRoleType.GeneralUser });
+
+    // Reset the user search
+    userService.resetSearch();
+
+    // Set a watch on the user name
+    userService.onSearchChanged().subscribe(() => {
+      this.reload();
+    });
+
+    // Filtering is set up as a public member of UserService
+    this.reload();
   }
 
-  ngOnInit() {
-    let searchBoard: SearchModel<User> = new SearchModel<User>();
-    let searchGeneral: SearchModel<User> = new SearchModel<User>();
+  reload() {
+    this.userService.getUserPage(PageData.firstPage(50))
+        .then(users => {
+          this.people = users;
+        });
+  }
+  loadPage(page:number) {
 
-    searchBoard.set('personRole', PersonRoleType.BoardMember);
-
-    // Fetch Board (this will need tuning later) (have to do pre-queries for the paging)
-    this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchBoard).subscribe(response => {
-
-      if (response.response == ApiResponseType.Success) {
-        this.peopleBoard = response.apiData.dataSet || [];
-      }
-    });
-
-    searchGeneral.set('personRole', PersonRoleType.GeneralUser);
-
-    this.userService.getPage(PageData.fromRequest(1, this.pageSize), searchGeneral).subscribe(response => {
-      if (response.response == ApiResponseType.Success) {
-        this.peopleGeneral = response.apiData.dataSet || [];
-      }
-    });
   }
 }

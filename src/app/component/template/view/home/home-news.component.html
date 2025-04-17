@@ -1,14 +1,11 @@
 <style>
-  h1 {
-    margin: 10px;
-    color: #EEEEEE;
-    font-size: 2.5em;
-  }
-
-  .container {
-  }
-
-  .container .body-container {
+  .news-container {
+    position:absolute;
+    display:block;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
   }
 
   .news-article {
@@ -76,9 +73,7 @@
   }
 </style>
 
-<div class="container">
-
-  <div class="body-container">
+<div class="news-container primary-body-container">
 
     <div class="news-article"
          *ngFor="let news of newsList;index as i">
@@ -139,6 +134,5 @@
         <div class="clear-fix"></div>
       </div>
 
-    </div>
   </div>
 </div>

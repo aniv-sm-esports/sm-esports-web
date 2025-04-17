@@ -1,8 +1,8 @@
 import {Chat} from './chat.model';
 import isEqual from 'lodash/isEqual';
+import {RepositoryEntity} from './repository-entity';
 
-export class ChatRoom {
-  public id: number;
+export class ChatRoom extends RepositoryEntity {
   public name: string;
   public description: string;
   public urlRoute: string;
@@ -11,7 +11,7 @@ export class ChatRoom {
   public chats: Chat[];
 
   constructor() {
-    this.id = -1;
+    super();
     this.name = "";
     this.description = "";
     this.urlRoute = "";

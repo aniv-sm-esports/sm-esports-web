@@ -8,289 +8,66 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <style>
-  :host {
-    --gray-900: oklch(19.37% 0.006 300.98);
-    --gray-700: oklch(36.98% 0.014 302.71);
-    --gray-400: oklch(70.9% 0.015 304.04);
-  }
-
-  h1 {
-    font-size: 2.0em;
-    color: white;
-  }
-
-  h5 {
-    color: darkgray;
-  }
-
-  main {
+  .main {
     display: block;
   }
 
-  main.loading {
+  .main.loading {
     display: none;
   }
 
-  .app-body-container {
-    background-color: rgba(0,0,0,0.70);
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-
-    color: #EEEEEE;
-  }
-  .app-body-container > .app-body {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  .app-body-container .app-body-header {
-    width: 100%;
-    background: #CCCCCCCC;
-    margin:0;
-    padding:0;
-    border-radius:10px 10px 0 0;
-    -webkit-border-radius: 10px 10px 0 0;
-  }
-
-  .app-body-container .app-body-header h1 {
-    color: rgba(134,134,255,1);
-    margin:10px;
-    display: inline-block;
-    font-size: 2.0em;
-    float:left;
-  }
-
-  .app-body-container .app-body-header .tab-container {
-    float: right;
-    display:flex;
-  }
-
-  .app-body-container .app-body-header .tab-container .tab-item-container {
-    align-content: center;
-    padding: 20px;
-    color:dimgray;
-    background-color:transparent;
-    cursor:pointer;
-  }
-  .app-body-container .app-body-header .tab-container .tab-item-container:last-child {
-    border-radius:0 10px 0 0;
-    -webkit-border-radius: 0 10px 0 0;
-  }
-  .app-body-container .app-body-header .tab-container .tab-item-container.active {
-    background-color:rgba(255,255,255,0.8);
-    color: rgba(134,134,255,1);
-  }
-
-  .app-body-container .app-body-header .tab-container .tab-item-container:hover {
-    background-color:rgba(255,255,255,0.8);
-  }
-
-  .link {
-    cursor: pointer;
-  }
-  .link:hover {
-
-  }
-
-  .banner {
-    display: flex !important;  /* Production setting (shouldn't be needed) */
-    flex-direction: row;
-    width: 100%;
-    text-align: right;
-    color: #FFFFFF;
-    background-image: radial-gradient(circle, #B5B5B5 0%, #FFFFFF 100%);
-  }
-
-  .banner a.banner-item {
-    background-color: transparent;
-    color: rgba(100, 100, 100, 1);
-    font-size: 1.5em;
-    text-decoration: none;
-    align-content: center;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-  .banner a.banner-item:hover {
-    background-color: #FFFFFF;
-    color: rgba(100, 100, 255, 1);
-    transition: background-color 0.3s ease-out;
-  }
-  .banner a.banner-item.active {
-    text-decoration: none;
-    background-color: #FFFFFF;
-    color: rgba(100, 100, 255, 1);
-  }
-  /* "Live" */
-  .banner fa-icon#liveDot {
-    color: lawngreen;
-    font-size: 0.8em;
-    margin:5px;
-  }
-
-  .sidenav-container-left {
-    position: absolute;
-    top: 0;
+  .main > sm-esports-sidenav {
+    width:260px;
+    position:absolute;
+    top:0;
     bottom:0;
-    left: -260px;
-    width: 260px;
-    background: rgba(255,255,255, 1);
+    z-index:3;
   }
-  .sidenav-container-right {
-    position: absolute;
-    opacity: 0;
-    top: 50px;
-    right: 16px;
-    border: 1px solid #888;
-    border-radius: 20px;
-    -webkit-border-radius: 20px;
-    background: #FFF;
-  }
-
-  .sidenav-container-left a:first-child fa-icon {
-    color: lawngreen;
-    font-size: 0.65em;
-    margin-left:5px;
-  }
-  .sidenav-container-left fa-icon {
-    margin-right:10px;
-  }
-
-  .sidenav-container-left.expand {
+  .main sm-esports-sidenav.expand {
     transition: left 0.15s ease-in-out;
     left: 0;
   }
-  .sidenav-container-left.collapse {
+  .main sm-esports-sidenav.collapse {
     transition: left 0.15s ease-in-out;
     left: -260px;
   }
 
-  .sidenav-container-right.expand {
-    transition: opacity 0.15s ease-in-out;
-    opacity: 1;
-    display: block;
-  }
-  .sidenav-container-right.collapse {
-    transition: opacity 0.15s ease-in-out;
-    opacity: 0;
-    display:none;
+  .main user-dropdown {
+    z-index:3;
+    position:absolute;
+    top:0;
+    right:0;
+    left:0;
   }
 
-  .sidenav-container-left div.logo {
-    display:block;
-    background-image: url("../../../../public/metroid/metroid-inactive.png");
-    background-size: 32px 32px;
-    background-repeat: no-repeat;
-    background-position-x: 222px;
-    background-position-y: 5px;
+  .main .app-body {
+    background-color: rgba(0,0,0,0.70);
+    color: #EEEEEE;
   }
-  .sidenav-container-left div.logo > h4 {
-    text-align:left;
-    margin: 0px;
-    padding: 10px;
+  .main .app-body {
+    background:red;
   }
-
-  .sidenav-container-right div.logo {
-    display:block;
-    background-image: url("../../../../public/metroid/metroid-inactive.png");
-    background-size: 32px 32px;
-    background-repeat: no-repeat;
-    background-position-x: 222px;
-    background-position-y: 5px;
-  }
-  .sidenav-container-right div.logo > h4 {
-    margin: 0px;
-    padding: 10px;
-
-  }
-  .sidenav-container-right .primary-user-logon {
-    font-style: italic;
-    text-align:right;
-    padding: 10px;
-    margin: 20px 0 20px 0;
-    background: rgba(134,134,255,0.3);
-  }
-  .sidenav-container-right .primary-user-logon h5 {
-    color: #888;
-    margin: 0;
-    padding:0;
-  }
-
-  .sidenav-container-right .primary-user-logon > h5 > .primary-user-name {
-    font-style: normal;
-    color: #555;
-  }
-
-  .sidenav-container-right .primary-user-logon h5:first-child {
-    margin-bottom:10px;
-  }
-
-  .sidenav-container-left .sidenav-content a {
-    display: block;
-    text-decoration: none;
-    padding: 5px;
-    padding-left: 10px;
-    color: #B5B5B5;
-  }
-  .sidenav-container-right .sidenav-content a {
-    display: block;
-    text-decoration: none;
-    padding: 5px;
-    padding-right: 10px;
-    padding-left:10px;
-    color: #B5B5B5;
-  }
-
-  .sidenav-container-left .sidenav-content a:hover,
-  .sidenav-container-left .sidenav-content .sidenav-tree-header:hover {
-    color: #888888 !important;
-    background-color: rgba(134,134,255,0.3);
-  }
-
-  .sidenav-container-right .sidenav-content a:hover,
-  .sidenav-container-right .sidenav-content .sidenav-tree-header:hover {
-    color: #888888 !important;
-    background-color: rgba(134,134,255,0.3);
-  }
-
-  .sidenav-content .sidenav-tree .sidenav-tree-header {
-    cursor: pointer;
-  }
-  .sidenav-content .sidenav-tree .sidenav-tree-item {
-    padding-left: 20px;
-  }
-  .sidenav-content .sidenav-tree .sidenav-tree-expander {
-    font-size: 1.1em;
-  }
-  .sidenav-content .sidenav-tree .sidenav-tree-expander.expand:after {
-  }
-
-  .sidenav-left-opener {
+  .main .sidenav-left-opener {
     color: lightgray;
     text-align: left;
     align-content: center;
-    padding-right: 10px;
   }
 
-  .sidenav-left-opener > button {
-    font-size: 1.0em;
+  .main .sidenav-left-opener > button {
     color: dimgray;
-    margin: 5px;
-    padding:8px;
     border:2px solid #eee;
     -webkit-border-radius: 20px;
     border-radius: 20px;
   }
-  .sidenav-left-opener > button:focus {
-    border:2px solid #eee;
+  .main .sidenav-left-opener > button:focus {
   }
 
-  .sidenav-right-opener {
+  .main .user-dropdown-opener {
     color: lightgray;
     text-align: left;
     align-content: center;
-    padding-right: 10px;
   }
-
-  .sidenav-right-opener > button {
+  .main .user-dropdown-opener > button {
     font-size: 1.0em;
     color: #888888;
     margin: 5px;
@@ -301,112 +78,210 @@
     cursor:pointer;
     background-color: #EFEFEF;
   }
-  .sidenav-right-opener > button:hover {
+  .main .user-dropdown-opener > button:hover {
     background-color: rgba(134,134,255,0.3);
   }
-  .sidenav-right-opener > button:focus {
+  .main .user-dropdown-opener > button:focus {
   }
 
-  .logo {
-    flex: max-content;
-    flex-direction: row-reverse;
-    display: flex;
+  .main table thead h1 {
+    color: rgba(134, 134, 255, 0.5);
+    margin:0;
+    padding:0;
+    background: linear-gradient(45deg, rgba(134, 134, 255, 0.5) 45%, #ffffff 50%, rgba(134, 134, 255, 0.5) 55%);
+    background-repeat: no-repeat;
+    animation: animate 3s linear 10s infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: rgba(134, 134, 255, 0.5);
   }
 
-  .logo h1,
-  .logo h4 {
-      color: rgba(134, 134, 255, 0.5);
-      font-size: 2.5em;
-      margin: 10px;
-      background: linear-gradient(45deg, rgba(134, 134, 255, 0.5) 45%, #ffffff 50%, rgba(134, 134, 255, 0.5) 55%);
-      background-repeat: no-repeat;
-      overflow: hidden;
-      animation: animate 3s linear 10s infinite;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: rgba(134, 134, 255, 0.5);
+  .main table a {
+    text-decoration: none;
+    color:#555;
   }
-  .logo h4 {
-    font-size: 1.2em !important;
+  .main table a:hover,
+  .main table a.active {
+    color:rgba(100,100,255,1);
+  }
+  .main table fa-icon.live {
+    font-size:0.65em;
+    color:lawngreen;
+    margin-left:5px;
   }
 
-  @keyframes animate {
-    0% {
-      background-position: -500%;
-    }
-    100% {
-      background-position: 500%;
-    }
+  /* BANNER + MENU LAYOUT */
+
+  .main table {
+    position:absolute;
+    display:table;
+    table-layout:fixed;
+    border-collapse: collapse;
+    text-align:left;
+    z-index:2;
+    top:0;
+    left:0;
+    right:0;
+    width: 100%;
+    background-image: radial-gradient(circle, #B5B5B5 0%, #FFFFFF 100%);
+  }
+  .main table.menu-open {
+    /* Trying to make the layout switch for column sizing */
+  }
+  .main table > thead {
+  }
+  .main table > tbody {
+    border-top:0px solid #AAA;
+  }
+  .main table > thead > tr {
+    width:100%;
+  }
+  .main table > tbody > tr {
+    width:100%;
+  }
+  .main table > thead > tr > th,
+  .main table > tbody > tr > td {
+    vertical-align: middle;
+    padding-left:10px;
+  }
+  .main table > thead > tr > th.active,
+  .main table > tbody > tr > td.active {
+    background-color:rgba(255,255,255,0.5);
+  }
+  .main table > thead > tr > th:nth-child(8),
+  .main table > thead > tr > th:nth-child(9){
+    text-align:right;
   }
 
   @media screen and (max-width: 1400px) {
-    .banner .logo > h1 {
-      font-size: 1.5em;
+
+    .main table > thead h1 {
+      font-size: 1.2em;
+      padding:0;
+      margin:8px;
     }
-    .banner a.banner-item {
-      font-size: 0.80em;
+    .main table a {
+      padding:0;
+      font-size: 0.85em;
     }
 
-    .banner a.banner-item.aniv {
-      background-image: url("../../../../public/metroid/samus-styalized-invert.jpg");
-      background-size: 80px 80px;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-
-    .sidenav-left-opener > button {
-      width: 40px;
-      height: 40px;
-      margin: 5px 0px 5px 10px;
+    .main .sidenav-left-opener > button {
+      width: 30px;
+      height: 30px;
+      margin: 3px 0 3px 5px;
       border: none;
       border-radius: 25px;
       background-image: url("../../../../public/metroid/metroid-inactive.png");
       background-color: rgba(0, 0, 0, 0.1);
-      background-size: 30px 30px;
+      background-size: 23px 23px;
       background-repeat: no-repeat;
       background-position: center;
       cursor: pointer;
     }
 
-    .sidenav-left-opener > button:hover {
+    .main .sidenav-left-opener > button:hover {
       background-color: rgba(134, 134, 255, 0.4);
+      background-image: url("../../../../public/metroid/metroid-angle-right.png");
     }
 
-    .sidenav-left-opener > button:active {
+    .main .sidenav-left-opener > button:active {
       background-color: rgba(0, 0, 0, 0.3);
-      background-image: url("../../../../public/metroid/metroid-angle-right.png");
+    }
+
+    .main table > thead > tr > th:nth-child(1),
+    .main table > tbody > tr > th:nth-child(1){
+      width:40px;
+    }
+    .main table > thead > tr > th:nth-child(2),
+    .main table > tbody > tr > th:nth-child(2){
+      width:100px;
+    }
+    .main table > thead > tr > th:nth-child(3),
+    .main table > tbody > tr > th:nth-child(3){
+      width:100px;
+    }
+    .main table > thead > tr > th:nth-child(4),
+    .main table > tbody > tr > th:nth-child(4){
+      width:100px;
+    }
+    .main table > thead > tr > th:nth-child(5),
+    .main table > tbody > tr > th:nth-child(5){
+      width:100px;
+    }
+    .main table > thead > tr > th:nth-child(6),
+    .main table > tbody > tr > th:nth-child(6){
+      width:120px;
+    }
+    .main table > thead > tr > th:nth-child(7),
+    .main table > tbody > tr > th:nth-child(7){
+      width:50px;
+    }
+    .main table > thead > tr > th:nth-child(9),
+    .main table > tbody > tr > th:nth-child(9){
+      width:50px;
     }
   }
 
   @media screen and (min-width: 1400px) {
 
-    .banner a.banner-item.aniv {
-      background-image: url("../../../../public/metroid/samus-styalized-invert.jpg");
-      background-size: 120px 120px;
-      background-repeat: no-repeat;
-      background-position: center;
+    .main table a {
+      padding:0;
+      font-size:1.2em;
     }
 
-    .sidenav-left-opener > button {
-      width: 52px;
-      height: 52px;
-      margin: 5px 0px 5px 10px;
+    .main .sidenav-left-opener > button {
+      width: 40px;
+      height: 40px;
+      margin: 5px 0px 5px 0px;
       border: none;
       border-radius: 25px;
       background-image: url("../../../../public/metroid/metroid-inactive.png");
       background-color: rgba(0, 0, 0, 0.1);
-      background-size: 42px 42px;
+      background-size: 32px 32px;
       background-repeat: no-repeat;
       background-position: center;
       cursor: pointer;
     }
 
-    .sidenav-left-opener > button:hover {
+    .main .sidenav-left-opener > button:hover {
       background-color: rgba(134, 134, 255, 0.4);
+      background-image: url("../../../../public/metroid/metroid-angle-right.png");
     }
 
-    .sidenav-left-opener > button:active {
+    .main .sidenav-left-opener > button:active {
       background-color: rgba(0, 0, 0, 0.3);
-      background-image: url("../../../../public/metroid/metroid-angle-right.png");
+    }
+
+    .main table > thead > tr > th:nth-child(1),
+    .main table > tbody > tr > th:nth-child(1){
+      width:45px;
+    }
+    .main table > thead > tr > th:nth-child(2),
+    .main table > tbody > tr > th:nth-child(2){
+      width:120px;
+    }
+    .main table > thead > tr > th:nth-child(3),
+    .main table > tbody > tr > th:nth-child(3){
+      width:120px;
+    }
+    .main table > thead > tr > th:nth-child(4),
+    .main table > tbody > tr > th:nth-child(4){
+      width:120px;
+    }
+    .main table > thead > tr > th:nth-child(5),
+    .main table > tbody > tr > th:nth-child(5){
+      width:120px;
+    }
+    .main table > thead > tr > th:nth-child(6),
+    .main table > tbody > tr > th:nth-child(6){
+      width:160px;
+    }
+    .main table > thead > tr > th:nth-child(7),
+    .main table > tbody > tr > th:nth-child(7){
+      width:70px;
+    }
+    .main table > thead > tr > th:nth-child(9),
+    .main table > tbody > tr > th:nth-child(9){
+      width:50px;
     }
   }
 
@@ -414,163 +289,88 @@
 
 <main class="main" [ngClass]="{'loading': this.loading}">
 
-  <!-- Side Nav Left -->
-  <div class="sidenav-container-left prevent-select"
-       [ngClass]="{'expand': this.showSideNavLeft, 'collapse': !this.showSideNavLeft}"
-       (clickOutside)="onSideNavOffClick()"
-       [clickOutsideAttached]="this.showSideNavLeft">
-    <div class="logo">
-      <h4>Super Metroid Esports</h4>
-    </div>
-    <div class="sidenav-content">
+  <sm-esports-sidenav [ngClass]="{'expand': this.showSideNavLeft, 'collapse': !this.showSideNavLeft}"
+                      [side-nav-show]="this.showSideNavLeft"
+                      (showSideNavChange)="this.showSideNavLeft = false" />
 
-      <!-- Live -->
-      <a class="russo-one-regular" (click)="this.showSideNavLeft = false" routerLink="/live" routerLinkActive="active">Live<fa-icon [icon]="faCircle"></fa-icon></a>
+  <user-dropdown [user-dropdown-show]="this.showUserDropdown" />
 
-      <!-- Login -->
-      <a class="russo-one-regular" (click)="this.showSideNavLeft = false; this.showSideNavRight = true;" >Login</a>
+  <!-- Banner + Menu-->
+  <table class="prevent-select russo-one-regular"
+         (mouseleave)="this.showMenu = false"
+         [ngClass]="{'menu-open': this.showMenu}">
+    <thead (mouseenter)="this.showMenu = true">
+      <tr>
+        <th>
+          <div class="sidenav-left-opener">
+            <button (click)="showSideNavLeft=true"></button>
+          </div>
+        </th>
+        <th routerLinkActive="active"><a class="banner-item" routerLink="/home/news" routerLinkActive="active">Home<fa-icon class="live" [icon]="faCircle"></fa-icon></a></th>
+        <th routerLinkActive="active"><a class="banner-item" routerLink="/people/all" routerLinkActive="active">People</a></th>
+        <th routerLinkActive="active"><a class="banner-item" routerLink="/collab/statement" routerLinkActive="active">Collab</a></th>
+        <th routerLinkActive="active"><a class="banner-item" routerLink="/landscape/media" routerLinkActive="active">Landscape</a></th>
+        <th routerLinkActive="active"><a class="banner-item" routerLink="/chat/politics" routerLinkActive="active">Chat</a></th>
+        <th routerLinkActive="active"></th>
+        <th><h1 class="animate">Super Metroid Esports</h1></th>
+        <th>
+          <div class="user-dropdown-opener">
+            <button (click)="this.showUserDropdown=!showUserDropdown"><fa-icon [icon]="faBars"></fa-icon></button>
+          </div>
+        </th>
+      </tr>
+    </thead>
 
-      <!-- Home -->
-      <div class="sidenav-tree">
-        <div class="sidenav-tree-header" (click)="this.showHomeNavTree = !this.showHomeNavTree">
-          <a class="russo-one-regular">Home <span class="sidenav-tree-expander"
-                                                    [textContent]="!this.showHomeNavTree ? '+' : '-'"></span></a>
-        </div>
-        <div class="sidenav-tree-body" *ngIf="this.showHomeNavTree">
-            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/news" routerLinkActive="active">News</a>
-            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/schedule" routerLinkActive="active">Schedule</a>
-            <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/home/online" routerLinkActive="active">Online</a>
-        </div>
-      </div>
+    <tbody *ngIf="this.showMenu">
+      <tr>
+        <td></td>
+        <td routerLinkActive="active"><a class="banner-item live" routerLink="/home/live" routerLinkActive="active">Live<fa-icon class="live" [icon]="faCircle"></fa-icon></a></td>
+        <td routerLinkActive="active"><a routerLink="/people/all" routerLinkActive="active">All</a></td>
+        <td routerLinkActive="active"><a routerLink="/collab/statement" routerLinkActive="active">Statement</a></td>
+        <td routerLinkActive="active"><a routerLink="/landscape/media" routerLinkActive="active">Media</a></td>
+        <td routerLinkActive="active"><a routerLink="/chat/politics" routerLinkActive="active">Politics</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td routerLinkActive="active"><a routerLink="/home/news" routerLinkActive="active">News</a></td>
+        <td routerLinkActive="active"><a routerLink="/people/board" routerLinkActive="active">Board</a></td>
+        <td routerLinkActive="active"><a routerLink="/collab/guide" routerLinkActive="active">Guide</a></td>
+        <td routerLinkActive="active"><a routerLink="/landscape/wiki" routerLinkActive="active">Wiki</a></td>
+        <td routerLinkActive="active"><a routerLink="/chat/people" routerLinkActive="active">People</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td routerLinkActive="active"><a routerLink="/home/schedule" routerLinkActive="active">Schedule</a></td>
+        <td routerLinkActive="active"><a routerLink="/people/search" routerLinkActive="active">Search</a></td>
+        <td routerLinkActive="active"><a routerLink="/collab/documents" routerLinkActive="active">Documents</a></td>
+        <td routerLinkActive="active"><a routerLink="/landscape/links" routerLinkActive="active">Links</a></td>
+        <td routerLinkActive="active"><a routerLink="/chat/speed-running" routerLinkActive="active">Speed Running</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td routerLinkActive="active"><a routerLink="/home/online" routerLinkActive="active">Online</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td routerLinkActive="active"><a routerLink="/chat/general" routerLinkActive="active">General</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 
-      <!-- People -->
-      <div class="sidenav-tree">
-        <div class="sidenav-tree-header" (click)="this.showPeopleNavTree = !this.showPeopleNavTree">
-          <a class="russo-one-regular">People <span class="sidenav-tree-expander"
-                                                  [textContent]="!this.showPeopleNavTree ? '+' : '-'"></span></a>
-        </div>
-        <div class="sidenav-tree-body" *ngIf="this.showPeopleNavTree">
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/all" routerLinkActive="active">All</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/board" routerLinkActive="active">Board</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/people/search" routerLinkActive="active">Search</a>
-        </div>
-      </div>
-
-      <!-- Collab -->
-      <div class="sidenav-tree">
-        <div class="sidenav-tree-header" (click)="this.showCollabNavTree = !this.showCollabNavTree">
-          <a class="russo-one-regular">Collab <span class="sidenav-tree-expander"
-                                                    [textContent]="!this.showCollabNavTree ? '+' : '-'"></span></a>
-        </div>
-        <div class="sidenav-tree-body" *ngIf="this.showCollabNavTree">
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/collab/statement" routerLinkActive="active">Statement</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/collab/guide" routerLinkActive="active">Guide</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/collab/documents" routerLinkActive="active">Documents</a>
-        </div>
-      </div>
-
-      <!-- Landscape -->
-      <div class="sidenav-tree">
-        <div class="sidenav-tree-header" (click)="this.showLandscapeNavTree = !this.showLandscapeNavTree">
-          <a class="russo-one-regular">Landscape <span class="sidenav-tree-expander"
-                                                    [textContent]="!this.showLandscapeNavTree ? '+' : '-'"></span></a>
-        </div>
-        <div class="sidenav-tree-body" *ngIf="this.showLandscapeNavTree">
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/landscape/media" routerLinkActive="active">Media</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/landscape/wiki" routerLinkActive="active">Landscape</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/landscape/links" routerLinkActive="active">Links</a>
-        </div>
-      </div>
-
-      <!-- Chat -->
-      <div class="sidenav-tree">
-        <div class="sidenav-tree-header" (click)="this.showChatNavTree = !this.showChatNavTree">
-          <a class="russo-one-regular">Chat <span class="sidenav-tree-expander"
-                                                  [textContent]="!this.showChatNavTree ? '+' : '-'"></span></a>
-        </div>
-        <div class="sidenav-tree-body" *ngIf="this.showChatNavTree">
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/politics" routerLinkActive="active">Politics</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/people" routerLinkActive="active">People</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/speed-running" routerLinkActive="active">SM Speed Running</a>
-          <a class="russo-one-regular sidenav-tree-item" (click)="this.showSideNavLeft = false" routerLink="/chat/general" routerLinkActive="active">General</a>
-        </div>
-      </div>
-
-      <!-- Contact -->
-      <a class="russo-one-regular" href="http://github.com/aniv-sm-esports/sm-esports-web" target="_blank" ><fa-icon [icon]="faGithub"></fa-icon>Project Github</a>
-      <a class="russo-one-regular" href="mailto:aniv.sm.esports@gmail.com"><fa-icon [icon]="faEnvelope"></fa-icon>Project Email</a>
-
-    </div>
-  </div>
-
-  <!-- Side Nav Right -->
-  <div class="sidenav-container-right"
-       [ngClass]="{'expand': this.showSideNavRight, 'collapse': !this.showSideNavRight}"
-       (clickOutside)="onSideNavOffClick()"
-       [clickOutsideAttached]="this.showSideNavRight">
-    <div class="sidenav-content">
-
-      <!-- Primary UserLogon -->
-      <div class="primary-user-logon" *ngIf="this.primaryUserLoggedOn">
-        <h5>Logged on as <span class="primary-user-name link" [routerLink]="'/personal/' + this.primaryUserLogon.userName">{{this.primaryUserLogon.userName}}</span></h5>
-        <h5>{{moment(this.primaryUserLogon.loggedinAt).format('YYYY-MM-DD h:mm:ss a')}}</h5>
-      </div>
-
-      <login *ngIf="!this.primaryUserLoggedOn" (formFinished)="this.showSideNavRight = false" />
-
-    </div>
-  </div>
-
-  <div class="banner prevent-select">
-
-    <div class="sidenav-left-opener">
-      <button (click)="showSideNavLeft=true"></button>
-    </div>
-
-    <a class="banner-item russo-one-regular" routerLink="/home" routerLinkActive="active">Home</a>
-    <a class="banner-item russo-one-regular" routerLink="/people" routerLinkActive="active">People</a>
-    <a class="banner-item russo-one-regular" routerLink="/collab" routerLinkActive="active">Collab</a>
-    <a class="banner-item russo-one-regular" routerLink="/landscape" routerLinkActive="active">Landscape</a>
-    <a class="banner-item russo-one-regular aniv" routerLink="/contact" routerLinkActive="active">Contact</a>
-    <a class="banner-item russo-one-regular" routerLink="/chat/politics" routerLinkActive="active">Chat</a>
-    <a class="banner-item russo-one-regular live" routerLink="/live" routerLinkActive="active">Live<fa-icon id="liveDot" [icon]="faCircle"></fa-icon></a>
-
-    <div class="logo">
-      <div class="sidenav-right-opener">
-        <button (click)="showSideNavRight=!showSideNavRight"><fa-icon [icon]="faBars"></fa-icon></button>
-      </div>
-      <h1 class="russo-one-regular animate">Super Metroid Esports</h1>
-    </div>
-
-  </div>
-
-  <div class="app-body-container"
-       [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
-                   'height': this.appService.getBodySize().height + 'px',
-                   'margin': this.appService.bodyMargin + 'px'}">
-
-    <div class="app-body-header prevent-select">
-      <h1 class="russo-one-regular">{{this.routeTitle}}</h1>
-
-      <!-- Optional Route Tabs (for child routes) -->
-      <div class="tab-container">
-        <div class="tab-item-container russo-one-regular"
-             [routerLinkActive]="'active'"
-             [routerLink]="tab.route"
-             *ngFor="let tab of this.routeTabs">
-          {{tab.name}}
-        </div>
-      </div>
-
-      <div class="clear-fix"></div>
-
-    </div>
-
-    <div class="app-body"
-         [ngStyle]="{'width': this.appService.getBodySize().width + 'px',
-                     'height': (this.appService.getBodySize().height - 60) + 'px'}">
-      <router-outlet />
-    </div>
+  <div class="app-body">
+    <router-outlet />
   </div>
 </main>
 

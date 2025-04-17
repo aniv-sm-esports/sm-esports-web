@@ -1,3 +1,4 @@
+import {RepositoryEntity} from './repository-entity';
 
 export enum UserReportType {
   Info = 'Informational',
@@ -7,7 +8,7 @@ export enum UserReportType {
   SiteBan = 'Banned From Site'
 }
 
-export class UserReport {
+export class UserReport extends RepositoryEntity {
   public userId: number = -1;
   public reportType: UserReportType = UserReportType.Info;
   public reportChatRoomId: number = -1;

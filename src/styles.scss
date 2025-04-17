@@ -14,6 +14,40 @@ html
   overflow: hidden;
 }
 
+@media screen and (max-width: 1400px) {
+  .primary-body-header {
+
+  }
+  /* PRIMARY BODY SCROLL BARS: Put this inside the final router-outlet component */
+  .primary-body-container {
+    position: absolute;
+    top: 45px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .primary-body-header {
+
+  }
+  /* PRIMARY BODY SCROLL BARS: Put this inside the final router-outlet component */
+  .primary-body-container {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
+}
+
 .bytesized-regular {
   font-family: "Bytesized", sans-serif;
   font-weight: 400;

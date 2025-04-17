@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/repository/user.model';
+import {PersonRoleType, User} from '../../../model/repository/user.model';
 import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
 import {PageData} from '../../../model/service/page.model';
 import {SearchModel} from '../../../model/service/search.model';
-import {ApiResponseType} from '../../../model/service/app.model';
+import {UserSearchPipe} from '../../../pipe/user-search.pipe';
 
 @Component({
   selector: 'people-board',
@@ -17,7 +17,8 @@ import {ApiResponseType} from '../../../model/service/app.model';
     NgStyle,
     RouterLink,
     NgIf,
-    AvatarComponent
+    AvatarComponent,
+    UserSearchPipe
   ],
   templateUrl: '../../template/view/people/people-board.component.html'
 })
@@ -26,29 +27,33 @@ export class PeopleBoardComponent {
   protected readonly appService: AppService;
   private readonly userService: UserService;
   private readonly router: Router;
-
-  protected userList: User[];
+  protected readonly AvatarSize = AvatarSize;
+  protected people: User[] = [];
 
   constructor(appService:AppService, userService: UserService, router: Router) {
     this.appService = appService;
     this.userService = userService;
     this.router = router;
-    this.userList = [];
-  }
 
-  ngOnInit() {
-    let searchBoard: SearchModel<User> = new SearchModel<User>();
+    this.userService.resetSearch();
+    this.userService.updateSearch("personRole", PersonRoleType.BoardMember );
 
-    searchBoard.set('personRole', 'Board Member');
-
-    // Fetch Board (this will need tuning later) (have to do pre-queries for the paging)
-    this.userService.getPage(PageData.fromRequest(1, 25), searchBoard).subscribe(response => {
-
-      if (response.response == ApiResponseType.Success) {
-        this.userList = response.apiData.dataSet || [];
-      }
+    // Set a watch on the user name
+    userService.onSearchChanged().subscribe(() => {
+      this.reload();
     });
+
+    // Filtering is set up as a public member of UserService
+    this.reload();
   }
 
-  protected readonly AvatarSize = AvatarSize;
+  reload() {
+    this.userService.getUserPage(PageData.firstPage(50))
+      .then(users => {
+        this.people = users;
+      });
+  }
+  loadPage(page:number) {
+
+  }
 }

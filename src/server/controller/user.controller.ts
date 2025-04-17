@@ -5,7 +5,7 @@ import { ParsedQs } from 'qs';
 import {RepositoryController} from './repository.controller';
 import {ApiData, ApiRequest, ApiResponse} from '../../app/model/service/app.model';
 import {UserCreation} from '../../app/model/view/user-creation.model';
-import {UserCredentials} from '../../app/model/repository/user-logon.model';
+import {UserCredentials} from '../../app/model/service/user-logon.model';
 import {PageData} from '../../app/model/service/page.model';
 import {SearchModel} from '../../app/model/service/search.model';
 import {Repository} from '../../app/model/repository/repository.model';
@@ -68,7 +68,7 @@ export class UserController extends RepositoryController<User> {
     try {
 
       // Spawn Filtered Child Repository
-      let repository = this.repository.createChild(request.body.repositoryState.filter);
+      let repository:Repository<User> = this.repository.createChild(request.body.repositoryState.filter) as Repository<User>;
 
       // Update Repository Data
       let pageData = request.body.pageData || PageData.firstPage(25);

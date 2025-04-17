@@ -1,3 +1,3 @@
-export interface RepositoryEntity {
-  id: number;
+export class RepositoryEntity {
+  public id: number = 0;
 }

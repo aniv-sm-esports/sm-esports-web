@@ -5,7 +5,7 @@ import {Chat} from '../../app/model/repository/chat.model';
 import {ChatRoomUserMap} from '../../app/model/repository/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
-import {UserCredentials, UserJWTPayload} from '../../app/model/repository/user-logon.model';
+import {UserCredentials, UserJWTPayload} from '../../app/model/service/user-logon.model';
 import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
 import {FileModel} from '../../app/model/repository/file.model';
 import * as fs from 'node:fs';

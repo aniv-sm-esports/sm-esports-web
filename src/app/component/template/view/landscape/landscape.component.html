@@ -1,3 +1,27 @@
-<div>
-  Landscape
+<style>
+
+  .landscape-container {
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+  }
+
+  @media screen and (max-width: 1400px) {
+    .landscape-container {
+      top:45px;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .landscape-container {
+      top:45px;
+    }
+  }
+
+</style>
+
+<div class="landscape-container">
+  <router-outlet />
 </div>

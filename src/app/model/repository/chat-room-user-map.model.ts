@@ -1,8 +1,10 @@
+import {RepositoryEntity} from './repository-entity';
 
-export class ChatRoomUserMap {
+export class ChatRoomUserMap extends RepositoryEntity {
   userMap: Map<number, number>;
 
   constructor() {
+    super();
     this.userMap = new Map();
   }
 

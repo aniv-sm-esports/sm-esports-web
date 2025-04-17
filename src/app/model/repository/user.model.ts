@@ -1,4 +1,5 @@
 import isEqual from 'lodash/isEqual';
+import {RepositoryEntity} from './repository-entity';
 
 export enum UserRoleType {
   General = 'General',
@@ -31,8 +32,7 @@ export class UserLink {
   displayImageUrl: string = '';
 }
 
-export class User {
-  id: number;
+export class User extends  RepositoryEntity {
   name: string;
   email: string;
   emailVisible: boolean;
@@ -48,6 +48,7 @@ export class User {
   links: UserLink[];
 
   constructor() {
+    super();
     this.id = -1;
     this.name = 'Not Logged In';
     this.email = '';
