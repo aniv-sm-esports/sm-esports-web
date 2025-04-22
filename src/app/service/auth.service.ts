@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {ApiResponse, ApiResponseType} from '../model/service/app.model';
 import {UserCredentials, UserJWT} from '../model/service/user-logon.model';
 import {AuthHandler} from '../model/service/handler.model'
+import { UserCreation } from '../model/view/user-creation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,9 @@ export class AuthService {
   private readonly localExpiresAtKey: string = 'expires_at';
 
   // URL Endpoint
-  private readonly urlLogon:string = '/api/login';
-  private readonly urlGetSession:string = '/api/login/getSession';
+  private readonly urlLogon:string = '/api/auth/login';
+  private readonly urlCreate:string = '/api/auth/create';
+  private readonly urlGetSession:string = '/api/auth/getSession';
 
   constructor(private http: HttpClient) {
     this.loggedIn$ = this.loggedInSubject.asObservable();
@@ -31,6 +33,10 @@ export class AuthService {
                     .subscribe(response => {
                         this.setSession(UserJWT.from(response));
                     });
+  }
+
+  createUser(userCreation:UserCreation) {
+    return this.http.post<UserCreation>(this.urlCreate, userCreation);
   }
 
   logout() {

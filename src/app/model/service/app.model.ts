@@ -1,9 +1,10 @@
 import {UserJWT} from './user-logon.model';
-import {User} from '../repository/user.model';
+import {User} from '../repository/entity/user.model';
 import {PageData} from './page.model';
-import {SearchModel} from './search.model';
+import {SearchModel} from '../repository/search.model';
 import {RepositoryState} from '../repository/repository-state.model';
 import {RepositoryEntity} from '../repository/repository-entity';
+import {RepositoryStateData} from '../repository/repository-state-data.model';
 
 export enum ApiResponseType {
   None = 'None',
@@ -15,128 +16,82 @@ export enum ApiResponseType {
 }
 
 export class ApiData<T extends RepositoryEntity> {
-  public data:T | undefined = undefined;
-  public dataSet:Array<T> | undefined = [];
-  public isDataSet:boolean = false;
+  public data:T[] = [];
 
-  constructor(){}
-
-  public static fromSingle<T extends RepositoryEntity>(entity: T): ApiData<T> {
-    let result:ApiData<T> = new ApiData<T>();
-    result.data = entity;
-    result.isDataSet = false;
-    return result;
-  }
-
-  public static fromSet<T extends RepositoryEntity>(entities: Array<T>): ApiData<T> {
-    let result:ApiData<T> = new ApiData<T>();
-    result.dataSet = entities;
-    result.isDataSet = true;
-    return result;
+  constructor(data:T[]) {
+    this.data = data;
   }
 
   public static default<T extends RepositoryEntity>() {
-    return new ApiData<T>();
+    return new ApiData<T>([]);
   }
 }
 
 export class ApiRequest<T extends RepositoryEntity> {
-  public pageData:PageData | undefined;
-  public data: T | undefined;
 
   // Used only with repository-related client / server methods
   //
-  public repositoryState:RepositoryState<T>;
+  public repositoryState:RepositoryStateData<T>;
+  public requestData:ApiData<T>;
+  public pageData:PageData;
 
-  public constructor() {
-    this.repositoryState = new RepositoryState(0, SearchModel.default());
-  }
-
-  public static simple() {
-    return new ApiRequest();
-  }
-
-  public static postBody<T extends RepositoryEntity>(data:T) {
-    let result = new ApiRequest();
-    result.data = data;
-    return result;
-  }
-
-  public static paged<T extends RepositoryEntity>(pageData:PageData, state:RepositoryState<T>) {
-    let result: ApiRequest<T> = new ApiRequest<T>();
-    result.pageData = pageData;
-    result.repositoryState = state;
-    return result;
-  }
-
-  public static full<T extends RepositoryEntity>(data:T, pageData:PageData, state:RepositoryState<T>) {
-    let result: ApiRequest<T> = new ApiRequest<T>();
-    result.data = data;
-    result.pageData = pageData;
-    result.repositoryState = state;
-    return result;
-  }
-
-  public static default<T extends RepositoryEntity>() {
-    return new ApiRequest<T>();
+  public constructor(stateData:RepositoryStateData<T>, pageData:PageData) {
+    this.repositoryState = stateData;
+    this.requestData = ApiData.default();
+    this.pageData = pageData;
   }
 }
 
 export class ApiResponse<T extends RepositoryEntity>  {
 
-  public apiData: ApiData<T>;
-  public response: ApiResponseType;
-  public message: string;
-  public pageData: PageData | undefined;
-
   // Used only with repository-related client / server methods
   //
-  public repositoryState:RepositoryState<T>;
+  public repositoryState:RepositoryStateData<T>;
+
+  public responseData: ApiData<T>;
+  public response: ApiResponseType;
+  public message: string;
 
   // JWT Session Data (property names)
   public userInfo: UserJWT;
   public loginNotRequired: boolean;
 
-  constructor() {
+  constructor(stateData:RepositoryStateData<T>) {
     this.response = ApiResponseType.None;
     this.message = '';
     this.userInfo = UserJWT.default();
-    this.apiData = ApiData.default<T>();
+    this.responseData = ApiData.default();
     this.loginNotRequired = true;
-    this.repositoryState = new RepositoryState(0, SearchModel.default())
+    this.repositoryState = stateData;
   }
 
-  public static initLogonRequired<T extends RepositoryEntity>() : ApiResponse<T> {
-    let result = new ApiResponse<T>();
-    result.loginNotRequired = true;
-    return result;
+  public static init<T extends RepositoryEntity>(stateData:RepositoryStateData<T>) : ApiResponse<T> {
+    return new ApiResponse<T>(stateData);
   }
 
-  public static initLogonNotRequired<T extends RepositoryEntity>() : ApiResponse<T> {
-    let result = new ApiResponse<T>();
-    result.loginNotRequired = true;
-    return result;
-  }
-
-  public setPageData(pageData:PageData | undefined)   {
-    this.pageData = pageData;
+  public logonRequired(value:boolean):ApiResponse<T> {
+    if (value) {
+      this.response = ApiResponseType.LogonRequired;
+      this.message = 'User logon is required';
+    }
+    else {
+      this.loginNotRequired = !value;
+    }
     return this;
   }
 
   public loggedOn(user: UserJWT) : ApiResponse<T> {
-    let result = new ApiResponse<T>();
-    result.userInfo = user;
-    return result;
+    this.userInfo = user;
+    return this;
   }
 
   public notLoggedOn() : ApiResponse<T> {
-    let result = new ApiResponse<T>();
-    result.userInfo = UserJWT.default();
-    return result;
+    this.userInfo = UserJWT.default();
+    return this;
   }
 
   public setData(apiData:ApiData<T>)  {
-    this.apiData = apiData;
+    this.responseData = apiData;
     return this;
   }
 
@@ -144,14 +99,6 @@ export class ApiResponse<T extends RepositoryEntity>  {
 
     this.response = ApiResponseType.Success;
     this.message = '';
-
-    return this;
-  }
-
-  public logonRequired() {
-
-    this.response = ApiResponseType.LogonRequired;
-    this.message = 'User logon is required';
 
     return this;
   }

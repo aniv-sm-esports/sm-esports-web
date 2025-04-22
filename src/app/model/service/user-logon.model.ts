@@ -1,4 +1,5 @@
 import isEqual from 'lodash/isEqual';
+import {User} from '../repository/entity/user.model';
 
 export class UserCredentials {
 
@@ -30,8 +31,8 @@ export class UserJWTPayload {
 export class UserJWT {
 
   public token: string = '';
-  public expiresAt: Date = new Date("2001-09-11");
-  public loggedinAt: Date = new Date("2001-09-11");
+  public expiresAt: Date = new Date();
+  public loggedinAt: Date = new Date();
   public userName: string = '';
 
   public isDefault() {
@@ -41,8 +42,8 @@ export class UserJWT {
   public static default() {
     let result:UserJWT = new UserJWT();
     result.token = '';
-    result.expiresAt = new Date("2001-09-11")
-    result.loggedinAt = new Date("2001-09-11");
+    result.expiresAt = new Date();
+    result.loggedinAt = new Date();
     result.userName = '';
     return result;
   }

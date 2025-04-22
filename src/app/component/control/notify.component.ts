@@ -23,7 +23,7 @@ export class NotifyComponent implements TimeHandler {
   @Input({required:true}) type!: NotifyType;
   @Input({required:true}) severity!: NotifySeverity;
   @Input({required:true}) message!: string;
-  @Input() expirationDate: Moment = moment().add(120, 'seconds');
+  @Input() expirationDate: Date = moment().add(120, 'seconds').toDate();
 
   // Output Values
   //
@@ -40,7 +40,7 @@ export class NotifyComponent implements TimeHandler {
 
     // Input variables should now be loaded
     //
-    this.timeService.setOnceDate(this.expirationDate, this);
+    this.timeService.setOnceDate(moment(this.expirationDate), this);
   }
 
   onReady(value:Moment) {

@@ -1,5 +1,5 @@
 import {afterNextRender, Component, inject} from '@angular/core';
-import {BannerLinkType, Article} from '../../../model/repository/article.model';
+import {BannerLinkType, Article} from '../../../model/repository/entity/article.model';
 import {NewsService} from '../../../service/news.service';
 import {NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -15,8 +15,7 @@ import moment from 'moment';
     NgForOf,
     NgIf,
     FormsModule,
-    YouTubePlayer,
-    NgStyle
+    YouTubePlayer
   ],
   templateUrl: '../../template/view/home/home-news.component.html'
 })
@@ -71,14 +70,14 @@ export class HomeNewsComponent {
 
   load() {
     this.newsService
-        .getPage(PageData.fromRequest(1, 25))
-        .subscribe(result => {
+        .getAll()
+        .then(result => {
 
         // Get -> NewsService ->
         console.log("News Fetched From Server: ", result);
 
         this.clearNews();
-        this.loadNews(result.apiData.dataSet || []);
+        this.loadNews(result);
     });
   }
 
@@ -90,10 +89,6 @@ export class HomeNewsComponent {
 
   loadNews(news: Article[]) {
     news.forEach(item => {
-
-      // TODO: Date being serialized as a string
-      item.date = new Date(Date.parse(item.date.toString()));
-
       this.newsList.push(item);
     });
   }

@@ -1,5 +1,5 @@
 import {SafeResourceUrl} from '@angular/platform-browser';
-import {RepositoryEntity} from './repository-entity';
+import {RepositoryEntity} from '../repository-entity';
 
 export enum BannerLinkType {
   None = 'none',
@@ -19,6 +19,10 @@ export class Article extends RepositoryEntity {
 
   constructor() {
     super();
+  }
+
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 
   public static default() {

@@ -20,7 +20,6 @@ import {AuthInterceptor} from '../interceptor/auth.interceptor';
 import {ClickOutsideDirective} from '../directive/click-outside.directive';
 import {LoginComponent} from '../component/control/login.component';
 import {ZoomService} from '../service/zoom.service';
-import {DefaultTitleStrategy} from '@angular/router';
 import {UserDropdownComponent} from "../component/control/user-dropdown.component";
 import {SideNavComponent} from '../component/control/side-nav.component';
 

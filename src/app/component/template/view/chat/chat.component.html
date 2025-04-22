@@ -1,0 +1,42 @@
+<style>
+
+  .chat-container {
+    position:absolute;
+    top:0;
+    bottom:0;
+    right:0;
+    left:0;
+    background:rgba(0,0,0,0.3);
+  }
+
+  @media screen and (max-width: 1400px) {
+    .chat-container {
+      top:42px;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .chat-container {
+      top:52px;
+    }
+  }
+
+</style>
+
+<div class="chat-container">
+
+    <div class="chat-selector">
+      <sm-esports-button *ngFor="let tab of chatTabs; index as i;"
+                         class="russo-one-regular button"
+                         (clicked)="navigateRoute($event)"
+                         [text]="tab.name"
+                         [route]="tab.route" />
+    </div>
+
+    <div class="chat-area">
+      <chatbox />
+    </div>
+
+    <div class="clear-fix"></div>
+
+</div>

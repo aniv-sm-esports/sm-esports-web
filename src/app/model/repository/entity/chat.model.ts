@@ -1,5 +1,6 @@
-import {UserJWT} from '../service/user-logon.model';
-import {RepositoryEntity} from './repository-entity';
+import {UserJWT} from '../../service/user-logon.model';
+import {RepositoryEntity} from '../repository-entity';
+import moment, { Moment } from 'moment'
 
 export class Chat extends RepositoryEntity {
 
@@ -18,13 +19,8 @@ export class Chat extends RepositoryEntity {
     this.flagComments = '';
   }
 
-  update(chat: Chat) {
-    this.id = chat.id;
-    this.userName = chat.userName;
-    this.text = chat.text;
-    this.date = chat.date;
-    this.flagged = chat.flagged;
-    this.flagComments = chat.flagComments;
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 
   public static default() {

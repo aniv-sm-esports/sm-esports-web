@@ -1,17 +1,13 @@
 import {Component, ElementRef, QueryList, viewChild, ViewChild, ViewChildren} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {User} from '../../../model/repository/user.model';
 import {AppService} from '../../../service/app.service';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SearchModel} from '../../../model/service/search.model';
-import {PageData} from '../../../model/service/page.model';
 import {NgIf, NgStyle} from '@angular/common';
 
 @Component({
   selector: 'people',
   imports: [
-    RouterLink,
     RouterOutlet,
     ReactiveFormsModule,
     FormsModule,
@@ -79,6 +75,6 @@ export class PeopleComponent {
 
     // Set -> Observers -> Get ...
     //
-    this.userService.updateSearch("name", searchInput);
+    //this.userService.updateSearch("name", searchInput);
   }
 }

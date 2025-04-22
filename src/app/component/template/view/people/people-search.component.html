@@ -2,6 +2,7 @@
 
   .people-search {
     width:100%;
+    overflow:hidden;
   }
 
   /*
@@ -9,118 +10,109 @@
   */
 
   .people-search table {
-    border-collapse: collapse;
-    font-size:0.9em;
+    text-align:left;
     width:100%;
-    display:block;
-    overflow:hidden;
+    font-size:0.9em;
     background:rgba(0,0,0,0.5);
-    position:absolute;
-    top:0;
-    bottom:0;
   }
   .people-search table thead {
-    display:block;
-    width:100%;
+
   }
   .people-search table tbody {
-    overflow-y:auto;
-    overflow-x:hidden;
-    display:block;
-    width:100%;
   }
   .people-search table thead > tr,
   .people-search table tbody > tr {
-    width:100%;
-    display:table;
   }
-  .people-search table thead > tr > th,
-  .people-search table tbody > tr > td {
-    text-align:left;
-    text-wrap:nowrap;
-    padding:2px;
-    display:table-cell;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    overflow:hidden;
+  .people-search table thead tr th,
+  .people-search table tbody tr td {
   }
-  .people-search table tbody > tr td:nth-child(1),
-  .people-search table thead > tr th:nth-child(1) {
-    width:200px;
-  }
-  .people-search table tbody > tr td:nth-child(2),
-  .people-search table thead > tr th:nth-child(2) {
-    width:240px;
-  }
-  .people-search table tbody > tr td:nth-child(3),
-  .people-search table thead > tr th:nth-child(3) {
-
-  }
-  .people-search table tbody > tr td:nth-child(4),
-  .people-search table thead > tr th:nth-child(4) {
-    width:120px;
-  }
-  .people-search table tbody > tr td:nth-child(5),
-  .people-search table thead > tr th:nth-child(5) {
-    width:100px;
-  }
-
-  .people-search table thead > tr {
-  }
-  .people-search table tbody > tr {
+  .people-search table tbody tr {
     background:rgba(0,0,0,0.3);
     cursor:pointer;
   }
-  .people-search table thead > tr > th:first-child {
-  }
-  .people-search table tbody > tr:hover > td {
+  .people-search table tbody tr:hover > td {
     background-color:rgba(255,255,255,0.1);
   }
-  .people-search table tbody > tr td:last-child {
-  }
-  .people-search table tbody > tr td {
-  }
-  .people-search table tbody > tr > td fa-icon {
+  .people-search table tr td fa-icon {
     color: lawngreen;
     font-size: 0.6em;
     margin:5px;
   }
 
   @media screen and (max-width: 1400px) {
-    .people-search table {
-      top:45px;
+    .people-search {
+      margin-top:45px;
     }
   }
 
   @media screen and (min-width: 1400px) {
-    .people-search table {
-      top:45px;
+    .people-search {
+      margin-top:45px;
     }
   }
 </style>
 <div class="people-search">
 
-  <table class="ibm-plex-mono-medium">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Description</th>
-        <th>Role</th>
-        <th>Security</th>
-      </tr>
-    </thead>
-    <tbody [ngStyle]="{'height': this.appService.getBodySize().height + 'px'}">
-      <tr class="search-result-item"
-          *ngFor="let user of people"
-          [ngStyle]="{'background-color': user.personRole === PersonRoleType.BoardMember ? 'rgba(134,134,255,0.2)' : 'rgba(255,225,255,0.1)'}">
-        <td><fa-icon [icon]="faCircle"></fa-icon>{{user.name}}</td>
-        <td>{{user.email}}</td>
-        <td>{{user.shortDescription}}</td>
-        <td [ngStyle]="{'color': user.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}">{{user.personRole}}</td>
-        <td>({{user.userRole}})</td>
-      </tr>
-    </tbody>
-  </table>
+  <cdk-virtual-scroll-viewport class="example-viewport" itemSize="50"
+                               [ngStyle]="{'height': (this.appService.getBodySize().height) + 'px'}">
+    <table cdk-table class="ibm-plex-mono-medium" datapagesize="50"
+           [trackBy]="this.trackByPeopleId"
+           [dataSource]="peopleDataSource">
+
+      <!-- Name Column -->
+      <ng-container cdkColumnDef="name">
+        <th cdk-header-cell *cdkHeaderCellDef>Name</th>
+        <td cdk-cell *cdkCellDef="let user"> <fa-icon [icon]="faCircle"></fa-icon>{{user.name}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container cdkColumnDef="email">
+        <th cdk-header-cell *cdkHeaderCellDef>Email</th>
+        <td cdk-cell *cdkCellDef="let user"> {{user.email}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container cdkColumnDef="shortDescription">
+        <th cdk-header-cell *cdkHeaderCellDef>Description</th>
+        <td cdk-cell *cdkCellDef="let user"> {{user.shortDescription}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container cdkColumnDef="personRole">
+        <th cdk-header-cell *cdkHeaderCellDef>Role</th>
+        <td cdk-cell *cdkCellDef="let user"
+            [ngStyle]="{'color': user.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}"> {{user.personRole}} </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="userRole">
+        <th cdk-header-cell *cdkHeaderCellDef>Security</th>
+        <td cdk-cell *cdkCellDef="let user"> {{user.userRole}} </td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="['name', 'email', 'shortDescription', 'personRole', 'userRole']"></tr>
+      <tr cdk-row *cdkRowDef="let user; columns: ['name', 'email', 'shortDescription', 'personRole', 'userRole'];"></tr>
+    </table>
+  </cdk-virtual-scroll-viewport>
+      <!--thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Description</th>
+          <th>Role</th>
+          <th>Security</th>
+        </tr>
+      </thead>
+      <tbody [ngStyle]="{'height': this.appService.getBodySize().height + 'px'}">
+        <tr class="search-result-item"
+            *cdkVirtualFor="let user of people"
+            [ngStyle]="{'background-color': user.personRole === PersonRoleType.BoardMember ? 'rgba(134,134,255,0.2)' : 'rgba(255,225,255,0.1)'}">
+          <td><fa-icon [icon]="faCircle"></fa-icon>{{user.name}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.shortDescription}}</td>
+          <td [ngStyle]="{'color': user.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}">{{user.personRole}}</td>
+          <td>({{user.userRole}})</td>
+        </tr>
+      </tbody>
+    </table-->
 
 </div>

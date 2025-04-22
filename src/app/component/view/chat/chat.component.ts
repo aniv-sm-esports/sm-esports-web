@@ -4,6 +4,8 @@ import {Tab} from '../../../model/view/tab.model';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {ChatService} from '../../../service/chat.service';
 import {BasicButtonComponent} from '../../control/primitive/button.component';
+import {ChatBoxComponent} from '../../control/chatbox.component';
+import {ChatRoomService} from '../../../service/chat-room.service'
 
 @Component({
   selector: 'chat',
@@ -12,38 +14,38 @@ import {BasicButtonComponent} from '../../control/primitive/button.component';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    BasicButtonComponent
+    BasicButtonComponent,
+    ChatBoxComponent
   ],
-  templateUrl: '../../template/chat/chat.component.html'
+  templateUrl: '../../template/view/chat/chat.component.html'
 })
 export class ChatComponent {
 
-  private readonly router:Router;
-  private readonly chatService: ChatService;
   private readonly baseRoute:string = '/chat';
 
   public chatTabs: Tab[];
   public selectedChatTab: Tab | undefined;
 
-  constructor(router:Router, chatService: ChatService) {
-    this.router = router;
-    this.chatService = chatService;
-    this.chatTabs = [];
-  }
+  constructor(private readonly router:Router,
+              private readonly chatRoomService:ChatRoomService) {
 
-  ngOnInit() {
-    this.chatService
-        .getChatRooms()
-        .subscribe(response =>{
+    this.chatTabs = [];
+
+    this.chatRoomService
+        .getAll()
+        .then(response =>{
 
           // Clear tabs
           this.chatTabs = [];
 
           // Add tabs from response
-          response.apiData.dataSet?.forEach(room => {
+          response.forEach(room => {
             this.chatTabs.push(Tab.from(room.name, room.urlRoute));
           });
         });
+  }
+
+  ngOnInit() {
   }
 
   navigateRoute(route: string) {

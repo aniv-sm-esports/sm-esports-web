@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../service/user.service';
-import {User} from '../../model/repository/user.model';
+import {User} from '../../model/repository/entity/user.model';
 import {NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../service/app.service';
 import {ActivatedRoute, RouterLink, RouterLinkActive} from '@angular/router';
@@ -28,10 +28,9 @@ export class PersonalComponent {
     this.appService = appService;
 
     activatedRoute.params.subscribe(params => {
-      let userName:string = params['userName'];
 
-      userService.getUser(userName).then(user =>{
-        this.person = user;
+      userService.getBy(user => user.name === params['userName']).then(users => {
+        this.person = users.find(user => user.name === params['userName']);
       });
     });
   }

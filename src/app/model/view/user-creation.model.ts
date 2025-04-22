@@ -1,8 +1,7 @@
 import {RepositoryEntity} from '../repository/repository-entity';
 
-export class UserCreation implements RepositoryEntity {
+export class UserCreation  {
 
-  id: number;
   userName: string;
   email: string;
   password: string;
@@ -16,7 +15,6 @@ export class UserCreation implements RepositoryEntity {
   passwordValidationMessage:string;
 
   constructor() {
-    this.id = 0;                          // Not used. Just piggy-backing off the repository pattern.
     this.userName = '';
     this.email = '';
     this.password = '';

@@ -1,4 +1,4 @@
-import {RepositoryEntity} from './repository-entity';
+import {RepositoryEntity} from '../repository-entity';
 
 export class FileModel extends RepositoryEntity{
   public name:string = '';
@@ -12,6 +12,10 @@ export class FileModel extends RepositoryEntity{
     this.directory = '';
     this.fileData = new Blob([]);
     this.isLoaded = false;
+  }
+
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 
   public static default() {

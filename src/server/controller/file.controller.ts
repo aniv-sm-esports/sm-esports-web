@@ -1,55 +1,41 @@
-import {Injectable} from '@angular/core';
-import { Request, Response } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 import { RepositoryController} from './repository.controller';
-import {ApiData, ApiRequest, ApiResponse} from '../../app/model/service/app.model';
-import {FileModel} from '../../app/model/repository/file.model';
-import * as fs from 'node:fs';
-import {Repository} from '../../app/model/repository/repository.model';
+import {FileModel} from '../../app/model/repository/entity/file.model';
 import {DataModel} from '../model/server.datamodel';
 import {AuthService} from '../service/auth.service';
+import {BaseController} from './base.controller';
 
 export class FileController extends RepositoryController<FileModel> {
 
-  private repository: Repository<FileModel> = new Repository<FileModel>('File Repository');
-
-  constructor(serverDb: DataModel, authService: AuthService) {
-    super(serverDb, authService);
-    this.initialize();
+  constructor(serverDb: DataModel, authService: AuthService, isPrimaryRepository:boolean) {
+    super(serverDb, authService, isPrimaryRepository);
   }
 
   protected override initialize() {
     this.repository = this.serverDb.files;
+    return FileModel.default();
   }
 
-  // GET -> /api/file/get/:fileName
-  //
-  get(request: Request<{fileName:string}, ApiResponse<FileModel>, ApiRequest<FileModel>, ParsedQs, Record<string, any>>,
-      response: Response<ApiResponse<FileModel>, Record<string, any>, number>) {
-
-    // Pre-work settings
-    this.setLogonRequired(true);
-
-    try {
-
-      let fileId = this.repository.getSize();
-      let file = FileModel.from(fileId, request.params.fileName, this.serverDb.publicFolder);
-
-      // Read file using node:fs
-      fs.readFile(request.params.fileName, (err, data) => {
-        file.fileData = new Blob([data], { type: 'binary' });
-      });
-
-      // Send during try/catch
-      this.sendSuccess(response, ApiData.fromSingle(file), undefined);
-      return;
-    }
-    catch(error) {
-      console.log(error);
-      this.sendError(response, 'An Error has occurred: See server log for details');
-    }
+  public clone(): BaseController {
+    return new FileController(this.serverDb, this.authService, false);
   }
 
+  getByIdLogonRequired(): boolean {
+    return false;
+  }
+
+  getEntityName(): string {
+    return 'FileModel';
+  }
+
+  getLogonRequired(): boolean {
+    return false;
+  }
+
+  getPageLogonRequired(): boolean {
+    return false;
+  }
+
+/*
   // POST -> /api/file/getRoom/:chatRoomRoute
   //
   post(request: Request<{}, ApiResponse<FileModel>, ApiRequest<FileModel>, ParsedQs, Record<string, any>>,
@@ -111,5 +97,5 @@ export class FileController extends RepositoryController<FileModel> {
       console.log(error);
       this.sendError(response, 'An Error has occurred: See server log for details');
     }
-  }
+  }*/
 }

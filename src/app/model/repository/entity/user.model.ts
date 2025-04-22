@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import {RepositoryEntity} from './repository-entity';
+import {RepositoryEntity} from '../repository-entity';
 
 export enum UserRoleType {
   General = 'General',
@@ -36,11 +36,10 @@ export class User extends  RepositoryEntity {
   name: string;
   email: string;
   emailVisible: boolean;
-  accoutCreation: Date;
+  accountCreation: Date;
   pictureUrl: string;
   shortDescription: string;
   longDescription: string;
-  roleInfo: UserRole;           // TODO: Generic type search with api request (un-flatten user role)
   personRole: PersonRoleType;
   userRole: UserRoleType;
   isMockAccount: boolean;
@@ -52,16 +51,19 @@ export class User extends  RepositoryEntity {
     this.id = -1;
     this.name = 'Not Logged In';
     this.email = '';
-    this.accoutCreation = new Date();
+    this.accountCreation = new Date();
     this.emailVisible = false;
     this.pictureUrl = '';
     this.shortDescription = '';
     this.longDescription = '';
     this.isMockAccount = true;
     this.links = [];
-    this.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
     this.personRole = PersonRoleType.GeneralUser;
     this.userRole = UserRoleType.General;
+  }
+
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 
   public static from(userId:number, userName:string, email:string){

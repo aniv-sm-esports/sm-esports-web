@@ -1,4 +1,4 @@
-import {RepositoryEntity} from './repository-entity';
+import {RepositoryEntity} from '../repository-entity';
 
 export class ChatRoomUserMap extends RepositoryEntity {
   userMap: Map<number, number>;
@@ -6,6 +6,10 @@ export class ChatRoomUserMap extends RepositoryEntity {
   constructor() {
     super();
     this.userMap = new Map();
+  }
+
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 
   add(userId: number, chatRoomId: number) {

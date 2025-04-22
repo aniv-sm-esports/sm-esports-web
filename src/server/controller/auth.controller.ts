@@ -1,12 +1,8 @@
-import {Injectable} from '@angular/core';
 import { Request, Response } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { BaseController } from './base.controller';
-import {ApiData, ApiRequest, ApiResponse} from '../../app/model/service/app.model';
 import {UserCredentials, UserJWT} from '../../app/model/service/user-logon.model';
-import {Chat} from '../../app/model/repository/chat.model';
-import {User} from '../../app/model/repository/user.model';
-import {SearchModel} from '../../app/model/service/search.model';
+import {User} from '../../app/model/repository/entity/user.model';
 import {UserCreation} from '../../app/model/view/user-creation.model';
 import {DataModel} from '../model/server.datamodel';
 import {AuthService} from '../service/auth.service';
@@ -18,29 +14,90 @@ export class AuthController extends BaseController {
     super(serverDb, authService);
   }
 
-  initialize() {
+  public override getName() {return "Auth Controller";}
 
+  public clone(): BaseController {
+    return new AuthController(this.serverDb, this.authService);
+  }
+
+  // Middleware Pipeline ->
+  //
+  // -> Authenticate: Log Url, Decode Bearer Token, Lookup User (stores for this request)
+  // -> (Work): Primary work method
+  // -> Send: ApiResponse<T>
+  //
+
+  // Authenticate: This will try and retrieve the JWT credentials stored by
+  // looking at the JWT bearer token headers. If there is information present,
+  // the User will be passed along with the controller's work load.
+  //
+  authenticate(request: Request<{}, any, any, ParsedQs, Record<string, any>>, response: Response<any, Record<string, any>, number>) {
+
+    // Internal Failure
+    if (!request) {
+      console.log('Server Request not properly formed!');
+      return UserJWT.default();
+    }
+
+    let userJWT = UserJWT.default();
+
+    try {
+
+      // NOTE*****  The "Bearer undefined" value should not be hard coded, here. The middle ware is having
+      //            problems somewhere in jwt.verify; and it is swallowing exceptions.
+
+      // No Headers Present
+      if (!request.headers.authorization ||
+           request.headers.authorization == 'Bearer undefined') {
+        return userJWT;
+      }
+
+      else {
+
+        let token = request.headers.authorization.replace('Bearer ', '')!;
+
+        // Verify
+        let payload = this.authService.verify(token);
+
+        // Default (User Not Logged On)
+        if (!payload) {
+          return userJWT;
+        }
+
+        // SUCCESS
+        else {
+
+          userJWT = UserJWT.fromLogon(payload.userName, token || '',
+                                      payload.loginTime,
+                                      payload.expirationTime);
+
+          console.log("User Verified " + payload.userName);
+        }
+      }
+    }
+    catch (error) {
+      console.log('Server Request Error: Could not verify user from auth headers (usually this means the JWT token has expired)');
+      console.log(error);
+    }
+
+    return userJWT;
   }
 
   // POST -> /api/login
   //
-  logon(request: Request<{}, UserJWT, UserCredentials, ParsedQs, Record<string, any>>,
-        response: Response<any, Record<string, any>, number>) {
-
-    // Pre-work settings
-    this.setLogonRequired(false);
+  logon(request: Request<{}, UserJWT, UserCredentials, ParsedQs, Record<string, any>>, response: Response<any, Record<string, any>, number>) {
 
     // Validate User Data
     if (!request.body.userName ||
          request.body.userName.trim() == '') {
       response.status(401).send(UserJWT.default());
-      return;
+      return UserJWT.default();
     }
 
     try {
 
       // User Lookup
-      let user= this.serverDb.users.getFirst(SearchModel.fromMap<User>({ "userName" : request.body.userName || '' }));
+      let user= this.serverDb.users.first(x => x.name === request.body.userName);
 
       // User Found
       if (user && this.serverDb.credentials.some(userCred => userCred.userName == user.name)) {
@@ -55,7 +112,7 @@ export class AuthController extends BaseController {
 
           // Response with message + empty token
           response.send('Password invalid');
-          return;
+          return UserJWT.default();
         }
 
         // JWT Token
@@ -63,6 +120,8 @@ export class AuthController extends BaseController {
 
         // Success -> Send JWT Token
         response.status(200).send(userJWT);
+
+        return userJWT;
       }
 
       // User Not Found
@@ -74,71 +133,14 @@ export class AuthController extends BaseController {
       console.log(error);
       response.status(500).send(UserJWT.default());
     }
-  }
 
-  // GET -> /api/login/getSession
-  //
-  getSession(request: Request<{}, UserJWT, any, ParsedQs, Record<string, any>>,
-             response: Response<any, Record<string, any>, number>) {
-
-    // Pre-work settings
-    this.setLogonRequired(true);
-
-    try {
-
-      // Success -> Send JWT Token
-      if (!this.requestJWT.isDefault())
-        response.send(this.requestJWT);
-
-      // User Not Found
-      else {
-        response.statusMessage = 'User not found';
-        response.send(UserJWT.default());
-      }
-    }
-    catch(error) {
-      console.log(error);
-      response.send('An Error has occurred: See server log for details');
-    }
-  }
-
-  // GET -> /api/users/exists/:userName
-  //
-  exists(request: Request<{ userName: string; }, any, any, ParsedQs, Record<string, any>>,
-         response: Response<any, Record<string, any>, number>){
-
-    // Pre-work settings
-    this.setLogonRequired(false);
-
-    // Parameter Validation -> Failure
-    if (!request.params.userName ||
-         request.params.userName.trim() == '') {
-      response.status(400).send('User name not specified');
-      return;
-    }
-
-    try {
-
-      if (this.serverDb.users.any(user => user.name === request.params.userName.trim())) {
-        response.status(200).send(true);
-      }
-      else {
-        response.status(200).send(false);
-      }
-    }
-    catch(error) {
-      console.log(error);
-      response.status(500).send('An Error has occurred: See server log for details');
-    }
+    return UserJWT.default();
   }
 
   // POST -> /api/users/create
   //
   create(request: Request<{ }, UserCreation, UserCreation, ParsedQs, Record<string, any>>,
          response: Response<any, Record<string, any>, number>){
-
-    // Pre-work settings
-    this.setLogonRequired(false);
 
     try {
 
@@ -265,11 +267,11 @@ export class AuthController extends BaseController {
         return;
       }
 
-      let userId = this.serverDb.users.getSize();
+      let userId = this.serverDb.users.getNextId();
       let credentialsId = this.serverDb.credentials.length;
 
-      // User
-      this.serverDb.users.append(User.from(userId, request.body.userName, request.body.email))
+      // User (NO-INVALIDATE)
+      this.serverDb.users.append(User.from(userId, request.body.userName, request.body.email), false);
 
       // User Credentials
       this.serverDb.credentials.push(UserCredentials.fromLogon(request.body.userName, request.body.password));

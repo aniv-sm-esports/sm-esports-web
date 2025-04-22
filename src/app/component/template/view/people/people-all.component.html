@@ -97,7 +97,7 @@
 
   <div class="people-container-general">
     <div class="people-item"
-         *ngFor="let person of this.people | userSearch:this.peopleGeneralSearch">
+         *ngFor="let person of this.people | userSearch:this.peopleGeneralSearch | sliceTyped:0:50">
       <div class="people-item-content">
         <div class="people-item-avatar-container">
           <sm-esports-avatar [size]="AvatarSize.Medium" [user]="person" />

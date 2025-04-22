@@ -1,18 +1,17 @@
-import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/repository/user.model';
-import {Article, BannerLinkType} from '../../app/model/repository/article.model';
-import {ChatRoom} from '../../app/model/repository/chat-room.model';
-import {Chat} from '../../app/model/repository/chat.model';
-import {ChatRoomUserMap} from '../../app/model/repository/chat-room-user-map.model';
+import {PersonRoleType, User, UserRole, UserRoleType} from '../../app/model/repository/entity/user.model';
+import {Article, BannerLinkType} from '../../app/model/repository/entity/article.model';
+import {ChatRoom} from '../../app/model/repository/entity/chat-room.model';
+import {Chat} from '../../app/model/repository/entity/chat.model';
+import {ChatRoomUserMap} from '../../app/model/repository/entity/chat-room-user-map.model';
 import {Injectable} from '@angular/core';
 import {randomInt} from 'node:crypto';
 import {UserCredentials, UserJWTPayload} from '../../app/model/service/user-logon.model';
 import { uniqueNamesGenerator, Config, names } from 'unique-names-generator';
-import {FileModel} from '../../app/model/repository/file.model';
+import {FileModel} from '../../app/model/repository/entity/file.model';
 import * as fs from 'node:fs';
-import { SearchModel } from '../../app/model/service/search.model';
-import {stringify} from 'node:querystring';
-import {Repository} from '../../app/model/repository/repository.model';
-import {RepositoryState} from '../../app/model/repository/repository-state.model';
+import { SearchModel } from '../../app/model/repository/search.model';
+import {RepositoryServer} from '../../app/model/repository/repository-server.model';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +22,10 @@ export class DataModel {
 
   credentials: UserCredentials[];
   chatRoomUserMap: ChatRoomUserMap;
-  chatRooms: Repository<ChatRoom>;
-  users: Repository<User>;
-  news: Repository<Article>;
-  files: Repository<FileModel>;
+  chatRooms: RepositoryServer<ChatRoom>;
+  users: RepositoryServer<User>;
+  news: RepositoryServer<Article>;
+  files: RepositoryServer<FileModel>;
 
   // Auth Service (this may move to separate auth server)
   userTokenMap: Map<string, string>;
@@ -34,12 +33,19 @@ export class DataModel {
 
   constructor() {
 
-    this.chatRooms = new Repository<ChatRoom>('Chat Room Repository');
-    this.users = new Repository<User>('User Repository');
+    // TODO: NEED SHARED CONFIG FOR THESE; OR SOME SHARED SERVICE FOR NAMING REPOSITORIES!
+    //
+    // There are dynamically created repositories. So, there must be a shared service
+    // to provide names. A configuration GET seems like a "solution". So, probably best
+    // to see what others have done.. /api/config/get .. sharedConfig: { ... }
+    //
+
+    this.chatRooms = new RepositoryServer<ChatRoom>('ChatRoom','ChatRoom', new SearchModel<ChatRoom>(ChatRoom.default(), []), [], true);
+    this.users = new RepositoryServer<User>('User', 'User', new SearchModel<User>(User.default(), []), [], true);
     this.chatRoomUserMap = new ChatRoomUserMap();
     this.credentials = [];
-    this.files = new Repository<FileModel>('File Repository');
-    this.news = new Repository<Article>('News Article Repository');
+    this.files = new RepositoryServer<FileModel>('File', 'File', new SearchModel<FileModel>(FileModel.default(), []), [], true);
+    this.news = new RepositoryServer<Article>('Article', 'Article', new SearchModel<Article>(Article.default(), []), [], true);
     this.userTokenMap = new Map<string, string>();
     this.tokenMap = new Map<string, UserJWTPayload>();
 
@@ -66,7 +72,6 @@ export class DataModel {
       user.longDescription = this.fillLoremIpsumShort();
       user.pictureUrl = 'user/' + user.name.toLowerCase() + '.png';   // CASE SENSITIVE (?!)
       user.email = user.name + "@nomail.com";
-      user.roleInfo = UserRole.from(UserRoleType.Editor, PersonRoleType.BoardMember);
       user.userRole = UserRoleType.Editor;
       user.personRole = PersonRoleType.BoardMember;
 
@@ -79,7 +84,6 @@ export class DataModel {
     aniv.shortDescription = 'i am aniv!';
     aniv.longDescription = 'Hey Evenyone! I am aniv! Thanks for joining me at this celebratory inaugural test-edition of Super Metroid Esports! (#freeaniv)';
     aniv.isMockAccount = false;
-    aniv.roleInfo = UserRole.from(UserRoleType.Admin, PersonRoleType.GeneralUser);
 
     users.push(aniv);
 
@@ -103,7 +107,6 @@ export class DataModel {
       user.isMockAccount = true;
       user.shortDescription = `A Short Description of ${user.name}`;
       user.longDescription = this.fillLoremIpsumShort();
-      user.roleInfo = UserRole.from(UserRoleType.General, PersonRoleType.GeneralUser);
       user.userRole = UserRoleType.General;
       user.personRole = PersonRoleType.GeneralUser;
 
@@ -198,10 +201,12 @@ export class DataModel {
     });
 
     // ~REPOSITORY INITIALIZE!~
-    this.chatRooms.fullInitialize(chatRooms, SearchModel.default());
-    this.users.fullInitialize(users, SearchModel.default());
-    this.files.fullInitialize(files, SearchModel.default());
-    this.news.fullInitialize(news, SearchModel.default());
+    this.chatRooms.appendMany(chatRooms, false);
+    this.users.appendMany(users, false);
+    this.files.appendMany(files, false);
+    this.news.appendMany(news, false);
+
+    console.log(`Server Data Model Initialized:  Users(${this.users.getRecordCount()}), ChatRooms(${this.chatRooms.getRecordCount()}), News(${this.news.getRecordCount()}), Files(${this.files.getRecordCount()})`);
   }
 
   helloMessage() {

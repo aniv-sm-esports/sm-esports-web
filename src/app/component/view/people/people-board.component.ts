@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {PersonRoleType, User} from '../../../model/repository/user.model';
+import {PersonRoleType, User} from '../../../model/repository/entity/user.model';
 import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
 import {PageData} from '../../../model/service/page.model';
-import {SearchModel} from '../../../model/service/search.model';
+import {SearchModel} from '../../../model/repository/search.model';
 import {UserSearchPipe} from '../../../pipe/user-search.pipe';
 
 @Component({
@@ -35,11 +35,11 @@ export class PeopleBoardComponent {
     this.userService = userService;
     this.router = router;
 
-    this.userService.resetSearch();
-    this.userService.updateSearch("personRole", PersonRoleType.BoardMember );
+    //this.userService.resetSearch();
+    //this.userService.updateSearch("personRole", PersonRoleType.BoardMember );
 
     // Set a watch on the user name
-    userService.onSearchChanged().subscribe(() => {
+    userService.onFilterChange().subscribe(() => {
       this.reload();
     });
 
@@ -48,7 +48,7 @@ export class PeopleBoardComponent {
   }
 
   reload() {
-    this.userService.getUserPage(PageData.firstPage(50))
+    this.userService.getBy(user => user.personRole === PersonRoleType.BoardMember)
       .then(users => {
         this.people = users;
       });

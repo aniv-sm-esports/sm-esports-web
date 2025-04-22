@@ -1,16 +1,17 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {PersonRoleType, User} from '../../../model/repository/user.model';
-import {NgForOf} from '@angular/common';
+import {PersonRoleType, User} from '../../../model/repository/entity/user.model';
+import {NgForOf, SlicePipe} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
 import {PageData} from '../../../model/service/page.model';
-import {SearchModel} from '../../../model/service/search.model';
+import {SearchModel} from '../../../model/repository/search.model';
 import {ApiResponseType} from '../../../model/service/app.model';
 import {faCircle} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 import {UserSearchPipe} from '../../../pipe/user-search.pipe';
+import {SlicePipeTyped} from '../../../pipe/slice-typed.pipe';
 
 @Component({
   selector: 'people-all',
@@ -18,7 +19,9 @@ import {UserSearchPipe} from '../../../pipe/user-search.pipe';
     NgForOf,
     AvatarComponent,
     FaIconComponent,
-    UserSearchPipe
+    UserSearchPipe,
+    SlicePipe,
+    SlicePipeTyped
   ],
   templateUrl: '../../template/view/people/people-all.component.html'
 })
@@ -43,14 +46,14 @@ export class PeopleAllComponent {
     this.appService = appService;
     this.userService = userService;
     this.router = router;
-    this.peopleBoardSearch = SearchModel.fromMap({ "personRole": PersonRoleType.BoardMember });
-    this.peopleGeneralSearch = SearchModel.fromMap({ "personRole": PersonRoleType.GeneralUser });
+    this.peopleBoardSearch = new SearchModel<User>({ "personRole": PersonRoleType.BoardMember } as User, ["personRole"]);
+    this.peopleGeneralSearch = new SearchModel<User>({ "personRole": PersonRoleType.GeneralUser } as User, ["personRole"]);
 
     // Reset the user search
-    userService.resetSearch();
+    //userService.resetSearch();
 
     // Set a watch on the user name
-    userService.onSearchChanged().subscribe(() => {
+    userService.onFilterChange().subscribe(() => {
       this.reload();
     });
 
@@ -59,7 +62,7 @@ export class PeopleAllComponent {
   }
 
   reload() {
-    this.userService.getUserPage(PageData.firstPage(50))
+    this.userService.getAll()
         .then(users => {
           this.people = users;
         });

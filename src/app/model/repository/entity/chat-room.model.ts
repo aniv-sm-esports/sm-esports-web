@@ -1,6 +1,6 @@
 import {Chat} from './chat.model';
 import isEqual from 'lodash/isEqual';
-import {RepositoryEntity} from './repository-entity';
+import {RepositoryEntity} from '../repository-entity';
 
 export class ChatRoom extends RepositoryEntity {
   public name: string;
@@ -29,13 +29,8 @@ export class ChatRoom extends RepositoryEntity {
     return this.chats.find((chat) => chat.id == id);
   }
 
-  public update(room: ChatRoom) {
-    this.id = room.id;
-    this.name = room.name;
-    this.description = room.description;
-    this.urlRoute = room.urlRoute;
-    this.chatRulesHtml = room.chatRulesHtml;
-    this.chats = room.chats;
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 
   public clearChats() {

@@ -1,29 +1,52 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ApiResponse} from '../model/service/app.model';
-import {FileModel} from '../model/repository/file.model';
+import {FileModel} from '../model/repository/entity/file.model';
+import {RepositoryService} from './repository.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FileService {
+export class FileService extends RepositoryService<FileModel> {
 
-  private readonly http: HttpClient;
-
-  // File API
+  // File API: ALL POST ENDPOINTS
   //
-  urlGetFile = "/api/file/get/:fileName";
-  urlPostFile = "/api/file/post";
+  private readonly urlGet = "/api/file/get";
+  private readonly urlGetAll = "/api/file/getAll";
+  private readonly urlCreate = "/api/file/create";
+  private readonly urlGetRepositoryState = "/api/repository/file/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/repository/file/checkState";
+  private readonly urlPostRepositoryClientState = "/api/repository/file/setState";
 
   constructor(private httpClient: HttpClient) {
-    this.http = httpClient;
+    super('File', 'File', httpClient, FileModel.default(), []);
   }
 
-  getFile(fileName:string) {
-    return this.http.get<ApiResponse<FileModel>>(this.urlGetFile);
+  protected getEntityName(): string {
+    return 'File';
   }
 
-  postFile(file:FileModel) {
-    return this.http.post<ApiResponse<FileModel>>(this.urlPostFile, file);
+  // TODO
+  protected getRepositoryKey(): string {
+    return this.getEntityName();
+  }
+
+  protected getRepositoryStateUrl(): string {
+    return this.urlGetRepositoryState;
+  }
+  protected getRepositoryClientCheckUrl(): string {
+    return this.urlPostRepositoryClientCheck;
+  }
+
+  protected getRepositoryClientStateUrl(): string {
+    return this.urlPostRepositoryClientState;
+  }
+  protected getUrl(): string {
+    return this.urlGet;
+  }
+  protected getAllUrl(): string {
+    return this.urlGetAll;
+  }
+  protected createUrl(): string {
+    return this.urlCreate;
   }
 }

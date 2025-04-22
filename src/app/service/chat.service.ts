@@ -1,48 +1,61 @@
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Chat} from '../model/repository/chat.model';
-import {ApiResponse} from '../model/service/app.model';
-import {ChatRoom} from '../model/repository/chat-room.model';
+import {Chat} from '../model/repository/entity/chat.model';
+import {RepositoryService} from './repository.service';
+import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ChatService {
+export class ChatService extends RepositoryService<Chat> {
 
-  private readonly http: HttpClient;
+  private readonly chatRoomId:number;
 
   // Chat API
   //
-  urlGetChatRooms = "/api/chatRoom/getRooms";
-  urlGetChatRoom = "/api/chatRoom/getRoom/:chatRoomRoute";
-  urlGetChats = "/api/chat/getChats/:chatRoomId";
-  urlPostChat = "/api/chat/postChat/:chatRoomId";
+  private readonly urlGet = "/api/chat/get/:chatRoomId";
+  private readonly urlGetAll = "/api/chat/getAll/:chatRoomId";
+  private readonly urlCreate = "/api/chat/create/:chatRoomId";
+  private readonly urlGetRepositoryState = "/api/repository/chat/getState/:chatRoomId";
+  private readonly urlPostRepositoryClientCheck = "/api/repository/chat/checkState/:chatRoomId";
+  private readonly urlPostRepositoryClientState = "/api/repository/chat/setState/:chatRoomId";
 
-  private readonly headers = new HttpHeaders({'Content-Type': 'application/json'});
-
-  constructor(private httpClient: HttpClient) {
-    this.http = httpClient;
+  constructor(httpClient: HttpClient, chatRoomId:number) {
+    super("Chat (" + chatRoomId + ")", "Chat", httpClient, Chat.default(), []);
+    this.chatRoomId = chatRoomId;
   }
 
-  getChatRooms() {
-    return this.http.get<ApiResponse<ChatRoom>>(this.urlGetChatRooms);
+  protected getEntityName(): string {
+    return 'Chat';
   }
 
-  getChatRoom(chatRoomRoute: string) {
-    return this.http.get<ApiResponse<ChatRoom>>(this.urlGetChatRoom.replace(':chatRoomRoute', chatRoomRoute), {
-      headers: this.headers
-    });
+  // TODO: NOTICE PATTERN!
+  protected getRepositoryKey(): string {
+    return this.getEntityName() + ` (${this.chatRoomId})`;
   }
 
-  getChats(chatRoomId: number) {
-    return this.http.get<ApiResponse<Chat>>(this.urlGetChats.replace(':chatRoomId', chatRoomId.toString()), {
-      headers: this.headers
-    });
+  protected getRepositoryStateUrl(): string {
+    return this.urlGetRepositoryState.replace(":chatRoomId", this.chatRoomId.toString());
   }
 
+  protected getRepositoryClientCheckUrl(): string {
+    return this.urlPostRepositoryClientCheck.replace(":chatRoomId", this.chatRoomId.toString());
+  }
+
+  protected getRepositoryClientStateUrl(): string {
+    return this.urlPostRepositoryClientState.replace(":chatRoomId", this.chatRoomId.toString());
+  }
+
+  protected getUrl(): string {
+    return this.urlGet.replace(":chatRoomId", this.chatRoomId.toString());
+  }
+  protected getAllUrl(): string {
+    return this.urlGetAll.replace(":chatRoomId", this.chatRoomId.toString());
+  }
+  protected createUrl(): string {
+    return this.urlCreate.replace(":chatRoomId", this.chatRoomId.toString());
+  }
+
+/*
   postChat(chatRoomId: number, chat: Chat)  {
     return this.http.post<ApiResponse<Chat>>(this.urlPostChat.replace(':chatRoomId', chatRoomId.toString()), chat, {
       headers: this.headers
     });
-  }
+  }*/
 }

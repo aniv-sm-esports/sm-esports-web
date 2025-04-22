@@ -1,41 +1,51 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {firstValueFrom, Observable} from 'rxjs';
-import {Article} from '../model/repository/article.model';
-import {ApiResponse} from '../model/service/app.model';
-import {PageData} from '../model/service/page.model';
+import {Article} from '../model/repository/entity/article.model';
+import {RepositoryService} from './repository.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NewsService {
+export class NewsService extends RepositoryService<Article> {
 
-  private readonly http: HttpClient;
+  // ALL POST ENDPOINTS
+  private readonly urlGet = "/api/news/get";
+  private readonly urlGetAll = "/api/news/getAll";
+  private readonly urlCreate = "/api/news/create";
+  private readonly urlGetRepositoryState = "/api/repository/news/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/repository/news/checkState";
+  private readonly urlPostRepositoryClientState = "/api/repository/news/setState";
 
-  // Users -> Post -> Create User
-  urlGet = "/api/news/get/:id";
-  urlCreate = "/api/news/create";
-  urlGetPage = "/api/news/getPage";
-
-  private readonly headers = new HttpHeaders({'Content-Type': 'application/json'});
-
-  constructor(private httpClient: HttpClient) {
-    this.http = httpClient;
+  constructor(protected httpClient: HttpClient) {
+    super('Article', 'Article', httpClient, Article.default(), []);
   }
 
-  get(id: number) {
-    return this.http.get<ApiResponse<Article>>(this.urlGet.replace(':id', id.toString()));
+  protected getEntityName(): string {
+    return 'Article';
   }
 
-  create(news: Article) : Observable<ApiResponse<Article>> {
-    return this.http.post<ApiResponse<Article>>(this.urlCreate, news, {
-      headers: this.headers
-    });
+  // TODO
+  protected getRepositoryKey(): string {
+    return this.getEntityName();
   }
 
-  getPage(pageData:PageData): Observable<ApiResponse<Article>> {
-    return this.http.post<ApiResponse<Article>>(this.urlGetPage, pageData, {
-      headers: this.headers
-    });
+  protected getRepositoryStateUrl(): string {
+    return this.urlGetRepositoryState;
+  }
+  protected getRepositoryClientCheckUrl(): string {
+    return this.urlPostRepositoryClientCheck;
+  }
+
+  protected getRepositoryClientStateUrl(): string {
+    return this.urlPostRepositoryClientState;
+  }
+  protected getUrl(): string {
+    return this.urlGet;
+  }
+  protected getAllUrl(): string {
+    return this.urlGetAll;
+  }
+  protected createUrl(): string {
+    return this.urlCreate;
   }
 }

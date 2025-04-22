@@ -4,32 +4,52 @@ export class PageData {
   public pageNumber: number;
   public pageSize: number;
 
-  constructor() {
-    this.pageNumber = 1;
-    this.pageSize = 50;
+  constructor(pageNumber: number, pageSize: number) {
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
+  }
+
+  public getStartIndex() {
+    return (this.pageNumber - 1) * this.pageSize;
+  }
+  public getEndIndex() {
+    return this.pageNumber * this.pageSize;
   }
 
   public static default() {
-    return new PageData();
+    return new PageData(0,0);
+  }
+}
+
+export class PageInfo {
+
+  protected pageNumber: number;
+  protected pageSize: number;
+  protected totalRecordCount: number;
+  protected filteredRecordCount: number;
+
+  constructor(pageNumber:number, pageSize:number) {
+    this.pageNumber = pageNumber;
+    this.pageSize = pageSize;
+    this.totalRecordCount = 0;
+    this.filteredRecordCount = 0;
   }
 
-  public static firstPage(pageSize: number) {
-    let result: PageData = new PageData();
-    result.pageNumber = 1;
-    result.pageSize = pageSize;
-    return result;
+  getPageNumber() {return this.pageNumber;}
+  getPageSize() {return this.pageSize;}
+  getTotalCount() {return this.totalRecordCount;}
+  getFilteredCount() {return this.filteredRecordCount;}
+
+  set(totalRecordCount:number, filteredRecordCount:number){
+    this.totalRecordCount = totalRecordCount;
+    this.filteredRecordCount = filteredRecordCount;
   }
 
-  public static fromRequest(pageNumber: number, pageSize: number): PageData {
-    let result: PageData = new PageData();
-    result.pageNumber = pageNumber;
-    result.pageSize = pageSize;
-    return result;
+  public static first(pageSize:number): PageInfo {
+    return new PageInfo(1, pageSize);
   }
-  public static fromResponse(pageNumber: number, pageSize: number): PageData {
-    let result: PageData = new PageData();
-    result.pageNumber = pageNumber;
-    result.pageSize = pageSize;
-    return result;
+
+  public static default() {
+    return new PageInfo(0,0);
   }
 }

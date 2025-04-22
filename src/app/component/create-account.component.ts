@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {UserJWT} from '../model/service/user-logon.model';
 import {AuthService} from '../service/auth.service';
-import {UserService} from '../service/user.service';
 import {FormsModule} from '@angular/forms';
 import {BasicButtonComponent} from './control/primitive/button.component';
 import {BasicCheckboxComponent} from './control/primitive/checkbox.component';
@@ -11,7 +10,6 @@ import {Router} from '@angular/router';
 import {noop} from 'rxjs';
 import {AuthHandler} from '../model/service/handler.model';
 import {UserCreation} from '../model/view/user-creation.model';
-import {ApiResponseType} from '../model/service/app.model';
 import {NotifyComponent} from './control/notify.component';
 import {NotifySeverity, NotifyType} from '../model/service/notify.model';
 
@@ -21,7 +19,6 @@ import {NotifySeverity, NotifyType} from '../model/service/notify.model';
     FormsModule,
     BasicButtonComponent,
     BasicCheckboxComponent,
-    NgStyle,
     NgIf,
     NotifyComponent
   ],
@@ -29,11 +26,8 @@ import {NotifySeverity, NotifyType} from '../model/service/notify.model';
 })
 export class CreateAccountComponent implements AuthHandler {
 
-  protected readonly appService: AppService;
-  private readonly authService: AuthService;
-  private readonly userService: UserService;
-  private readonly router: Router;
-
+  protected readonly NotifyType = NotifyType;
+  protected readonly NotifySeverity = NotifySeverity;
   protected readonly noop = noop;
 
   public userCreation:UserCreation;
@@ -43,11 +37,9 @@ export class CreateAccountComponent implements AuthHandler {
   public userCreationGeneralError: boolean = false;
   public userCreationGeneralErrorMessage:string = '';
 
-  constructor(router:Router, appService:AppService, authService: AuthService, userService: UserService) {
-    this.router = router;
-    this.appService = appService;
-    this.authService = authService;
-    this.userService = userService;
+  constructor(private readonly router:Router,
+              protected readonly appService:AppService,
+              private readonly authService: AuthService) {
 
     this.userCreation = new UserCreation();
 
@@ -92,7 +84,7 @@ export class CreateAccountComponent implements AuthHandler {
       return;
     }
 
-    this.userService
+    this.authService
       .createUser(this.userCreation)    // Emitted value
       .subscribe(response => {
 
@@ -113,7 +105,4 @@ export class CreateAccountComponent implements AuthHandler {
         }
       });
   }
-
-  protected readonly NotifyType = NotifyType;
-  protected readonly NotifySeverity = NotifySeverity;
 }

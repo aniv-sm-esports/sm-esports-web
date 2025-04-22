@@ -37,7 +37,7 @@ export class AuthService {
 
     // Create payload to store user name and logon time (+ 120 minutes)
     //
-    payload = new UserJWTPayload(credentials.userName, moment().toDate(), moment().add(120, 'minutes').toDate());
+    payload = new UserJWTPayload(credentials.userName, new Date(), moment().add(120, 'minutes').toDate());
 
     // Encrypt JWT Payload
     //

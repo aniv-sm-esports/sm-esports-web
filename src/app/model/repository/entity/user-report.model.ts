@@ -1,4 +1,5 @@
-import {RepositoryEntity} from './repository-entity';
+import {RepositoryEntity} from '../repository-entity';
+import {result} from 'lodash';
 
 export enum UserReportType {
   Info = 'Informational',
@@ -8,7 +9,7 @@ export enum UserReportType {
   SiteBan = 'Banned From Site'
 }
 
-export class UserReport extends RepositoryEntity {
+export class UserReportModel extends RepositoryEntity {
   public userId: number = -1;
   public reportType: UserReportType = UserReportType.Info;
   public reportChatRoomId: number = -1;
@@ -16,7 +17,7 @@ export class UserReport extends RepositoryEntity {
   public message: string = '';
 
   public static fromChat(userId:number, reportType: UserReportType, reportChatRoomId:number, reportChatId:number, message:string){
-    let result = new UserReport();
+    let result = new UserReportModel();
 
     result.userId = userId;
     result.reportType = reportType;
@@ -25,5 +26,9 @@ export class UserReport extends RepositoryEntity {
     result.message = message;
 
     return result;
+  }
+
+  update<T extends RepositoryEntity>(entity: T): void {
+    Object.assign(this, entity);
   }
 }

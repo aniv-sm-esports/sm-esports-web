@@ -124,8 +124,10 @@
     width: 100%;
     background-image: radial-gradient(circle, #B5B5B5 0%, #FFFFFF 100%);
   }
-  .main table.menu-open {
-    /* Trying to make the layout switch for column sizing */
+  .main table > tbody.menu-open {
+  }
+  .main table > tbody.menu-close {
+    display:none;
   }
   .main table > thead {
   }
@@ -297,21 +299,20 @@
 
   <!-- Banner + Menu-->
   <table class="prevent-select russo-one-regular"
-         (mouseleave)="this.showMenu = false"
-         [ngClass]="{'menu-open': this.showMenu}">
-    <thead (mouseenter)="this.showMenu = true">
+         (mouseleave)="this.showMenu = false">
+    <thead>
       <tr>
         <th>
           <div class="sidenav-left-opener">
             <button (click)="showSideNavLeft=true"></button>
           </div>
         </th>
-        <th routerLinkActive="active"><a class="banner-item" routerLink="/home/news" routerLinkActive="active">Home<fa-icon class="live" [icon]="faCircle"></fa-icon></a></th>
-        <th routerLinkActive="active"><a class="banner-item" routerLink="/people/all" routerLinkActive="active">People</a></th>
-        <th routerLinkActive="active"><a class="banner-item" routerLink="/collab/statement" routerLinkActive="active">Collab</a></th>
-        <th routerLinkActive="active"><a class="banner-item" routerLink="/landscape/media" routerLinkActive="active">Landscape</a></th>
-        <th routerLinkActive="active"><a class="banner-item" routerLink="/chat/politics" routerLinkActive="active">Chat</a></th>
-        <th routerLinkActive="active"></th>
+        <th routerLinkActive="active" (mouseenter)="this.showMenu = true"><a class="banner-item" routerLink="/home/news" routerLinkActive="active">Home<fa-icon class="live" [icon]="faCircle"></fa-icon></a></th>
+        <th routerLinkActive="active" (mouseenter)="this.showMenu = true"><a class="banner-item" routerLink="/people/all" routerLinkActive="active">People</a></th>
+        <th routerLinkActive="active" (mouseenter)="this.showMenu = true"><a class="banner-item" routerLink="/collab/statement" routerLinkActive="active">Collab</a></th>
+        <th routerLinkActive="active" (mouseenter)="this.showMenu = true"><a class="banner-item" routerLink="/landscape/media" routerLinkActive="active">Landscape</a></th>
+        <th routerLinkActive="active" (mouseenter)="this.showMenu = true"><a class="banner-item" routerLink="/chat/politics" routerLinkActive="active">Chat</a></th>
+        <th></th>
         <th><h1 class="animate">Super Metroid Esports</h1></th>
         <th>
           <div class="user-dropdown-opener">
@@ -321,7 +322,7 @@
       </tr>
     </thead>
 
-    <tbody *ngIf="this.showMenu">
+    <tbody [ngClass]="{'menu-open': this.showMenu, 'menu-close': !this.showMenu}">
       <tr>
         <td></td>
         <td routerLinkActive="active"><a class="banner-item live" routerLink="/home/live" routerLinkActive="active">Live<fa-icon class="live" [icon]="faCircle"></fa-icon></a></td>
