@@ -1,41 +1,47 @@
 <style>
 
   .people-all-container {
-    text-align:center;
-    position:absolute;
-    top:0;
-    bottom:0;
-    right:0;
-    left:0;
-    z-index:0;
     background:rgba(0,0,0,0.3);
-    overflow-x:hidden;
-    overflow-y:auto;
   }
-  .people-all-container > .people-container-general,
-  .people-all-container > .people-container-board {
+
+  .people-all-container cdk-virtual-scroll-viewport  {
+
+  }
+
+  /* flex-layout is deprecated */
+  ::ng-deep .people-all-container .cdk-virtual-scroll-content-wrapper {
     display:flex;
     flex-wrap: wrap;
+    flex-direction: row;
     justify-content: center;
+  }
+  .people-all-container .people-item.board-member {
+    background:rgba(134,134,255,0.5);
+  }
+  .people-all-container .people-item-content {
+    text-align:center;
   }
   .people-all-container .people-item {
     margin:10px;
   }
   .people-all-container .people-item-avatar-container {
-    display:flex;
     cursor:pointer;
+    background:rgba(134,134,255,0.5);
   }
-  .people-all-container .people-item-content {
-    text-align:center;
+  .people-all-container .people-item-content .people-item-text-container {
+    background:rgba(255,255,255,0.5);
+    color:#555;
+    padding:5px;
+    border-radius:0 0 10px 10px;
   }
   .people-all-container .people-item h5 {
     margin: 5px;
     padding: 0;
   }
 
-  .people-all-container .people-item-content h5:nth-child(2) > fa-icon {
+  .people-all-container .people-item-content fa-icon {
     font-size:0.65em;
-    color: red;
+    color: lawngreen;
     margin:5px -5px 5px 5px;
   }
   .people-all-container .people-item-content h5:nth-child(2) {
@@ -45,36 +51,30 @@
     color: #CCC;
   }
 
-  .people-all-container .people-container-board .people-item {
+  .people-all-container .people-item {
     background:rgba(134,134,255,0.5);
     padding:10px;
     border-radius:10px;
     -webkit-border-radius: 10px;
   }
 
-  .people-all-container .people-container-board .people-item {
-  }
-
-  .people-all-container .people-container-general .people-item {
+  .people-all-container .people-item {
     font-size:0.9em;
     background:rgba(255,255,255,0.3);
     padding:10px;
     border-radius:10px;
     -webkit-border-radius: 10px;
   }
-  .people-all-container .people-container-general .people-item .people-item-content {
-
-  }
 
   @media screen and (max-width: 1400px) {
     .people-all-container {
-      top:45px;
+      margin-top:45px;
     }
   }
 
   @media screen and (min-width: 1400px) {
     .people-all-container {
-      top:45px;
+      margin-top:45px;
     }
   }
 
@@ -82,30 +82,19 @@
 
 <div class="people-all-container">
 
-  <div class="people-container-board">
-    <div class="people-item"
-         *ngFor="let person of this.people | userSearch:this.peopleBoardSearch">
+  <cdk-virtual-scroll-viewport itemSize="50"
+                               [ngStyle]="{'height': (this.appService.getBodySize().height) + 'px', 'display':'flex'}">
+    <div class="people-item" [ngClass]="{'board-member': person.personRole == PersonRoleType.BoardMember}"
+         *cdkVirtualFor="let person of this.peopleDataSource">
       <div class="people-item-content">
         <div class="people-item-avatar-container">
           <sm-esports-avatar [size]="AvatarSize.Large" [user]="person" />
         </div>
-        <h5>{{person.name}}<fa-icon [icon]="faCircle"></fa-icon></h5>
-        <h5>({{person.personRole}})</h5>
-      </div>
-    </div>
-  </div>
-
-  <div class="people-container-general">
-    <div class="people-item"
-         *ngFor="let person of this.people | userSearch:this.peopleGeneralSearch | sliceTyped:0:50">
-      <div class="people-item-content">
-        <div class="people-item-avatar-container">
-          <sm-esports-avatar [size]="AvatarSize.Medium" [user]="person" />
+        <div class="people-item-text-container">
+          <h5>{{person.name}}<fa-icon [icon]="faCircle"></fa-icon></h5>
+          <h5>({{person.personRole}})</h5>
         </div>
-        <h5>{{person.name}}<fa-icon [icon]="faCircle"></fa-icon></h5>
-        <h5>({{person.personRole}})</h5>
       </div>
     </div>
-  </div>
-
+  </cdk-virtual-scroll-viewport>
 </div>
