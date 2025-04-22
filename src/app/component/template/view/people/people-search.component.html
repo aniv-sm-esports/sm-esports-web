@@ -11,20 +11,20 @@
 
   .people-search table {
     text-align:left;
+    border-collapse:collapse;
     width:100%;
     font-size:0.9em;
     background:rgba(0,0,0,0.5);
   }
-  .people-search table thead {
-
+  .people-search table tr {
+    cursor:pointer;
   }
-  .people-search table tbody {
+  .people-search table tr[cdk-row]:hover td {
+    background:rgba(255,255,255,0.2);
   }
-  .people-search table thead > tr,
-  .people-search table tbody > tr {
-  }
-  .people-search table thead tr th,
-  .people-search table tbody tr td {
+  .people-search table th[cdk-header-cell] {
+    background:#CCC;
+    color:#888;
   }
   .people-search table tbody tr {
     background:rgba(0,0,0,0.3);
@@ -89,7 +89,7 @@
         <td cdk-cell *cdkCellDef="let user"> {{user.userRole}} </td>
       </ng-container>
 
-      <tr cdk-header-row *cdkHeaderRowDef="['name', 'email', 'shortDescription', 'personRole', 'userRole']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="['name', 'email', 'shortDescription', 'personRole', 'userRole']; sticky:true"></tr>
       <tr cdk-row *cdkRowDef="let user; columns: ['name', 'email', 'shortDescription', 'personRole', 'userRole'];"></tr>
     </table>
   </cdk-virtual-scroll-viewport>
