@@ -4,6 +4,8 @@ import {AppService} from '../../../service/app.service';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgIf, NgStyle} from '@angular/common';
+import {PagerComponent} from '../../control/primitive/pager.component';
+import {PageInfo} from '../../../model/service/page.model';
 
 @Component({
   selector: 'people',
@@ -12,7 +14,8 @@ import {NgIf, NgStyle} from '@angular/common';
     ReactiveFormsModule,
     FormsModule,
     NgIf,
-    NgStyle
+    NgStyle,
+    PagerComponent
   ],
   templateUrl: '../../template/view/people/people.component.html'
 })
@@ -33,6 +36,9 @@ export class PeopleComponent {
     'email',
     'personRole'
   ];
+
+  public pageNumber:number = 1;
+  public pageSize:number = 50;
 
   constructor(appService:AppService, userService: UserService, router: Router, activatedRoute: ActivatedRoute) {
 
@@ -55,10 +61,15 @@ export class PeopleComponent {
         }
       }
     });
+
   }
 
   ngOnInit(){
 
+  }
+
+  onPageChanged(pageNumber:number) {
+    this.userService.get(new PageInfo(this.pageNumber, this.pageSize));
   }
 
   getContainerHeight() {

@@ -3,7 +3,7 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from '../component/app.component';
-import {NgOptimizedImage} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {UserService} from '../service/user.service';
 import {
@@ -37,7 +37,8 @@ import {SideNavComponent} from '../component/control/side-nav.component';
     ClickOutsideDirective,
     LoginComponent,
     UserDropdownComponent,
-    SideNavComponent
+    SideNavComponent,
+    CommonModule
   ],
   providers: [
     provideClientHydration(withEventReplay()),

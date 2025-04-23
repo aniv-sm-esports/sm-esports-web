@@ -2,117 +2,21 @@
 
   .people-search {
     width:100%;
-    overflow:hidden;
+    overflow-x:hidden !important;
+    overflow-y:hidden !important;
+    background:rgba(0,0,0,0.3);
+  }
+
+  .people-search people-table-search {
+    overflow-x:hidden !important;
+    overflow-y:hidden !important;
   }
 
   /*
     Search Results: Table sizing had to be static column widths. Still looking for CSS workaround.
   */
 
-  .people-search table {
-    text-align:left;
-    border-collapse:collapse;
-    width:100%;
-    font-size:0.9em;
-    background:rgba(0,0,0,0.5);
-  }
-  .people-search table tr {
-    cursor:pointer;
-  }
-  .people-search table tr[cdk-row]:hover td {
-    background:rgba(255,255,255,0.2);
-  }
-  .people-search table th[cdk-header-cell] {
-    background:#CCC;
-    color:#888;
-  }
-  .people-search table tbody tr {
-    background:rgba(0,0,0,0.3);
-    cursor:pointer;
-  }
-  .people-search table tbody tr:hover > td {
-    background-color:rgba(255,255,255,0.1);
-  }
-  .people-search table tr td fa-icon {
-    color: lawngreen;
-    font-size: 0.6em;
-    margin:5px;
-  }
-
-  @media screen and (max-width: 1400px) {
-    .people-search {
-      margin-top:45px;
-    }
-  }
-
-  @media screen and (min-width: 1400px) {
-    .people-search {
-      margin-top:45px;
-    }
-  }
 </style>
 <div class="people-search">
-
-  <cdk-virtual-scroll-viewport class="example-viewport" itemSize="50"
-                               [ngStyle]="{'height': (this.appService.getBodySize().height) + 'px'}">
-    <table cdk-table class="ibm-plex-mono-medium" datapagesize="50"
-           [trackBy]="this.trackByPeopleId"
-           [dataSource]="peopleDataSource">
-
-      <!-- Name Column -->
-      <ng-container cdkColumnDef="name">
-        <th cdk-header-cell *cdkHeaderCellDef>Name</th>
-        <td cdk-cell *cdkCellDef="let user"> <fa-icon [icon]="faCircle"></fa-icon>{{user.name}} </td>
-      </ng-container>
-
-      <!-- Name Column -->
-      <ng-container cdkColumnDef="email">
-        <th cdk-header-cell *cdkHeaderCellDef>Email</th>
-        <td cdk-cell *cdkCellDef="let user"> {{user.email}} </td>
-      </ng-container>
-
-      <!-- Weight Column -->
-      <ng-container cdkColumnDef="shortDescription">
-        <th cdk-header-cell *cdkHeaderCellDef>Description</th>
-        <td cdk-cell *cdkCellDef="let user"> {{user.shortDescription}} </td>
-      </ng-container>
-
-      <!-- Symbol Column -->
-      <ng-container cdkColumnDef="personRole">
-        <th cdk-header-cell *cdkHeaderCellDef>Role</th>
-        <td cdk-cell *cdkCellDef="let user"
-            [ngStyle]="{'color': user.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}"> {{user.personRole}} </td>
-      </ng-container>
-
-      <ng-container cdkColumnDef="userRole">
-        <th cdk-header-cell *cdkHeaderCellDef>Security</th>
-        <td cdk-cell *cdkCellDef="let user"> {{user.userRole}} </td>
-      </ng-container>
-
-      <tr cdk-header-row *cdkHeaderRowDef="['name', 'email', 'shortDescription', 'personRole', 'userRole']; sticky:true"></tr>
-      <tr cdk-row *cdkRowDef="let user; columns: ['name', 'email', 'shortDescription', 'personRole', 'userRole'];"></tr>
-    </table>
-  </cdk-virtual-scroll-viewport>
-      <!--thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Description</th>
-          <th>Role</th>
-          <th>Security</th>
-        </tr>
-      </thead>
-      <tbody [ngStyle]="{'height': this.appService.getBodySize().height + 'px'}">
-        <tr class="search-result-item"
-            *cdkVirtualFor="let user of people"
-            [ngStyle]="{'background-color': user.personRole === PersonRoleType.BoardMember ? 'rgba(134,134,255,0.2)' : 'rgba(255,225,255,0.1)'}">
-          <td><fa-icon [icon]="faCircle"></fa-icon>{{user.name}}</td>
-          <td>{{user.email}}</td>
-          <td>{{user.shortDescription}}</td>
-          <td [ngStyle]="{'color': user.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}">{{user.personRole}}</td>
-          <td>({{user.userRole}})</td>
-        </tr>
-      </tbody>
-    </table-->
-
+  <people-table-search [ngStyle]="{'height':this.appService.getBodySize().height + 'px'}" />
 </div>

@@ -2,14 +2,11 @@
 
   .people-all-container {
     background:rgba(0,0,0,0.3);
+    overflow-y:auto;
   }
 
-  .people-all-container cdk-virtual-scroll-viewport  {
-
-  }
-
-  /* flex-layout is deprecated */
-  ::ng-deep .people-all-container .cdk-virtual-scroll-content-wrapper {
+  /* npm flex-layout is deprecated */
+  .people-all-container {
     display:flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -26,23 +23,19 @@
   }
   .people-all-container .people-item-avatar-container {
     cursor:pointer;
-    background:rgba(134,134,255,0.5);
   }
   .people-all-container .people-item-content .people-item-text-container {
-    background:rgba(255,255,255,0.5);
     color:#555;
-    padding:5px;
-    border-radius:0 0 10px 10px;
   }
   .people-all-container .people-item h5 {
-    margin: 5px;
+    margin: 3px;
     padding: 0;
   }
 
   .people-all-container .people-item-content fa-icon {
     font-size:0.65em;
     color: lawngreen;
-    margin:5px -5px 5px 5px;
+    margin-left:5px;
   }
   .people-all-container .people-item-content h5:nth-child(2) {
     cursor:pointer;
@@ -80,15 +73,14 @@
 
 </style>
 
-<div class="people-all-container">
+<div class="people-all-container" [ngStyle]="{'height': this.appService.getBodySize().height + 'px'}">
 
-  <cdk-virtual-scroll-viewport itemSize="50"
-                               [ngStyle]="{'height': (this.appService.getBodySize().height) + 'px', 'display':'flex'}">
-    <div class="people-item" [ngClass]="{'board-member': person.personRole == PersonRoleType.BoardMember}"
-         *cdkVirtualFor="let person of this.peopleDataSource">
+    <div class="people-item"
+         *ngFor="let person of this.peopleDataSource"
+         [ngClass]="{'board-member': person.personRole == PersonRoleType.BoardMember}">
       <div class="people-item-content">
         <div class="people-item-avatar-container">
-          <sm-esports-avatar [size]="AvatarSize.Large" [user]="person" />
+          <sm-esports-avatar [size]="AvatarSize.Medium" [user]="person" />
         </div>
         <div class="people-item-text-container">
           <h5>{{person.name}}<fa-icon [icon]="faCircle"></fa-icon></h5>
@@ -96,5 +88,4 @@
         </div>
       </div>
     </div>
-  </cdk-virtual-scroll-viewport>
 </div>

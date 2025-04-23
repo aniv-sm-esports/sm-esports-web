@@ -13,7 +13,7 @@
     right:0;
     left:0;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
   }
   .people-container .search-bar {
     position:absolute;
@@ -71,6 +71,7 @@
 
   <div class="search-bar"
        *ngIf="this.searchVisible">
+    <pager [page-number]="this.pageNumber" [page-size]="this.pageSize" (pageInfoChanged)="onPageChanged($event)" />
     <!--sm-esports-select [items]="this.searchFields" [model]="this.selectedField" (change)="search(this.searchValue)" /-->
     <input placeholder="Enter Search..." [type]="this.searchType" [(ngModel)]="this.searchValue" (ngModelChange)="search(this.searchValue)" />
     <label class="russo-one-regular">Search</label>
