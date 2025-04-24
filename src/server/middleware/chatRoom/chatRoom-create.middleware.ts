@@ -16,7 +16,7 @@ export class ChatRoomCreateMiddleware extends MiddlewareBase {
   }
 
   public override apply(request: Request<{}, ApiResponse<ChatRoom>, ApiRequest<ChatRoom>, ParsedQs, Record<string, any>>,
-                        response: Response<any, Record<string, any>, number>, next: any) {
+                        response: Response<ApiResponse<ChatRoom>, Record<string, any>, number>, next: any) {
     (this.controllerManagerService.getPrimaryController(ChatRoomControllerName) as ChatRoomController).create(request, response);
   }
 }

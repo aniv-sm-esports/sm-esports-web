@@ -10,3 +10,5 @@ export interface TimeHandler {
 }
 
 export type Predicate<T> = (item: T) => boolean;
+export type Callback<T> = (item: T) => void;
+export type Selector<TResult, T> = (item: T) => TResult;

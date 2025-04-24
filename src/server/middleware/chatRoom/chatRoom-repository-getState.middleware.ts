@@ -15,7 +15,8 @@ export class ChatRoomRepositoryGetStateMiddleware extends MiddlewareBase {
     super(controllerManagerService, route, method);
   }
 
-  public apply(request: Request<{}, ApiResponse<ChatRoom>, ApiRequest<ChatRoom>, ParsedQs, Record<string, any>>, response: Response<any, Record<string, any>, number>, next: any) {
+  public apply(request: Request<{}, ApiResponse<ChatRoom>, ApiRequest<ChatRoom>, ParsedQs, Record<string, any>>,
+               response: Response<ApiResponse<ChatRoom>, Record<string, any>, number>, next: any) {
     (this.controllerManagerService.getPrimaryController(ChatRoomControllerName) as ChatRoomController).getState(request, response);
   }
 }

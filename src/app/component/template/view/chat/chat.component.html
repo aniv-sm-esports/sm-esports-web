@@ -1,42 +1,76 @@
 <style>
 
   .chat-container {
-    position:absolute;
-    top:0;
-    bottom:0;
-    right:0;
-    left:0;
     background:rgba(0,0,0,0.3);
+    display:grid;
+    grid-auto-columns: 260px 1fr 1fr;
+    overflow-x:hidden;
+    overflow-y:hidden;
+  }
+
+  .chat-container h2 {
+    font-family: "Russo One", sans-serif;
+    font-size:1.2em;
+    font-style: normal;
+    font-weight: lighter;
+    margin:0;
+    padding:10px;
+    color: rgba(134,134,255,0.5);
+    background-color:rgba(255,255,255,0.75);
+  }
+
+  .chat-category-container {
+    background:rgba(0,0,0,0.3);
+    grid-column: 1;
+  }
+
+  .chat-category-container > .chat-category-item > h4 {
+    color: #888;
+    margin:0;
+    padding:0;
+  }
+
+  .chat-room-container {
+    background:rgba(0,0,0,0.3);
+    grid-column: 2;
+  }
+
+  .chatbox-container {
+    background:rgba(0,0,0,0.3);
+    grid-column: 3;
   }
 
   @media screen and (max-width: 1400px) {
     .chat-container {
-      top:42px;
+      margin-top:42px;
     }
   }
 
   @media screen and (min-width: 1400px) {
     .chat-container {
-      top:52px;
+      margin-top:52px;
     }
   }
 
 </style>
 
-<div class="chat-container">
+<div class="chat-container" [ngStyle]="{'height': (this.appService.getSize().height - 42) + 'px'}">
 
-    <div class="chat-selector">
-      <sm-esports-button *ngFor="let tab of chatTabs; index as i;"
-                         class="russo-one-regular button"
-                         (clicked)="navigateRoute($event)"
-                         [text]="tab.name"
-                         [route]="tab.route" />
+  <div class="chat-category-container">
+    <h2>Chat Categories</h2>
+    <div class="chat-category-item"
+         *ngFor="let model of this.chatRoomViewModel | groupByFirst:this.categoryIdSelector:this.categorySelector">
+      <h4>{{model.name}}</h4>
     </div>
+  </div>
 
-    <div class="chat-area">
-      <chatbox />
-    </div>
+  <div class="chat-room-container">
+    <h2>Chat Rooms ({{this.selectedChatCategory?.name}})</h2>
+    asdfasd
+  </div>
 
-    <div class="clear-fix"></div>
+  <div class="chatbox-container">
+    <chatbox [chatRoomId]="this.selectedChatRoom?.chatRoom?.id" />
+  </div>
 
 </div>

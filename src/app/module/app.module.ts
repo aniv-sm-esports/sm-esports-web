@@ -22,6 +22,12 @@ import {LoginComponent} from '../component/control/login.component';
 import {ZoomService} from '../service/zoom.service';
 import {UserDropdownComponent} from "../component/control/user-dropdown.component";
 import {SideNavComponent} from '../component/control/side-nav.component';
+import {ChatCategoryGroupMapService} from '../service/chat-category-group-map.service';
+import { ChatCategoryService } from '../service/chat-category.service';
+import {ChatGroupService} from '../service/chat-group.service';
+import {ChatService} from '../service/chat.service';
+import {ChatRoomService} from '../service/chat-room.service';
+import {ChatGroupRoomMapService} from '../service/chat-group-room-map.service';
 
 @NgModule({
   declarations: [
@@ -52,7 +58,12 @@ import {SideNavComponent} from '../component/control/side-nav.component';
     UserService,
     NewsService,
     AppService,
-    ZoomService
+    ZoomService,
+    ChatRoomService,
+    ChatGroupService,
+    ChatCategoryService,
+    ChatGroupRoomMapService,
+    ChatCategoryGroupMapService
   ],
   bootstrap: [AppComponent]
 })

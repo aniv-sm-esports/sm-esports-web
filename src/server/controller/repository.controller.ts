@@ -250,7 +250,7 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
       entity.id = entityId;
 
       // TODO: ADD TO DATABASE, RE-VALIDATE DATA SET
-      this.repository.append(entity, false);
+      this.repository.append(entity, false, false);
 
       // API Data
       let apiData = new ApiData([entity]);

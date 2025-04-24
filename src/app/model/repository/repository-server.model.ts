@@ -66,13 +66,13 @@ export class RepositoryServer<T extends RepositoryEntity> extends Repository<T> 
     }
 
     entities.forEach(entity => {
-      this.append(entity, invalidate);
+      this.append(entity, false, invalidate);
     });
   }
 
   // Appends new record, and does NOT INVALIDATE the repository. This is used during
   // initialization; or after the search filter is set. FILTER APPLIED!
-  append(entity:T, invalidate:boolean) {
+  append(entity:T, assignId:boolean, invalidate:boolean) {
 
     if (!this.state.getIsPrimary()) {
       console.log(`Error: Trying to append to non-primary repository! (${this.state.getKey()})`);
@@ -96,11 +96,22 @@ export class RepositoryServer<T extends RepositoryEntity> extends Repository<T> 
 
       // INVALIDATE: This function is intended to add server records from the database. So, the
       //             invalid flag will force a re-sync of the client state.
-      //this.state.setRecordsAdded(true); (waiting on invalidate procedure for server)
       this.state.primaryAppend(1, invalidate);
     }
     else {
-      console.log(`Error: Trying to set overwrite existing entity (by :id):  (${this.state.getKey()})`);
+      if (!assignId) {
+        console.log(`Error: Trying to set overwrite existing entity (by :id):  (${this.state.getKey()})`);
+      }
+      else {
+        entity.id = this.entities.length;
+
+        this.entityMap.set(entity.id, entity);
+        this.entities.push(entity);
+
+        // INVALIDATE: This function is intended to add server records from the database. So, the
+        //             invalid flag will force a re-sync of the client state.
+        this.state.primaryAppend(1, invalidate);
+      }
     }
   }
 }

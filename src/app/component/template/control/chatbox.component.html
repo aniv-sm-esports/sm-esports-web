@@ -93,14 +93,14 @@
 <div class="container">
 
   <div class="header">
-    <h2>{{chatRoom.name}}</h2>
-    <h4>{{chatRoom.description}}</h4>
+    <h2>{{chatRoom?.name}}</h2>
+    <h4>{{chatRoom?.description}}</h4>
     <div class="clear-fix"></div>
   </div>
 
   <div class="body">
     <div class="chat-container"
-         *ngFor="let chat of this.chatRoom.chats;index as i">
+         *ngFor="let chat of this.chats;index as i">
       <span class="chat-user">{{chat.userName}}</span>
       <p class="chat-body">{{chat.text}}</p>
       <span class="chat-date">{{formatDate(chat.date, 'YYYY-MM-dd hh:mm:ss', 'en-US')}}</span>
@@ -116,4 +116,5 @@
            required />
     <div class="clear-fix"></div>
   </div>
+
 </div>

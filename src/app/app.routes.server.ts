@@ -8,10 +8,9 @@ export const serverRoutes: ServerRoute[] = [
   { path:"people",  renderMode: RenderMode.Client },
   { path:"personal/:userName",  renderMode: RenderMode.Client },
   { path:"chat",  renderMode: RenderMode.Client },
-  { path:"chat/politics", renderMode: RenderMode.Client },
-  { path:"chat/people", renderMode: RenderMode.Client },
-  { path:"chat/speed-running", renderMode: RenderMode.Client },
-  { path:"chat/general", renderMode: RenderMode.Client },
+  { path:"chat/chatRooms", renderMode: RenderMode.Client },
+  { path:"chat/management", renderMode: RenderMode.Client },
+  { path:"chat/security", renderMode: RenderMode.Client },
   {
     path: '**',
     renderMode: RenderMode.Client

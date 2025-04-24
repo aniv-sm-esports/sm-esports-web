@@ -159,10 +159,9 @@
                                                 [textContent]="!this.showChatNavTree ? '+' : '-'"></span></a>
       </div>
       <div class="sidenav-tree-body" *ngIf="this.showChatNavTree">
-        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/politics" routerLinkActive="active">Politics</a>
-        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/people" routerLinkActive="active">People</a>
-        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/speed-running" routerLinkActive="active">SM Speed Running</a>
-        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/general" routerLinkActive="active">General</a>
+        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/chatRooms" routerLinkActive="active">Public / Private</a>
+        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/management" routerLinkActive="active">Management</a>
+        <a class="russo-one-regular sidenav-tree-item" (click)="onClicked()" routerLink="/chat/security" routerLinkActive="active">Security</a>
       </div>
     </div>
 

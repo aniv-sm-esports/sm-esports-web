@@ -2,7 +2,7 @@ import {RepositoryState} from './repository-state.model';
 import {RepositoryEntity} from './repository-entity';
 import {PageData} from '../service/page.model';
 import {SearchModel, SearchModelFilter} from './search.model';
-import {Predicate} from '../service/handler.model';
+import {Callback, Predicate} from '../service/handler.model';
 import lodash from 'lodash';
 import {RepositoryStateData} from './repository-state-data.model';
 
@@ -75,6 +75,15 @@ export class Repository<T extends RepositoryEntity> {
     }
 
     return this.entityMap.has(id);
+  }
+
+  forEach(callback:Callback<T>){
+    if (this.state.getInvalid()) {
+      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
+      return;
+    }
+
+    return this.entities.forEach(callback);
   }
 
   any(callback:Predicate<T>) {

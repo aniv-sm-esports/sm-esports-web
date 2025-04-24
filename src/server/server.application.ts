@@ -12,7 +12,11 @@ import {fileURLToPath} from 'node:url';
 import {ControllerManagerService} from './service/controller-manager.service';
 import {
   AuthControllerName,
+  ChatCategoryControllerName,
+  ChatGroupControllerName,
   ChatRoomControllerName,
+  ChatCategoryGroupMapControllerName,
+  ChatGroupRoomMapControllerName,
   FileControllerName,
   NewsControllerName,
   UserControllerName
@@ -31,6 +35,10 @@ import {HttpMethod, MiddlewareBase} from './middleware/base.middleware';
 import {LoggerMiddleware} from './middleware/logger.middleware';
 import moment from 'moment';
 import 'reflect-metadata';
+import {ChatGroupController} from './controller/chat-group.controller';
+import {ChatCategoryController} from './controller/chat-category.controller';
+import {ChatCategoryGroupMapController} from './controller/chat-category-group-map.controller';
+import {ChatGroupRoomMapController} from './controller/chat-group-room-map.controller';
 
 // Application Instances
 //
@@ -97,6 +105,10 @@ export class ServerApplication {
     this.controllerManagerService.setPrimaryController(NewsControllerName, new NewsController(this.serverDb, this.authService, true));
     this.controllerManagerService.setPrimaryController(FileControllerName, new FileController(this.serverDb, this.authService, true));
     this.controllerManagerService.setPrimaryController(ChatRoomControllerName, new ChatRoomController(this.serverDb, this.authService, true));
+    this.controllerManagerService.setPrimaryController(ChatGroupControllerName, new ChatGroupController(this.serverDb, this.authService, true));
+    this.controllerManagerService.setPrimaryController(ChatCategoryControllerName, new ChatCategoryController(this.serverDb, this.authService, true));
+    this.controllerManagerService.setPrimaryController(ChatGroupRoomMapControllerName, new ChatGroupRoomMapController(this.serverDb, this.authService, true));
+    this.controllerManagerService.setPrimaryController(ChatCategoryGroupMapControllerName, new ChatCategoryGroupMapController(this.serverDb, this.authService, true));
   }
 
   public configure(middleware: MiddlewareBase[]) {

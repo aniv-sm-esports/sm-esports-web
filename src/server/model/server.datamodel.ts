@@ -12,6 +12,10 @@ import * as fs from 'node:fs';
 import { SearchModel } from '../../app/model/repository/search.model';
 import {RepositoryServer} from '../../app/model/repository/repository-server.model';
 import moment from 'moment';
+import { ChatGroup } from '../../app/model/repository/entity/chat-group.model';
+import { ChatGroupRoomMap } from '../../app/model/repository/entity/chat-group-room-map.model';
+import { ChatCategory } from '../../app/model/repository/entity/chat-category.model';
+import { ChatCategoryGroupMap } from '../../app/model/repository/entity/chat-category-group-map.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +27,10 @@ export class DataModel {
   credentials: UserCredentials[];
   chatRoomUserMap: ChatRoomUserMap;
   chatRooms: RepositoryServer<ChatRoom>;
+  chatGroups: RepositoryServer<ChatGroup>;
+  chatGroupRoomMaps: RepositoryServer<ChatGroupRoomMap>;
+  chatCategories: RepositoryServer<ChatCategory>;
+  chatCategoryGroupMaps: RepositoryServer<ChatCategoryGroupMap>;
   users: RepositoryServer<User>;
   news: RepositoryServer<Article>;
   files: RepositoryServer<FileModel>;
@@ -41,6 +49,10 @@ export class DataModel {
     //
 
     this.chatRooms = new RepositoryServer<ChatRoom>('ChatRoom','ChatRoom', new SearchModel<ChatRoom>(ChatRoom.default(), []), [], true);
+    this.chatGroups = new RepositoryServer<ChatGroup>('ChatGroup','ChatGroup', new SearchModel<ChatGroup>(ChatGroup.default(), []), [], true);
+    this.chatGroupRoomMaps = new RepositoryServer<ChatGroupRoomMap>('ChatGroupRoomMap','ChatGroupRoomMap', new SearchModel<ChatGroupRoomMap>(ChatGroupRoomMap.default(), []), [], true);
+    this.chatCategories = new RepositoryServer<ChatCategory>('ChatCategory','ChatCategory', new SearchModel<ChatCategory>(ChatCategory.default(), []), [], true);
+    this.chatCategoryGroupMaps = new RepositoryServer<ChatCategoryGroupMap>('ChatCategoryGroupMap','ChatCategoryGroupMap', new SearchModel<ChatCategoryGroupMap>(ChatCategoryGroupMap.default(), []), [], true);
     this.users = new RepositoryServer<User>('User', 'User', new SearchModel<User>(User.default(), []), [], true);
     this.chatRoomUserMap = new ChatRoomUserMap();
     this.credentials = [];
@@ -48,12 +60,6 @@ export class DataModel {
     this.news = new RepositoryServer<Article>('Article', 'Article', new SearchModel<Article>(Article.default(), []), [], true);
     this.userTokenMap = new Map<string, string>();
     this.tokenMap = new Map<string, UserJWTPayload>();
-
-    // Server Application Defaults
-    let chatRooms = new Array<ChatRoom>();
-    let users = new Array<User>();
-    let news = new Array<Article>();
-    let files = new Array<FileModel>();
 
     // Users
     let zoasty = User.from(0, 'zoasty', 'zoasty@nomail.com');
@@ -75,7 +81,7 @@ export class DataModel {
       user.userRole = UserRoleType.Editor;
       user.personRole = PersonRoleType.BoardMember;
 
-      users.push(user);
+      this.users.append(user, true, false);
     });
 
     let aniv = User.from(6, 'AnivSmEsports', 'aniv-sm-esports@nomail.com');
@@ -85,11 +91,11 @@ export class DataModel {
     aniv.longDescription = 'Hey Evenyone! I am aniv! Thanks for joining me at this celebratory inaugural test-edition of Super Metroid Esports! (#freeaniv)';
     aniv.isMockAccount = false;
 
-    users.push(aniv);
+    this.users.append(aniv, true, false);
 
     // User Credentials - (using 'test' as password for every test user)
     //
-    users.forEach((user: User) => {
+    this.users.forEach((user: User) => {
       this.credentials.push(UserCredentials.fromLogon(user.name, 'test'));
     });
 
@@ -103,45 +109,14 @@ export class DataModel {
       let uniqueName: string = uniqueNamesGenerator(config);
       let user:User = User.from(-1, uniqueName, uniqueName + "@nomail.com");
 
-      user.id = index + users.length;
       user.isMockAccount = true;
       user.shortDescription = `A Short Description of ${user.name}`;
       user.longDescription = this.fillLoremIpsumShort();
       user.userRole = UserRoleType.General;
       user.personRole = PersonRoleType.GeneralUser;
 
-      users.push(user);
+      this.users.append(user, true, false);
     }
-
-    // Chat Rooms
-    let chatPolitics = ChatRoom.from(0,
-      'Politics',
-      'Chat freely about politics! As, it is your first ammendment right!',
-      'politics',
-      'Please be respectful to others. How would you want to be treated?');
-
-    let chatPeople = ChatRoom.from(1,
-      'People',
-      'Come and engage with us, about people and public outreach!',
-      'people',
-      'Please be respectful to others. How would you want to be treated?');
-
-    let chatSpeedRunning = ChatRoom.from(2,
-      'SM Speed Running',
-      'This chat room is dedicated to the topic of SM Speed Running',
-      'speed-running',
-      'Please be respectful to others. How would you want to be treated?');
-
-    let chatGeneral = ChatRoom.from(3,
-      'General',
-      'This chat room is for general chatting. Come share with us!',
-      'general',
-      'Please be respectful to others. How would you want to be treated?');
-
-    chatRooms.push(chatPolitics);
-    chatRooms.push(chatPeople);
-    chatRooms.push(chatSpeedRunning);
-    chatRooms.push(chatGeneral);
 
     // News
     let newsWelcome = Article.from(0,
@@ -175,15 +150,9 @@ export class DataModel {
       "\n" +
       "Released in April 1994, Super Metroid was the eagerly anticipated third game in the Metroid series. Samus Aran returns to the planet Zebes to once again fight the space pirates and Mother Brain who have taken the metroid hatchling.</p>";
 
-    news.push(newsWelcome);
-    news.push(newsGDQ);
-    news.push(newsGDQZoasty);
-
-    // MOCK CHAT DATA
-    chatRooms.forEach(chatRoom => {
-      chatRoom.chats.push(Chat.from(0, 'AnivSmEsports', this.helloMessage()));
-    });
-
+    this.news.append(newsWelcome, true, false);
+    this.news.append(newsGDQ, true, false);
+    this.news.append(newsGDQZoasty, true, false);
 
     // FILES
     fs.readdir(this.publicFolder, (error, dirFiles) => {
@@ -194,17 +163,83 @@ export class DataModel {
       else{
         let index = 0;
         dirFiles.forEach((item) => {
-          files.push(FileModel.from(index++, item, this.publicFolder));
+          this.files.append(FileModel.from(index++, item, this.publicFolder), true, false);
         });
       }
 
     });
 
-    // ~REPOSITORY INITIALIZE!~
-    this.chatRooms.appendMany(chatRooms, false);
-    this.users.appendMany(users, false);
-    this.files.appendMany(files, false);
-    this.news.appendMany(news, false);
+    // Chat:
+    //
+    // - Category:     General, Board, Personal (Groups you set up)
+    // - Group:        M groups per category
+    // - Room:         N rooms per group
+    // - Security:     TODO
+    // - Chat:         ...
+    //
+
+    let chatCategoryGeneral = ChatGroup.from('General', 'Public chat open to all users. Must be logged in to chat.');
+    let chatCategoryBoard = ChatGroup.from('Board', 'Board member chat group. Must be logged in as a board member to chat.');
+    let chatCategoryPersonal = ChatGroup.from('Personal', 'Chat rooms for groups that I am currently a member of.');
+
+    chatCategoryGeneral.id = 0;
+    chatCategoryBoard.id = 1;
+    chatCategoryPersonal.id = 2;
+
+    this.chatCategories.append(chatCategoryGeneral, true, false);
+    this.chatCategories.append(chatCategoryBoard, true, false);
+    this.chatCategories.append(chatCategoryPersonal, true, false);
+
+    // Category -> General
+    let chatPolitics = ChatGroup.from('Politics', 'Chat freely about politics! As, it is your first ammendment right!');
+    let chatPeople = ChatGroup.from('People', 'Come and engage with us, about people and public outreach!');
+    let chatSpeedRunning = ChatGroup.from('Speed Running', 'This chat room is dedicated to the topic of SM Speed Running');
+    let chatGeneral = ChatGroup.from('General', 'This chat room is for general chatting. Come share with us!');
+
+    chatPolitics.id = 0;
+    chatPeople.id = 1;
+    chatSpeedRunning.id = 2;
+    chatGeneral.id = 3;
+
+    this.chatGroups.append(chatPolitics, true, false);
+    this.chatGroups.append(chatPeople, true, false);
+    this.chatGroups.append(chatSpeedRunning, true, false);
+    this.chatGroups.append(chatGeneral, true, false);
+
+    // Category -> Board
+    let chatAll = ChatGroup.from('All', 'General Board Chat');
+    let chatMedia = ChatGroup.from('Media', 'Board discussion about media affairs');
+    let chatSecurity = ChatGroup.from('Speed Running', 'Security related matters');
+
+    chatAll.id = 4;
+    chatMedia.id = 5;
+    chatSecurity.id = 6;
+
+    this.chatGroups.append(chatAll, true,  false);
+    this.chatGroups.append(chatMedia, true, false);
+    this.chatGroups.append(chatSecurity, true, false);
+
+    // Chat Map Associations
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(0, chatCategoryGeneral.id, chatPolitics.id), true, false);
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(1, chatCategoryGeneral.id, chatPeople.id), true, false);
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(2, chatCategoryGeneral.id, chatSpeedRunning.id), true, false);
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(3, chatCategoryGeneral.id, chatGeneral.id), true, false);
+
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(4, chatCategoryBoard.id, chatAll.id), true, false);
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(5, chatCategoryBoard.id, chatMedia.id), true, false);
+    this.chatCategoryGroupMaps.append(ChatCategoryGroupMap.from(6, chatCategoryBoard.id, chatSecurity.id), true, false);
+
+    // Chat Rooms (just put one per group for now)
+    this.chatGroups.forEach(chatGroup => {
+
+      // ChatRoom (default) (entity.id)
+      let chatRoom = ChatRoom.from(0, chatGroup.name + " (default room)", "(default chat room)", '/', '');
+      this.chatRooms.append(chatRoom, true, false);
+
+      // ChatRoomGroupMap
+      let chatRoomGroupMap = ChatGroupRoomMap.from(0, chatGroup.id, chatRoom.id);
+      this.chatGroupRoomMaps.append(chatRoomGroupMap, true, false);
+    });
 
     console.log(`Server Data Model Initialized:  Users(${this.users.getRecordCount()}), ChatRooms(${this.chatRooms.getRecordCount()}), News(${this.news.getRecordCount()}), Files(${this.files.getRecordCount()})`);
   }

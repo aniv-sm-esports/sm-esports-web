@@ -24,8 +24,10 @@ import {ChatRoomService} from '../../service/chat-room.service';
 })
 export class ChatBoxComponent implements AuthHandler {
 
+  @Input('chatRoomId') chatRoomId: number | undefined;
+
   // Chat Service (Loaded off constructor stack)
-  private chatService: ChatService;
+  private chatService: ChatService | undefined;
   private chatServiceLoaded: boolean;
 
   // DOM Properties (for chat permissions and readiness)
@@ -37,20 +39,17 @@ export class ChatBoxComponent implements AuthHandler {
   protected readonly noop = noop;
 
   // Chat Room
-  public chatRoom:ChatRoom;
+  public chatRoom:ChatRoom | undefined;
+  public chats: Chat[] = [];
 
   // Chat Data
   public chatInput: string = '';
 
   constructor(private readonly http:HttpClient,
-              private readonly activatedRoute:ActivatedRoute,
               private readonly authService:AuthService,
               private readonly chatRoomService:ChatRoomService) {
 
-    this.chatService = new ChatService(http, -1);
     this.chatServiceLoaded = false;
-    this.activatedRoute = activatedRoute;
-    this.authService = authService;
 
     // Must retrieve data from server
     this.chatRoom = ChatRoom.default();
@@ -58,27 +57,33 @@ export class ChatBoxComponent implements AuthHandler {
 
     // Subscribe for logon JWT (which contains user name)
     this.authService.subscribeLogonChanged(this);
+  }
 
-    // Chat Room Name
-    let chatRoomName =  this.activatedRoute.snapshot?.url[0].path;
+  // Lifecycle Hook:  Check for chatRoomId
+  ngOnChanges(changes: SimpleChanges): void {
 
-    // -> Chat Room
-    this.chatRoomService
-      .getBy(room => room.name === chatRoomName)
-      .then(response => {
+    if (changes.hasOwnProperty('chatRoomId') && changes['chatRoomId']) {
 
-        // LOADED W/O CHAT DATA!
-        if (response.length == 1) {
-          this.chatRoom = response[0];
-          this.chatService = new ChatService(http, response[0].id);
-          this.chatServiceLoaded = true;
-          this.refresh();
-        }
-        else {
-          console.log("Error: Chat service not available for Chat Room: " + response[0].name);
-        }
+      // -> Chat Room
+      this.chatRoomService
+        .getBy(room => room.id === Number(changes['chatRoomId']))
+        .then(response => {
 
-      });
+          // LOADED W/O CHAT DATA!
+          if (response.length == 1) {
+            this.chatRoom = response[0];
+            this.chatService = new ChatService(this.http, response[0].id);
+            this.chatServiceLoaded = true;
+            this.refresh();
+          }
+          else {
+            this.chatRoom = undefined;
+            this.chatService = undefined;
+            this.chatServiceLoaded = false;
+            console.log("Error: Chat service not available for Chat Room: id(" + changes['chatRoomId'] + ")");
+          }
+        });
+    }
   }
 
   // Procedure:
@@ -103,8 +108,7 @@ export class ChatBoxComponent implements AuthHandler {
       return;
     }
 
-    this.chatService
-        .create(Chat.fromUserJWT(this.userJWT, this.chatInput))
+    this.chatService?.create(Chat.fromUserJWT(this.userJWT, this.chatInput))
         .then(response => {
 
           if (response != Chat.default()) {
@@ -131,13 +135,12 @@ export class ChatBoxComponent implements AuthHandler {
     // Chat Room
     if (this.chatServiceLoaded) {
 
-        this.chatService
-          .getAll()
-          .then(response => {
-              this.chatRoom.chats = response;
-          });
-      }
-      else
-        console.log('URL for chat box component needs to be updated: URL segment mismatch for chatRoomName');
+        this.chatService?.getAll().then(response => {
+              this.chats = response;
+        });
+    }
+    else {
+      console.log('Chat service not available, or improperly loaded.');
+    }
   }
 }

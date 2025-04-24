@@ -14,7 +14,9 @@ export class AuthController extends BaseController {
     super(serverDb, authService);
   }
 
-  public override getName() {return "Auth Controller";}
+  public override getName() {
+    return "Auth Controller";
+  }
 
   public clone(): BaseController {
     return new AuthController(this.serverDb, this.authService);
@@ -271,7 +273,7 @@ export class AuthController extends BaseController {
       let credentialsId = this.serverDb.credentials.length;
 
       // User (NO-INVALIDATE)
-      this.serverDb.users.append(User.from(userId, request.body.userName, request.body.email), false);
+      this.serverDb.users.append(User.from(userId, request.body.userName, request.body.email), false, false);
 
       // User Credentials
       this.serverDb.credentials.push(UserCredentials.fromLogon(request.body.userName, request.body.password));

@@ -4,7 +4,6 @@ import {HomeComponent} from '../component/view/home/home.component';
 import {HomeNewsComponent} from '../component/view/home/home-news.component';
 import {PeopleComponent} from '../component/view/people/people.component';
 import {ChatComponent} from '../component/view/chat/chat.component';
-import {ChatBoxComponent} from '../component/control/chatbox.component';
 import {PersonalComponent} from '../component/view/personal.component';
 import {LoginComponent} from '../component/control/login.component';
 import {CreateAccountComponent} from '../component/create-account.component';
@@ -13,7 +12,6 @@ import {HomeScheduleComponent} from '../component/view/home/home-schedule.compon
 import {PeopleAllComponent} from '../component/view/people/people-all.component';
 import {PeopleBoardComponent} from '../component/view/people/people-board.component';
 import {PeopleSearchComponent} from '../component/view/people/people-search.component';
-import {Tab} from '../model/view/tab.model';
 import {ContactComponent} from '../component/contact.component';
 import {HomeOnlineComponent} from '../component/view/home/home-online.component';
 import { CollabComponent } from '../component/view/collab/collab.component';
@@ -24,6 +22,8 @@ import {LandscapeComponent} from '../component/view/landscape/landscape.componen
 import {LandscapeMediaComponent} from '../component/view/landscape/landscape-media.component';
 import { LandscapeWikiComponent } from '../component/view/landscape/landscape-wiki.component';
 import {LandscapeLinksComponent} from '../component/view/landscape/landscape-links.component';
+import {ChatSecurityComponent} from '../component/view/chat/chat-security.component';
+import {ChatManagementComponent} from '../component/view/chat/chat-management.component';
 
 export const routes: Routes = [
   { path:"login",  component: LoginComponent, title: 'Login'},
@@ -54,14 +54,13 @@ export const routes: Routes = [
       { path:"links",  component: LandscapeLinksComponent, title: 'Links'},
     ]},
 
-  { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
   { path:"chat",  component: ChatComponent, title: 'Chat', children: [
-      { path:"politics", component: ChatBoxComponent, title: 'Chat > Politics' },
-      { path:"people", component: ChatBoxComponent, title: 'Chat > People' },
-      { path:"speed-running", component: ChatBoxComponent, title: 'Chat > Speed Running' },
-      { path:"general", component: ChatBoxComponent, title: 'Chat > General' },
-    ]
-  },
+      { path:"chatRooms",  component: ChatComponent, title: 'Chat (Public / Private)'},
+      { path:"management",  component: ChatManagementComponent, title: 'Chat (Management)'},
+      { path:"security",  component: ChatSecurityComponent, title: 'Chat (Security)'},
+    ]},
+
+  { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
   { path:"contact",  component: ContactComponent, title: 'Contact' },
   {
     path: '**', redirectTo: '/home/news'
