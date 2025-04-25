@@ -3,7 +3,7 @@
   .chat-container {
     background:rgba(0,0,0,0.3);
     display:grid;
-    grid-auto-columns: 260px 1fr 1fr;
+    grid-auto-columns: 220px 320px 1fr;
     overflow-x:hidden;
     overflow-y:hidden;
   }
@@ -16,7 +16,29 @@
     margin:0;
     padding:10px;
     color: rgba(134,134,255,0.5);
-    background-color:rgba(255,255,255,0.75);
+  }
+
+  .chat-category-container {
+    background:rgba(255,255,255,0.75) !important;
+  }
+  .chat-room-container {
+    background:rgba(255,255,255,0.75) !important;
+  }
+
+  .chat-category-container h3,
+  .chat-category-container h4,
+  .chat-room-container h4 {
+    font-family: "Russo One", sans-serif;
+    font-style: normal;
+    font-weight: lighter;
+  }
+
+  .chat-category-container h3 {
+    font-size: 1.1em;
+  }
+  .chat-room-container h4,
+  .chat-category-container h4 {
+    font-size: 0.9em;
   }
 
   .chat-category-container {
@@ -24,10 +46,40 @@
     grid-column: 1;
   }
 
-  .chat-category-container > .chat-category-item > h4 {
+  .chat-category-container h4,
+  .chat-room-container h4 {
     color: #888;
     margin:0;
-    padding:0;
+    padding:5px 10px 5px 10px;
+    cursor:pointer;
+  }
+
+  .chat-category-container h4:hover,
+  .chat-category-container h4:hover,
+  .chat-room-container h4:hover {
+    color:rgba(50,50,255,0.75);
+    background: #FFF;
+  }
+
+  .chat-category-container h4.selected,
+  .chat-category-container h4.selected,
+  .chat-room-container h4.selected {
+    color:rgba(50,50,255,1);
+    background: #FFF;
+  }
+
+  .chat-category-container h3 {
+    color: #888;
+    margin: 0;
+    padding:5px 10px 5px 10px;
+    cursor:pointer;
+  }
+
+  .chat-category-container h4 {
+    color: #888;
+    margin: 0;
+    padding:5px 10px 5px 30px;
+    cursor:pointer;
   }
 
   .chat-room-container {
@@ -35,9 +87,13 @@
     grid-column: 2;
   }
 
-  .chatbox-container {
+  .chat-container .chatbox-container {
     background:rgba(0,0,0,0.3);
     grid-column: 3;
+  }
+  .chat-container .chatbox-container chatbox {
+    display:block;
+    height:100%;
   }
 
   @media screen and (max-width: 1400px) {
@@ -54,23 +110,35 @@
 
 </style>
 
-<div class="chat-container" [ngStyle]="{'height': (this.appService.getSize().height - 42) + 'px'}">
+<div class="chat-container prevent-select" [ngStyle]="{'height': (this.appService.getSize().height - 42) + 'px'}">
 
   <div class="chat-category-container">
     <h2>Chat Categories</h2>
     <div class="chat-category-item"
-         *ngFor="let model of this.chatRoomViewModel | groupByFirst:this.categoryIdSelector:this.categorySelector">
-      <h4>{{model.name}}</h4>
+         *ngFor="let category of this.chatCategories">
+
+      <h3>{{category.category.name}}</h3>
+
+      <div class="chat-group-item"
+           *ngFor="let group of category.groups">
+        <h4 (click)="this.selectGroup(group.id)"
+            [ngClass]="{'selected': group.id === this.selectedChatGroup?.group?.id}">{{group.name}}</h4>
+      </div>
+
     </div>
   </div>
 
   <div class="chat-room-container">
-    <h2>Chat Rooms ({{this.selectedChatCategory?.name}})</h2>
-    asdfasd
+    <h2>Chat Rooms</h2>
+    <h4 *ngFor="let room of this.selectedChatGroup?.rooms"
+        [ngClass]="{'selected': room.id === this.selectedChatRoom?.id}"
+        (click)="this.selectChatRoom(room.id)">
+      {{room.name}}
+    </h4>
   </div>
 
   <div class="chatbox-container">
-    <chatbox [chatRoomId]="this.selectedChatRoom?.chatRoom?.id" />
+    <chatbox [chatRoomId]="this.selectedChatRoom?.id" />
   </div>
 
 </div>

@@ -13,8 +13,13 @@ export class ChatCategoryController extends RepositoryController<ChatCategory> {
   }
 
   initialize() {
+
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.chatCategories;
-    return ChatCategory.default();
+    this.defaultEntity = ChatCategory.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

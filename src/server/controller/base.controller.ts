@@ -19,8 +19,9 @@ export abstract class BaseController {
 
   protected abstract getName():string;
   public abstract clone(): BaseController;
+  public abstract initialize():void;
 
-  constructor(serverDb: DataModel, authService: AuthService) {
+  protected constructor(serverDb: DataModel, authService: AuthService) {
     this.authService = authService;
     this.serverDb = serverDb;
   }

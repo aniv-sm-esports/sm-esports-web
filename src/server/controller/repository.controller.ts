@@ -21,24 +21,22 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
   //         must take data, first, before choosing the actual repository from the DataModel.
   //
   protected repository!:RepositoryServer<T>;
-  protected defaultEntity:T;
+  protected defaultEntity!:T;
 
   // Primary Repository implies that it is the primary parent (master records) which should be
   // in sync with the database.
   protected isPrimaryRepository:boolean = false;
 
-  constructor(serverDb: DataModel, authService: AuthService, isPrimaryRepository:boolean) {
+  // Repository controller must be initialized before using
+  protected initialized:boolean = false;
+
+  protected constructor(serverDb: DataModel, authService: AuthService, isPrimaryRepository:boolean) {
     super(serverDb, authService);
 
     this.isPrimaryRepository = isPrimaryRepository;
-
-    // TYPE CASTING ISSUE! NEEDS AN OBJECT PROTOTYPE
-    this.defaultEntity = this.initialize();
   }
 
-  // Must call initialize from super class!
-  protected abstract initialize():T;
-
+  public abstract override initialize():void;
   public override getName() { return this.getEntityName(); }
   public abstract getEntityName():string;
   public abstract getLogonRequired():boolean;
@@ -46,15 +44,33 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
   public abstract getPageLogonRequired():boolean;
 
   public createChild(childState:RepositoryState<T>) {
+
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
+
     return this.repository.createChild(childState.getFilter());
   }
 
   // Server-Side search function
   public search(predicate:Predicate<T>){
+
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return [];
+    }
+
     return this.repository.where(predicate);
   }
 
   public first(predicate:Predicate<T>){
+
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
+
     return this.repository.first(predicate);
   }
 
@@ -109,6 +125,11 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
   public getState(request: Request<{}, ApiResponse<T>, ApiRequest<T>, ParsedQs, Record<string, any>>,
                   response: Response<ApiResponse<T>, Record<string, any>, number>) {
 
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
+
     this.preWorkLog(request, response);
 
     // CHECK INVAILD STATUS!
@@ -125,6 +146,11 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
   public checkState(request: Request<{}, ApiResponse<T>, ApiRequest<T>, ParsedQs, Record<string, any>>,
                     response: Response<ApiResponse<T>, Record<string, any>, number>) {
 
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
+
     this.preWorkLog(request, response);
 
     // CHECK INVAILD STATUS!
@@ -139,6 +165,11 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
 
   public get(request: Request<{}, ApiResponse<T>, ApiRequest<T>, ParsedQs, Record<string, any>>,
              response: Response<ApiResponse<T>, Record<string, any>, number>) {
+
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
 
     this.preWorkLog(request, response);
 
@@ -184,6 +215,11 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
   public getAll(request: Request<{}, ApiResponse<T>, ApiRequest<T>, ParsedQs, Record<string, any>>,
                 response: Response<ApiResponse<T>, Record<string, any>, number>) {
 
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
+
     this.preWorkLog(request, response);
 
     // Validate State!
@@ -217,6 +253,11 @@ export abstract class RepositoryController<T extends RepositoryEntity> extends B
 
   public create(request: Request<{}, ApiResponse<T>, ApiRequest<T>, ParsedQs, Record<string, any>>,
                 response: Response<ApiResponse<T>, Record<string, any>, number>) {
+
+    if (!this.initialized) {
+      console.log("Error: Trying to use repository controller before calling initialize");
+      return;
+    }
 
     this.preWorkLog(request, response);
 

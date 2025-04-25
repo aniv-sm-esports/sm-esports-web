@@ -11,8 +11,12 @@ export class ChatRoomController extends RepositoryController<ChatRoom> {
   }
 
   initialize() {
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.chatRooms;
-    return ChatRoom.default();
+    this.defaultEntity = ChatRoom.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

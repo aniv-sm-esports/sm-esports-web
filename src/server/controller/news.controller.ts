@@ -10,9 +10,13 @@ export class NewsController extends RepositoryController<Article> {
     super(serverDb, authService, isPrimaryRepository);
   }
 
-  protected override initialize() {
+  initialize() {
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.news;
-    return Article.default();
+    this.defaultEntity = Article.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

@@ -4,6 +4,7 @@ import {BaseController} from '../controller/base.controller';
 import {UserJWT} from '../../app/model/service/user-logon.model';
 import {ChatRoom} from '../../app/model/repository/entity/chat-room.model';
 import {ChatRoomControllerName} from './controller-const';
+import {ChatController} from '../controller/chat.controller';
 
 export class ControllerManagerService {
 
@@ -13,6 +14,16 @@ export class ControllerManagerService {
   constructor(private readonly serverDb:DataModel, private readonly authService: AuthService) {
     this.primaryControllers = new Map<string, BaseController>();
     this.sessionControllers = new Map<string, BaseController>();
+  }
+
+  // Initializes all controllers
+  public initialize() {
+    this.primaryControllers.forEach((controller: BaseController) => {
+      controller.initialize();
+    });
+    this.sessionControllers.forEach((controller: BaseController) => {
+      controller.initialize();
+    });
   }
 
   public getChatControllerName(chatRoomId:number):string {
@@ -26,6 +37,24 @@ export class ControllerManagerService {
   // Create a single sub-repository per user / per controller.
   private getControllerKey(repositoryName:string, user:UserJWT) {
     return repositoryName + user.userName;
+  }
+
+  // Creates a chat controller for the chat room
+  public addChatController(chatRoomId:number) {
+    let controllerKey = this.getChatControllerName(chatRoomId);
+
+    if (this.primaryControllers.has(controllerKey)) {
+      return this.primaryControllers.get(controllerKey);
+    }
+    else {
+      let controller = new ChatController(chatRoomId, this.serverDb, this.authService, true);
+
+      // Initialize ChatController
+      controller.initialize();
+
+      this.primaryControllers.set(controllerKey, controller);
+      return controller;
+    }
   }
 
   // Sets a primary controller for the given repository (name)

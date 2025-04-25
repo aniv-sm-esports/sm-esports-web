@@ -15,12 +15,16 @@ export class ChatController extends RepositoryController<Chat> {
 
   initialize() {
 
+    if (this.initialized)
+      return;
+
     let chatRoom = this.serverDb.chatRooms.first(x => x.id === this.chatRoomId)!;
     let search = new SearchModel<Chat>(Chat.default(), []);
 
     // IMPORTANT! Setting base repository! NOTICE KEY!
     this.repository = new RepositoryServer<Chat>(`Chat (${chatRoom.id})`, 'Chat', search, [], true);
-    return Chat.default();
+    this.defaultEntity = Chat.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

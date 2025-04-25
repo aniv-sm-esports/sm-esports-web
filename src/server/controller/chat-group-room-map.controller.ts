@@ -16,7 +16,8 @@ export class ChatGroupRoomMapController extends RepositoryController<ChatGroupRo
 
   initialize() {
     this.repository = this.serverDb.chatGroupRoomMaps;
-    return ChatGroupRoomMap.default();
+    this.defaultEntity = ChatGroupRoomMap.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

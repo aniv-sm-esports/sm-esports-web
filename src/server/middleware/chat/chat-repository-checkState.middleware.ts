@@ -17,30 +17,35 @@ export class ChatRepositoryCheckStateMiddleware extends MiddlewareBase {
     super(controllerManagerService, route, method);
   }
 
-  public apply(request: Request<{chatRoomId:number}, ApiResponse<Chat>, ApiRequest<Chat>, ParsedQs, Record<string, any>>, response: Response<any, Record<string, any>, number>, next: any) {
+  public apply(request: Request<{chatRoomId:number}, ApiResponse<Chat>, ApiRequest<Chat>, ParsedQs, Record<string, any>>,
+               response: Response<any, Record<string, any>, number>, next: any) {
     try {
 
-      // Get Primary ChatRoom Controller
-      let chatRoomId = request.params.chatRoomId;
-      let chatRoomController = (this.controllerManagerService.getPrimaryController(ChatRoomControllerName) as ChatRoomController);
+      if (!request.params?.chatRoomId) {
+        console.log("Chat Room Id not included in URL");
+        response.status(500).send("Chat Room not found.");
+        return;
+      }
 
-      // Get ChatRoom for this call
-      let chatRoom = chatRoomController.first(room => room.id === chatRoomId);
+      let chatRoomId = Number(request.params?.chatRoomId);
+      let chatRoomController = this.controllerManagerService.getPrimaryController(ChatRoomControllerName) as ChatRoomController;
+      let chatRoom = chatRoomController.first(x => x.id === chatRoomId);
 
-      // Chat Controllers are created with the chat room
-      if (!chatRoom){
+      if (!chatRoom) {
         response.status(500).send("Chat Room not found.");
       }
-      else{
-        let chatControllerName = this.controllerManagerService.getChatControllerName(chatRoomId);
-        let chatController = (this.controllerManagerService.getPrimaryController(chatControllerName) as ChatController);
 
-        // ChatController -> checkState
-        chatController.checkState(request, response);
+      let chatKey = this.controllerManagerService.getChatControllerName(chatRoomId);
+      let chatController = this.controllerManagerService.getPrimaryController(chatKey) as ChatController;
+
+      if (!chatController) {
+        chatController = this.controllerManagerService.addChatController(chatRoomId) as ChatController;
       }
+
+      chatController.checkState(request, response);
     }
-    catch (error) {
-      console.log("Server Error:  Could not retrieve chat room state");
+    catch(error){
+      console.log("Server Error:  Could not check state of chat repository");
       console.log(error);
     }
   }

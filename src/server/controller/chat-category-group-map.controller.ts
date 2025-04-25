@@ -15,8 +15,13 @@ export class ChatCategoryGroupMapController extends RepositoryController<ChatCat
   }
 
   initialize() {
+
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.chatCategoryGroupMaps;
-    return ChatCategoryGroupMap.default();
+    this.defaultEntity = ChatCategoryGroupMap.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

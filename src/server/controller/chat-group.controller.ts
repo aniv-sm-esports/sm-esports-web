@@ -15,8 +15,12 @@ export class ChatGroupController extends RepositoryController<ChatGroup> {
   }
 
   initialize() {
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.chatGroups;
-    return ChatGroup.default();
+    this.defaultEntity = ChatGroup.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

@@ -14,6 +14,9 @@ export class AuthController extends BaseController {
     super(serverDb, authService);
   }
 
+  public override initialize(): void {
+  }
+
   public override getName() {
     return "Auth Controller";
   }

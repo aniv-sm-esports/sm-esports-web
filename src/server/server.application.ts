@@ -109,6 +109,9 @@ export class ServerApplication {
     this.controllerManagerService.setPrimaryController(ChatCategoryControllerName, new ChatCategoryController(this.serverDb, this.authService, true));
     this.controllerManagerService.setPrimaryController(ChatGroupRoomMapControllerName, new ChatGroupRoomMapController(this.serverDb, this.authService, true));
     this.controllerManagerService.setPrimaryController(ChatCategoryGroupMapControllerName, new ChatCategoryGroupMapController(this.serverDb, this.authService, true));
+
+    // -> Initialize Controllers
+    this.controllerManagerService.initialize();
   }
 
   public configure(middleware: MiddlewareBase[]) {

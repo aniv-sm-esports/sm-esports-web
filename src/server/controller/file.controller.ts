@@ -10,9 +10,13 @@ export class FileController extends RepositoryController<FileModel> {
     super(serverDb, authService, isPrimaryRepository);
   }
 
-  protected override initialize() {
+  initialize() {
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.files;
-    return FileModel.default();
+    this.defaultEntity = FileModel.default();
+    this.initialized = true;
   }
 
   public clone(): BaseController {

@@ -105,7 +105,7 @@ export class Repository<T extends RepositoryEntity> {
 
     let filtered = this.entities.filter((item:T) => callback(item));
 
-    if (filtered.length > 0) {
+    if (filtered && filtered.length > 0) {
       return filtered[0];
     }
     else

@@ -12,8 +12,12 @@ export class UserController extends RepositoryController<User> {
 
   // Called from super()
   initialize() {
+    if (this.initialized)
+      return;
+
     this.repository = this.serverDb.users;
-    return User.default();
+    this.defaultEntity = User.default();
+    this.initialized = true;
   }
 
   clone(): BaseController {

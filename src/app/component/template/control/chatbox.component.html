@@ -2,91 +2,84 @@
 
   .container {
     height:100%;
+    display:grid;
+    grid-template-rows: 42px auto 80px 50px;
   }
 
   .container > .header {
-    width: 100%;
     background-color: rgba(255, 255, 255, 0.4);
-    padding: 5px;
-    height: 40px;
   }
 
   .container > .header > h2 {
-    float: left;
+    font-family: "Russo One", sans-serif;
+    font-size:1.2em;
+    font-style: normal;
+    font-weight: lighter;
+    margin:0;
+    padding:10px;
+    background-color: rgba(0,0,0,0.3);
+    border:none;
   }
 
-  .container > .header > h4 {
-    float: right;
-    margin: 10px;
-    margin-right: 20px;
+  .container > .description-container {
+    font-size:0.85em;
+    font-weight: 400;
+    line-height:1;
+    margin:0;
+    padding:5px;
+    background:rgba(0,0,0,0.3);
+    border-radius:0 0 10px 10px;
+    -webkit-border-radius:0 0 10px 10px;
+    border:2px solid rgba(255,255,255,0.5);
   }
 
-  .container .body {
-    height: calc(100% - 108px);
-    overflow: auto;
+  .container > .body {
+    background: rgba(0,0,0,0.3);
   }
 
-  .container .chat-container {
-    display:flex;
+  .container > .logon-notification-container {
+    font-family: "IBM Plex Mono", monospace;
+    font-size:0.9em;
+    padding: 10px;
   }
 
-  .container > .body > .chat-container:nth-child(2n) {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  .container > .body > .chat-container > .chat-user {
-    flex: auto;
-    min-width: 200px;
-    max-width: 200px;
-    margin: 5px;
-  }
-  .container > .body > .chat-container > .chat-body {
-    flex: auto;
-    margin: 5px;
-  }
-  .container > .body > .chat-container > .chat-date {
-    flex: auto;
-    text-align: right;
-    min-width: 160px;
-    max-width: 160px;
-    margin: 5px;
-  }
-
-  .container > .header > h2 {
-    margin: 5px;
+  .container > .logon-notification-container > a {
+    color: #AAA;
   }
 
   .container > .input-container {
-    background-color: rgba(255, 255, 255, 0.3);
-
-    color: lightgray;
-    text-align: right;
-    horiz-align: right !important;
-
-    border-radius: 0 10px 10px 0;
-    -webkit-border-radius: 0 10px 10px 0;
+    display:grid;
+    grid-template-columns:1fr auto;
+    margin:5px;
   }
 
   .container > .input-container > input {
-    width: 300px;
     font-size: 1.0em;
     color: dimgray;
-    margin: 10px 0 10px 10px;
     padding:8px;
     border:2px solid #eee;
     border-radius: 20px;
     -webkit-border-radius: 20px;
-
-    float: right;
   }
   .container > .input-container > input:focus {
     border:1px solid #ccc;
   }
   .container > .input-container > sm-esports-button {
-    width:50px;
-    float: right;
-    margin: 10px;
+    margin-left:5px;
   }
+
+  @media screen and (max-width: 1400px) {
+    .chat-container {
+      margin-top:42px;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .chat-container {
+      margin-top:52px;
+    }
+  }
+
 </style>
 
 
@@ -94,8 +87,6 @@
 
   <div class="header">
     <h2>{{chatRoom?.name}}</h2>
-    <h4>{{chatRoom?.description}}</h4>
-    <div class="clear-fix"></div>
   </div>
 
   <div class="body">
@@ -108,13 +99,18 @@
     </div>
   </div>
 
-  <div class="input-container">
-    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (clicked)="submitChat()" />
+  <div class="logon-notification-container"
+       [ngStyle]="{'height': this.appService.primaryUserLoggedOn ? '80px' : '0'}">
+    You muse be <a [routerLink]="'/login'">logged on</a> to participate in the chat. If you don't yet have
+    an account, please <a [routerLink]="'/create-account'">create</a> an account or contact our <a [routerLink]="'/people/board'">board</a>. Thank you
+  </div>
+
+  <div class="input-container" *ngIf="this.appService.primaryUserLoggedOn">
     <input [(ngModel)]="chatInput"
            (keyup.enter)="!!chatInput? submitChat() : noop()"
            type="text"
            required />
-    <div class="clear-fix"></div>
+    <sm-esports-button [disabled]="!chatInput" [text]="'Chat'" (clicked)="submitChat()" />
   </div>
 
 </div>
