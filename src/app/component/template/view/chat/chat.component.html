@@ -31,7 +31,7 @@
 
   .chat-container .chat-tree-container h3,
   .chat-container .chat-tree-container h4,
-  .chat-container .chat-tree-container h4 {
+  .chat-container .chat-tree-container h5 {
     font-family: "Russo One", sans-serif;
     font-style: normal;
     font-weight: lighter;
@@ -106,7 +106,7 @@
 
   @media screen and (min-width: 1400px) {
     .chat-container {
-      margin-top:52px;
+      margin-top:42px;
     }
   }
 
@@ -147,7 +147,7 @@
   </div>
 
   <div class="chatbox-container">
-    <chatbox [chatRoomId]="this.viewModel.selectedChatRoom?.room?.id" />
+    <chatbox [chatRoomId]="this.viewModel.selectedChatRoom?.room?.id" [height]="this.appService.getBodySize().height" />
   </div>
 
 </div>

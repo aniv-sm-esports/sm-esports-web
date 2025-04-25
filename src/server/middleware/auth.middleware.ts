@@ -16,11 +16,11 @@ export class AuthMiddleware extends MiddlewareBase {
   public override apply(request: Request, response: Response, next:NextFunction) {
 
     // Auth Service -> Get Session (UserJWT)
-    //let userJWT = (this.controllerManagerService.getPrimaryController(AuthControllerName) as AuthController).authenticate(request, response);
+    let userJWT = (this.controllerManagerService.getPrimaryController(AuthControllerName) as AuthController).authenticate(request, response);
 
     // INITIALIZE LOCALS!
-    //response.locals = new ServerLocals();
-    //response.locals['userJWT'] = userJWT;
+    response.locals = new ServerLocals();
+    response.locals['userJWT'] = userJWT;
 
     next();
   }

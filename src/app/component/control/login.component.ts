@@ -8,6 +8,7 @@ import {AppService} from '../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {noop} from 'rxjs';
 import {AuthHandler} from '../../model/service/handler.model';
+import {UserCreation} from '../../model/view/user-creation.model';
 
 @Component({
   selector: 'login',
@@ -20,66 +21,40 @@ import {AuthHandler} from '../../model/service/handler.model';
 })
 export class LoginComponent implements AuthHandler {
 
-  @Output('formFinished') formFinished: EventEmitter<any> = new EventEmitter();
-
-  protected readonly appService: AppService;
-  private readonly authService: AuthService;
-  private readonly userService: UserService;
-  private readonly router: Router;
+  @Output('formFinished') formFinished: EventEmitter<UserJWT> = new EventEmitter();
 
   protected readonly noop = noop;
 
   public userLogon:UserCredentials = new UserCredentials();
-  public userLoggedOn: boolean = false;
   public userFormValid: boolean = false;
 
-  constructor(router:Router, appService:AppService, authService: AuthService, userService: UserService) {
-    this.router = router;
-    this.appService = appService;
-    this.authService = authService;
-    this.userService = userService;
+  constructor(protected readonly appService:AppService,
+              private readonly authService: AuthService) {
+    this.userFormValid = false;
 
     this.authService.subscribeLogonChanged(this);
-
-    router.events.subscribe((event) => {
-      // Notify Listener(s)
-      this.formFinished.emit(true);
-    });
-  }
-
-  ngOnInit() {
-    this.userLoggedOn = false;
-    this.userFormValid = false;
   }
 
   onLoginChanged(value:UserJWT) {
 
     if (value) {
-      this.userLoggedOn = !value.isDefault();
-
       // Notify Listener(s)
-      this.formFinished.emit(true);
+      this.formFinished.emit(value);
     }
     else {
       return;
-    }
-
-    // Redirect -> Home
-    //
-    if (this.userLoggedOn && this.router) {
-      //this.router.navigate(['home/live']);
     }
   }
 
   login(){
 
     // Already Logged On
-    if (this.userLoggedOn)
-      return;
+    if (this.appService.primaryUserLoggedOn)
+      this.formFinished.emit(this.appService.primaryUserLogon);
 
     // Logon Mode + User Form Valid -> Logon
     //
-    if (this.userFormValid) {
+    else if (this.userFormValid) {
 
       // Call Auth Service
       this.authService.logon(this.userLogon.userName, this.userLogon.password);

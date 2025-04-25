@@ -34,7 +34,7 @@
 <div class="login-page-container">
   <div class="login-control-container">
     <h1>Logon</h1>
-    <login />
+    <login (formFinished)="onLoginSubmit($event)" />
   </div>
   <div class="clear-fix"></div>
 </div>

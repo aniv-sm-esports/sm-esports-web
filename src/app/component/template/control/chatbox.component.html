@@ -1,9 +1,11 @@
 <style>
 
   .container {
-    height:100%;
     display:grid;
-    grid-template-rows: 42px auto 80px 50px;
+    grid-template-rows: 42px auto 50px;
+  }
+
+  .container.loggedOn {
   }
 
   .container > .header > h2 {
@@ -14,6 +16,7 @@
     margin:0;
     padding:10px;
     border:none;
+    background: transparent;
   }
 
   .container > .description-container {
@@ -28,14 +31,44 @@
     border:2px solid rgba(255,255,255,0.5);
   }
 
-  .container > .body {
+  .container > .chat-container {
     background: rgba(0,0,0,0.3);
+    display:block;
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+
+  .container > .chat-container .chat-item {
+    font-family: "IBM Plex Mono", monospace;
+    font-size:0.9em;
+    display:flex;
+    margin:0;
+    padding:0;
+    text-align:left;
+    color:#EEE;
+  }
+
+  .container > .chat-container .chat-item:nth-child(2n + 1) {
+    background:rgba(255,255,255,0.2);
+  }
+  .container > .chat-container .chat-item:nth-child(2n) {
+    background:rgba(255,255,255,0.05);
+  }
+
+  .container > .chat-container .chat-item > p {
+    margin:0;
+    padding:5px;
+  }
+  .container > .chat-container .chat-item > span {
+    margin:0;
+    padding:5px;
   }
 
   .container > .logon-notification-container {
     font-family: "IBM Plex Mono", monospace;
     font-size:0.9em;
     padding: 10px;
+    background:transparent;
   }
 
   .container > .logon-notification-container > p {
@@ -71,46 +104,49 @@
   }
 
   @media screen and (max-width: 1400px) {
-    .chat-container {
-      margin-top:42px;
+    .container {
     }
   }
 
   @media screen and (min-width: 1400px) {
-    .chat-container {
-      margin-top:52px;
+    .container {
     }
   }
 
 </style>
 
 
-<div class="container">
+<div class="container"
+     [ngClass]="{'loggedOn': this.appService.primaryUserLoggedOn}"
+     [ngStyle]="{'height': this.height + 'px', 'grid-template-rows': '42px ' + (this.height - 25).toString() + 'px 50px'}">
 
   <div class="header">
     <h2>{{chatRoom?.name}}</h2>
   </div>
 
-  <div class="body">
-    <div class="chat-container"
-         *ngFor="let chat of this.chats;index as i">
-      <span class="chat-user">{{chat.userName}}</span>
-      <p class="chat-body">{{chat.text}}</p>
-      <span class="chat-date">{{formatDate(chat.date, 'YYYY-MM-dd hh:mm:ss', 'en-US')}}</span>
-      <div class="clear-fix"></div>
+  @if(!this.appService.primaryUserLoggedOn) {
+    <div class="logon-notification-container">
+      <p>
+        You muse be <a [routerLink]="'/account/login'">logged on</a> to participate in the chat. If you don't yet have
+        an account, please <a [routerLink]="'/account/create'">create</a> an account or contact our <a [routerLink]="'/people/board'">board</a>. Thank you
+      </p>
     </div>
-  </div>
+  }
 
-  <div class="logon-notification-container"
-       [ngStyle]="{'height': this.appService.primaryUserLoggedOn ? '80px' : '0'}">
-    <p>
-      You muse be <a [routerLink]="'/account/login'">logged on</a> to participate in the chat. If you don't yet have
-      an account, please <a [routerLink]="'/account/create'">create</a> an account or contact our <a [routerLink]="'/people/board'">board</a>. Thank you
-    </p>
-  </div>
+  @else {
+    <div class="chat-container">
+      <div class="chat-item"
+           *ngFor="let chat of this.chats;index as i">
+        <span class="chat-user">{{chat.userName}}</span>
+        <p class="chat-body">{{chat.text}}</p>
+        <!--span class="chat-date">{{formatDate(chat.date, 'h:mm:ss:a (z)', 'en-US')}}</span-->
+      </div>
+    </div>
+  }
 
-  <div class="input-container" *ngIf="this.appService.primaryUserLoggedOn">
+  <div class="input-container">
     <input [(ngModel)]="chatInput"
+           [disabled]="!this.appService.primaryUserLoggedOn"
            (keyup.enter)="!!chatInput? submitChat() : noop()"
            type="text"
            required />

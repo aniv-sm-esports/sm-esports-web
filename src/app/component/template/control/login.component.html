@@ -93,6 +93,7 @@
             <td>Password</td>
             <td><input type="password" class="russo-one-regular"
                        [(ngModel)]="userLogon.password"
+                       required="required"
                        (ngModelChange)="onFormInput()"
                        (keyup.enter)="this.userFormValid ? login() : noop()"
                        placeholder="Password" /></td>

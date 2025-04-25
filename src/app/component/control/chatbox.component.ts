@@ -19,13 +19,15 @@ import {AppService} from '../../service/app.service';
     BasicButtonComponent,
     RouterLink,
     NgIf,
-    NgStyle
+    NgStyle,
+    NgClass
   ],
   templateUrl: '../template/control/chatbox.component.html'
 })
 export class ChatBoxComponent {
 
   @Input('chatRoomId') chatRoomId: number | undefined;
+  @Input('height') height!:number;
 
   // Chat Service (Loaded off constructor stack)
   private chatService: ChatService | undefined;
@@ -66,8 +68,17 @@ export class ChatBoxComponent {
           if (response.length == 1) {
             this.chatRoom = response[0];
             this.chatService = new ChatService(this.http, response[0].id);
+            this.chatService
+                .onAllEntitiesChanged()                           // Auto-Refresh
+                .subscribe(apiData => {
+                  this.chats = apiData.data;
+            });
             this.chatServiceLoaded = true;
-            this.refresh();
+            this.chatService
+                .getAll()
+                .then(data => {   // Initial Refresh
+              this.chats = data;
+            });
           }
           else {
             this.chatRoom = undefined;
@@ -94,28 +105,5 @@ export class ChatBoxComponent {
         .catch(error => {
           console.log(error);
         });
-  }
-
-  refresh() {
-
-    // Procedure
-    //
-    // 1) Verify ChatService Loaded
-    // 2) *Verify UserJWT is loaded
-    // 3) *Load chat messages if user is logged in
-    //
-    // TODO: Check chat permissions with server before loading messages
-    //
-
-    // Chat Room
-    if (this.chatServiceLoaded) {
-
-        this.chatService?.getAll().then(response => {
-          this.chats = response;
-        });
-    }
-    else {
-      console.log('Chat service not available, or improperly loaded.');
-    }
   }
 }

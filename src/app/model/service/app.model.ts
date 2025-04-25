@@ -40,6 +40,12 @@ export class ApiRequest<T extends RepositoryEntity> {
     this.requestData = ApiData.default();
     this.pageData = pageData;
   }
+
+  public static fromCreate<T extends RepositoryEntity>(stateData:RepositoryStateData<T>, apiData:ApiData<T>){
+    let result = new ApiRequest<T>(stateData, PageData.default());
+    result.requestData = apiData;
+    return result;
+  }
 }
 
 export class ApiResponse<T extends RepositoryEntity>  {

@@ -131,7 +131,7 @@ export class AuthController extends BaseController {
 
       // User Not Found
       else {
-        response.status(200).send(UserJWT.default());
+        response.status(500).send(UserJWT.default());
       }
     }
     catch(error) {

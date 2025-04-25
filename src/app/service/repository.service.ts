@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {User} from '../model/repository/entity/user.model';
-import {ApiRequest, ApiResponse, ApiResponseType} from '../model/service/app.model';
+import {ApiData, ApiRequest, ApiResponse, ApiResponseType} from '../model/service/app.model';
 import {SearchModel} from '../model/repository/search.model';
 import {RepositoryEntity} from '../model/repository/repository-entity';
 import {RepositoryClient} from '../model/repository/repository-client.model';
@@ -55,6 +55,9 @@ export abstract class RepositoryService<T extends RepositoryEntity> {
   //
   public onEntitiesChanged() {
     return this.repository.repositoryChange$;
+  }
+  public onAllEntitiesChanged() {
+    return this.repository.repositoryChangeAll$;
   }
 
   // Event that occurs when the repository filter is modified. This will invalidate
@@ -334,7 +337,7 @@ export abstract class RepositoryService<T extends RepositoryEntity> {
   }
 
   private createRemote(entity:T) {
-    return this.http.post<ApiResponse<T>>(this.createUrl(), entity);
+    return this.http.post<ApiResponse<T>>(this.createUrl(), ApiRequest.fromCreate<T>(this.repository.cloneState(), new ApiData([entity])), {headers: this.headers});
   }
 
   private getRemote(pageData:PageData) {

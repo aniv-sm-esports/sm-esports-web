@@ -36,7 +36,7 @@ export class UserJWT {
   public userName: string = '';
 
   public isDefault() {
-    return isEqual(this, UserJWT.default());
+    return !this.token || this.token.trim() === '';
   }
 
   public static default() {

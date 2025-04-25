@@ -30,8 +30,11 @@ export class RepositoryClient<T extends RepositoryEntity> extends Repository<T> 
 
   // Repository Changes
   //
-  public repositoryChangeBehavior = new BehaviorSubject<ApiData<T>>(ApiData.default());
+  protected repositoryChangeBehavior = new BehaviorSubject<ApiData<T>>(ApiData.default());
+  protected repositoryChangeAllBehavior = new BehaviorSubject<ApiData<T>>(ApiData.default());
+
   public repositoryChange$ = this.repositoryChangeBehavior.asObservable();
+  public repositoryChangeAll$ = this.repositoryChangeAllBehavior.asObservable();
 
   constructor(repositoryKey:string, entityName:string, search:SearchModel<T>, entities:Array<T>) {
     super(repositoryKey, entityName, search, entities, false);
@@ -121,22 +124,15 @@ export class RepositoryClient<T extends RepositoryEntity> extends Repository<T> 
     console.log(`Repository records added:  ${recordsAdded}`);
 
     // NOTIFY
-    this.notifySet(entities);
+    this.notify(entities);
 
     return true;
   }
 
-  private notifyAll(){
+  private notify(data:T[]) {
     let apiData = new ApiData(this.entities);
 
-    // Notify Observers
     this.repositoryChangeBehavior.next(apiData);
-  }
-
-  private notifySet(data:T[]){
-    let apiData = new ApiData(data);
-
-    // Notify Observers
-    this.repositoryChangeBehavior.next(apiData);
+    this.repositoryChangeAllBehavior.next(new ApiData(this.entities));
   }
 }
