@@ -4,7 +4,7 @@ import {ChatCategoryService} from '../../../service/chat-category.service';
 import {ChatCategoryGroupMapService} from '../../../service/chat-category-group-map.service';
 import {ChatGroupRoomMapService} from '../../../service/chat-group-room-map.service';
 import {ChatGroupService} from '../../../service/chat-group.service';
-import {ChatCategoryViewModel, ChatGroupViewModel} from './chat-view-model';
+import {ChatCategoryViewModel, ChatComponentViewModel, ChatGroupViewModel, ChatRoomViewModel} from './chat-view-model';
 import {ChatBoxComponent} from '../../control/chatbox.component';
 import {NgClass, NgForOf, NgStyle} from '@angular/common';
 import {GroupByFirstPipe} from '../../../pipe/group-by-first.pipe';
@@ -16,6 +16,8 @@ import {GroupByGroupPipe} from '../../../pipe/group-by-group';
 import {WherePipe} from '../../../pipe/where';
 import {ChatGroup} from '../../../model/repository/entity/chat-group.model';
 import {RouterLink} from '@angular/router';
+import lodash from 'lodash';
+import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'chat',
@@ -27,18 +29,15 @@ import {RouterLink} from '@angular/router';
     GroupByGroupPipe,
     WherePipe,
     NgClass,
-    RouterLink
+    RouterLink,
+    FaIconComponent
   ],
   templateUrl: '../../template/view/chat/chat.component.html'
 })
 export class ChatComponent {
 
   // (TEMPORARY) Use a pipe filter to get your chat category, and group collections.
-  protected chatCategories:ChatCategoryViewModel[] = [];
-  protected chatGroups:ChatGroupViewModel[] = [];
-
-  protected selectedChatGroup:ChatGroupViewModel | undefined;
-  protected selectedChatRoom:ChatRoom | undefined;
+  protected viewModel:ChatComponentViewModel;
 
   constructor(protected readonly appService: AppService,
               private readonly chatCategoryService:ChatCategoryService,
@@ -46,6 +45,8 @@ export class ChatComponent {
               private readonly chatRoomService:ChatRoomService,
               private readonly chatCategoryGroupMapService: ChatCategoryGroupMapService,
               private readonly chatGroupRoomMapService:ChatGroupRoomMapService) {
+
+    this.viewModel = new ChatComponentViewModel();
 
     // Why use a view? :)
     this.chatCategoryService.getAll().then(categories => {
@@ -71,21 +72,33 @@ export class ChatComponent {
 
                         if (!room || !group || !category) {
                           console.log("Error: Mismatched chat data!");
-                        } else {
-                          let existingCategory = this.chatCategories.find(x => x.category.id === category.id);
-                          if (existingCategory) {
-                            existingCategory.groups.push(group);
-                          }
-                          else {
-                            this.chatCategories.push(new ChatCategoryViewModel(category, [group]));
+                        }
+                        else {
+
+                          let categoryViewModel = this.viewModel.chatCategories.find(x => x.category.id === category.id);
+                          if (!categoryViewModel) {
+                            categoryViewModel = new ChatCategoryViewModel(category, []);
                           }
 
-                          let existingGroup = this.chatGroups.find(x => x.group.id === group.id);
-                          if (existingGroup) {
-                            existingGroup.rooms.push(room);
+                          let groupViewModel = categoryViewModel.groups.find(x => x.group.id === group.id);
+                          if (!groupViewModel) {
+                            groupViewModel = new ChatGroupViewModel(group, []);
                           }
-                          else {
-                            this.chatGroups.push(new ChatGroupViewModel(group, [room]));
+
+                          let roomViewModel = groupViewModel.rooms.find(x => x.room.id === room.id);
+                          if (!roomViewModel) {
+                            roomViewModel = new ChatRoomViewModel(room);
+                          }
+
+                          if (!groupViewModel.rooms.find(x => x.room.id === roomViewModel?.room?.id)) {
+                            groupViewModel.rooms.push(roomViewModel);
+                          }
+                          if (!categoryViewModel.groups.find(x => x.group.id === groupViewModel?.group?.id)) {
+                            categoryViewModel.groups.push(groupViewModel);
+                          }
+
+                          if (!this.viewModel.chatCategories.find(x => x.category.id === categoryViewModel?.category?.id)) {
+                            this.viewModel.chatCategories.push(categoryViewModel);
                           }
                         }
                       });
@@ -98,22 +111,11 @@ export class ChatComponent {
     });
   }
 
-  public selectGroup(chatGroupId:number) {
-    this.selectedChatGroup = this.chatGroups.find(x => x.group.id === chatGroupId);
-
-    this.chatGroups.forEach(chatGroup => {
-      chatGroup.selected = chatGroup.group.id === chatGroupId;
-    });
-
-    this.chatCategories.forEach(category => {
-      category.selected = category.groups.some(x => x.id === chatGroupId);
-    });
-
-    // Un-Select Chat Room
-    //this.selectedChatRoom = undefined;
-  }
-
   public selectChatRoom(chatRoomId:number) {
-    this.selectedChatRoom = this.selectedChatGroup?.rooms?.find(x => x.id === chatRoomId);
+
+    let groups = lodash.flatten(this.viewModel.chatCategories.map(category => { return category.groups;}));
+    let rooms = lodash.flatten(groups.map(group => group.rooms));
+
+    this.viewModel.selectedChatRoom = rooms.find(model => { return model.room.id === chatRoomId; });
   }
 }

@@ -3,11 +3,18 @@
   .chat-container {
     background:rgba(0,0,0,0.3);
     display:grid;
-    grid-auto-columns: 220px 320px 1fr;
+    grid-auto-columns: 260px minmax(300px, auto) minmax(300px, 800px);
     overflow-x:hidden;
     overflow-y:hidden;
   }
+  .chat-container .chat-tree-container {
+    background:rgba(0,0,0,0.3);
+  }
+  .chat-container .chat-user-container {
+    background:rgba(0,0,0,0.5);
+  }
 
+  /* Fonts */
   .chat-container h2 {
     font-family: "Russo One", sans-serif;
     font-size:1.2em;
@@ -17,74 +24,69 @@
     padding:10px;
     color: rgba(134,134,255,0.5);
   }
-
-  .chat-category-container {
-    background:rgba(255,255,255,0.75) !important;
-  }
-  .chat-room-container {
-    background:rgba(255,255,255,0.75) !important;
+  .chat-container .chat-user-container h2 {
+    color:#EEE;
+    background:rgba(255,255,255,0.2);
   }
 
-  .chat-category-container h3,
-  .chat-category-container h4,
-  .chat-room-container h4 {
+  .chat-container .chat-tree-container h3,
+  .chat-container .chat-tree-container h4,
+  .chat-container .chat-tree-container h4 {
     font-family: "Russo One", sans-serif;
     font-style: normal;
     font-weight: lighter;
   }
 
-  .chat-category-container h3 {
+  .chat-container .chat-tree-expander {
+    margin-left: 5px;
+    font-size:1em !important;
+  }
+
+  .chat-container .chat-tree-container h3 {
     font-size: 1.1em;
   }
-  .chat-room-container h4,
-  .chat-category-container h4 {
+  .chat-container .chat-tree-container h4 {
     font-size: 0.9em;
   }
-
-  .chat-category-container {
-    background:rgba(0,0,0,0.3);
-    grid-column: 1;
+  .chat-container .chat-tree-container h5 {
+    font-size: 0.8em;
   }
 
-  .chat-category-container h4,
-  .chat-room-container h4 {
+  .chat-container .chat-tree-container h3,
+  .chat-container .chat-tree-container h4,
+  .chat-container .chat-tree-container h5{
     color: #888;
     margin:0;
     padding:5px 10px 5px 10px;
     cursor:pointer;
   }
-
-  .chat-category-container h4:hover,
-  .chat-category-container h4:hover,
-  .chat-room-container h4:hover {
+  .chat-container .chat-tree-container h3:hover,
+  .chat-container .chat-tree-container h4:hover,
+  .chat-container .chat-tree-container h5:hover {
     color:rgba(50,50,255,0.75);
     background: #FFF;
   }
-
-  .chat-category-container h4.selected,
-  .chat-category-container h4.selected,
-  .chat-room-container h4.selected {
+  .chat-container .chat-tree-container h3.selected,
+  .chat-container .chat-tree-container h4.selected,
+  .chat-container .chat-tree-container h5.selected {
     color:rgba(50,50,255,1);
     background: #FFF;
   }
-
-  .chat-category-container h3 {
-    color: #888;
-    margin: 0;
+  .chat-container .chat-tree-container h3 {
     padding:5px 10px 5px 10px;
-    cursor:pointer;
+  }
+  .chat-container .chat-tree-container h4 {
+    padding:5px 10px 5px 25px;
+  }
+  .chat-container .chat-tree-container h5 {
+    padding:5px 10px 5px 40px;
   }
 
-  .chat-category-container h4 {
-    color: #888;
-    margin: 0;
-    padding:5px 10px 5px 30px;
-    cursor:pointer;
+  .chat-container .chat-tree-container {
+    background:rgba(255,255,255,0.75) !important;
   }
-
-  .chat-room-container {
-    background:rgba(0,0,0,0.3);
-    grid-column: 2;
+  .chat-container .chat-tree-container {
+    background:rgba(255,255,255,0.75) !important;
   }
 
   .chat-container .chatbox-container {
@@ -112,33 +114,40 @@
 
 <div class="chat-container prevent-select" [ngStyle]="{'height': (this.appService.getSize().height - 42) + 'px'}">
 
-  <div class="chat-category-container">
-    <h2>Chat Categories</h2>
+  <div class="chat-tree-container">
+    <h2>Chat</h2>
     <div class="chat-category-item"
-         *ngFor="let category of this.chatCategories">
+         *ngFor="let category of this.viewModel.chatCategories">
 
-      <h3>{{category.category.name}}</h3>
+      <h3 (click)="category.expanded = !category.expanded">{{category.category.name}}<span class="chat-tree-expander"
+                                          [textContent]="!category.expanded ? '+' : '-'"></span></h3>
 
-      <div class="chat-group-item"
-           *ngFor="let group of category.groups">
-        <h4 (click)="this.selectGroup(group.id)"
-            [ngClass]="{'selected': group.id === this.selectedChatGroup?.group?.id}">{{group.name}}</h4>
-      </div>
+      @if (category.expanded) {
+        <div class="chat-group-item"
+             *ngFor="let group of category.groups">
+          <h4 (click)="group.expanded = !group.expanded">{{group.group.name}}<span class="chat-tree-expander"
+                                                                                   [textContent]="!group.expanded ? '+' : '-'"></span></h4>
+
+          @if(group.expanded) {
+            <div class="chat-room-item"
+                 *ngFor="let room of group.rooms">
+              <h5 (click)="this.selectChatRoom(room.room.id)"
+                  [ngClass]="{'selected': room.room.id === this.viewModel.selectedChatRoom?.room?.id}">{{room.room.name}}</h5>
+            </div>
+          }
+
+        </div>
+      }
 
     </div>
   </div>
 
-  <div class="chat-room-container">
-    <h2>Chat Rooms</h2>
-    <h4 *ngFor="let room of this.selectedChatGroup?.rooms"
-        [ngClass]="{'selected': room.id === this.selectedChatRoom?.id}"
-        (click)="this.selectChatRoom(room.id)">
-      {{room.name}}
-    </h4>
+  <div class="chat-user-container">
+    <h2>Users</h2>
   </div>
 
   <div class="chatbox-container">
-    <chatbox [chatRoomId]="this.selectedChatRoom?.id" />
+    <chatbox [chatRoomId]="this.viewModel.selectedChatRoom?.room?.id" />
   </div>
 
 </div>
