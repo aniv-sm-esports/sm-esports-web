@@ -1,17 +1,17 @@
 import {Component} from '@angular/core';
-import {UserJWT} from '../model/service/user-logon.model';
-import {AuthService} from '../service/auth.service';
+import {UserJWT} from '../../../model/service/user-logon.model';
+import {AuthService} from '../../../service/auth.service';
 import {FormsModule} from '@angular/forms';
-import {BasicButtonComponent} from './control/primitive/button.component';
-import {BasicCheckboxComponent} from './control/primitive/checkbox.component';
+import {BasicButtonComponent} from '../../control/primitive/button.component';
+import {BasicCheckboxComponent} from '../../control/primitive/checkbox.component';
 import {NgIf, NgStyle} from '@angular/common';
-import {AppService} from '../service/app.service';
+import {AppService} from '../../../service/app.service';
 import {Router} from '@angular/router';
 import {noop} from 'rxjs';
-import {AuthHandler} from '../model/service/handler.model';
-import {UserCreation} from '../model/view/user-creation.model';
-import {NotifyComponent} from './control/notify.component';
-import {NotifySeverity, NotifyType} from '../model/service/notify.model';
+import {AuthHandler} from '../../../model/service/handler.model';
+import {UserCreation} from '../../../model/view/user-creation.model';
+import {NotifyComponent} from '../../control/notify.component';
+import {NotifySeverity, NotifyType} from '../../../model/service/notify.model';
 
 @Component({
   selector: 'create-account',
@@ -20,9 +20,10 @@ import {NotifySeverity, NotifyType} from '../model/service/notify.model';
     BasicButtonComponent,
     BasicCheckboxComponent,
     NgIf,
-    NotifyComponent
+    NotifyComponent,
+    NgStyle
   ],
-  templateUrl: './template/create-account.component.html'
+  templateUrl: '../../template/view/account/create-account.component.html'
 })
 export class CreateAccountComponent implements AuthHandler {
 
@@ -57,7 +58,7 @@ export class CreateAccountComponent implements AuthHandler {
     // Redirect -> Home
     //
     if (!value.isDefault() && this.router) {
-      this.router.navigate(['home/live']);
+      //this.router.navigate(['home/live']);
     }
   }
 

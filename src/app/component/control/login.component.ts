@@ -67,7 +67,7 @@ export class LoginComponent implements AuthHandler {
     // Redirect -> Home
     //
     if (this.userLoggedOn && this.router) {
-      this.router.navigate(['home/live']);
+      //this.router.navigate(['home/live']);
     }
   }
 

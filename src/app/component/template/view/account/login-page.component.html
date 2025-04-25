@@ -1,0 +1,40 @@
+<style>
+
+  .login-page-container {
+    background:rgba(134,134,255,0.3);
+  }
+  .login-page-container .login-control-container > h1 {
+    font-family: "Russo One", sans-serif;
+    font-style:italic;
+    font-weight:lighter;
+    font-size:2.2em;
+    color: rgba(134,134,255,0.5);
+
+    padding:20px;
+    margin:0;
+    float:left;
+  }
+  .login-page-container .login-control-container > login {
+    float:right;
+  }
+
+  @media screen and (max-width: 1400px) {
+    .login-page-container {
+      margin-top:100px;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .login-page-container {
+      margin-top:180px;
+    }
+  }
+</style>
+
+<div class="login-page-container">
+  <div class="login-control-container">
+    <h1>Logon</h1>
+    <login />
+  </div>
+  <div class="clear-fix"></div>
+</div>

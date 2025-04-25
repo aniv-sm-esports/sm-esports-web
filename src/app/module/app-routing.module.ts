@@ -6,7 +6,7 @@ import {PeopleComponent} from '../component/view/people/people.component';
 import {ChatComponent} from '../component/view/chat/chat.component';
 import {PersonalComponent} from '../component/view/personal.component';
 import {LoginComponent} from '../component/control/login.component';
-import {CreateAccountComponent} from '../component/create-account.component';
+import {CreateAccountComponent} from '../component/view/account/create-account.component';
 import {LiveComponent} from '../component/live.component';
 import {HomeScheduleComponent} from '../component/view/home/home-schedule.component';
 import {PeopleAllComponent} from '../component/view/people/people-all.component';
@@ -24,10 +24,11 @@ import { LandscapeWikiComponent } from '../component/view/landscape/landscape-wi
 import {LandscapeLinksComponent} from '../component/view/landscape/landscape-links.component';
 import {ChatSecurityComponent} from '../component/view/chat/chat-security.component';
 import {ChatManagementComponent} from '../component/view/chat/chat-management.component';
+import {LoginPageComponent} from '../component/view/account/login-page.component';
 
 export const routes: Routes = [
-  { path:"login",  component: LoginComponent, title: 'Login'},
-  { path:"create-account",  component: CreateAccountComponent, title: 'Create Account' },
+  { path:"account/login",  component: LoginPageComponent, title: 'Login'},
+  { path:"account/create",  component: CreateAccountComponent, title: 'Create Account' },
 
   { path:"home", component: HomeComponent, title: 'Home', children: [
       { path:"live",  component: LiveComponent, title: 'Live' },
