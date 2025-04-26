@@ -222,6 +222,9 @@ server.configure([
   new ChatGroupRoomMapCreateMiddleware(server.getControllerManager(), '/api/chatGroupRoomMap/create', HttpMethod.POST),
 ]);
 
+// INITIALIZE!  Sync sequel model
+server.initialize();
+
 // START!
 server.start();
 
