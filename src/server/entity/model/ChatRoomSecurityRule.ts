@@ -12,6 +12,10 @@ export class ChatRoomSecurityRule extends Model {
     super();
   }
 
+  public ctor() {
+    return new ChatRoomSecurityRule();
+  }
+
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,

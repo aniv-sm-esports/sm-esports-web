@@ -1,15 +1,19 @@
 import {Column, DataType, Model, Table} from 'sequelize-typescript';
 
 @Table({
-  modelName: 'ChatCategoryGroupMap',
-  tableName: 'ChatCategoryGroupMap',
+  modelName: 'ChatRoomChatMap',
+  tableName: 'ChatRoomChatMap',
   freezeTableName: true,
   timestamps: false
 })
-export class ChatCategoryGroupMap extends Model {
+export class ChatRoomChatMap extends Model {
 
   constructor(){
     super();
+  }
+
+  public ctor() {
+    return new ChatRoomChatMap();
   }
 
   @Column({
@@ -26,13 +30,13 @@ export class ChatCategoryGroupMap extends Model {
     type: DataType.INTEGER,
     allowNull: false
   })
-  get ChatCategoryId():number { return this.getDataValue('ChatCategoryId'); }
-  set ChatCategoryId(value: number) { this.setDataValue('ChatCategoryId', value); }
+  get ChatRoomId():number { return this.getDataValue('ChatRoomId'); }
+  set ChatRoomId(value: number) { this.setDataValue('ChatRoomId', value); }
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  get ChatGroupId():number { return this.getDataValue('ChatGroupId'); }
-  set ChatGroupId(value:number) { this.setDataValue('ChatGroupId', value); }
+  get ChatId():number { return this.getDataValue('ChatId'); }
+  set ChatId(value:number) { this.setDataValue('ChatId', value); }
 }

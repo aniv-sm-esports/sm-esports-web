@@ -12,6 +12,10 @@ export class ChatGroupRoomMap extends Model {
     super();
   }
 
+  public ctor() {
+    return new ChatGroupRoomMap();
+  }
+
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,

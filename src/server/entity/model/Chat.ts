@@ -12,6 +12,10 @@ export class Chat extends Model {
     super();
   }
 
+  public ctor() {
+    return new Chat();
+  }
+
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,

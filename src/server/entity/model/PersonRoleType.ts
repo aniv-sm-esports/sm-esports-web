@@ -1,17 +1,23 @@
-import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table} from "sequelize-typescript";
+import {ModelAttributeColumnOptions} from 'sequelize';
 
 @Table({
-  modelName: 'ArticleBannerLinkType',
-  tableName: 'ArticleBannerLinkType',
+  modelName: 'PersonRoleType',
+  tableName: 'PersonRoleType',
   freezeTableName: true,
   timestamps: false
 })
-export class ArticleBannerLinkType extends Model {
+export class PersonRoleType extends Model {
+
   public constructor() {
     super();
 
     this.Id = 0;
     this.Name = '';
+  }
+
+  public ctor() {
+    return new PersonRoleType();
   }
 
   @Column({

@@ -14,14 +14,46 @@ import {ChatRoomSecurityRule} from './model/ChatRoomSecurityRule';
 import {ChatRoomUserMap} from './model/ChatRoomUserMap';
 import {User} from './model/User';
 import {UserRoleType} from './model/UserRoleType';
+import { EntityCache } from "./entity-cache";
+import { EntityCacheSearch } from "./entity-cache-search";
+import {UserCredential} from './model/UserCredential';
+import { TableChangedView } from "./model/TableChangedView";
+import { UserJWT } from "./model/UserJWT";
 
 
-export class ServerDatabase {
+export class EntityController {
 
+  // ORM Adapter (postgres)
   private readonly sequelize:Sequelize;
 
+  // Entity Caches (by Table <-> Typescript Model)
+  public articles: EntityCache<Article>;
+  public articleBannerLinkTypes: EntityCache<ArticleBannerLinkType>;
+  public chats: EntityCache<Chat>;
+  public chatCategories: EntityCache<ChatCategory>;
+  public chatCategoryGroupMaps: EntityCache<ChatCategoryGroupMap>;
+  public chatGroups: EntityCache<ChatGroup>;
+  public chatGroupRoomMaps: EntityCache<ChatGroupRoomMap>;
+  public chatRooms: EntityCache<ChatRoom>;
+  public chatRoomChatMap: EntityCache<ChatRoomChatMap>;
+  public chatRoomSecurityRules: EntityCache<ChatRoomSecurityRule>;
+  public chatRoomUserMaps: EntityCache<ChatRoomUserMap>;
+  public files: EntityCache<File>;
+  public personRoleTypes: EntityCache<PersonRoleType>;
+  public tableChangedViews: EntityCache<TableChangedView>;
+  public users: EntityCache<User>;
+  public userCredentials: EntityCache<UserCredential>;
+  public userJWTs: EntityCache<UserJWT>;
+  public userRoleTypes: EntityCache<UserRoleType>;
+
+  /*
+
+  // Auth Service (this may move to separate auth server)
+  userTokenMap: Map<string, string>;
+  tokenMap: Map<string, UserJWTPayload>;
+*/
   // Creates an instance of the server database using environment variable settings [USER, PASSWORD, HOST, DB])
-  constructor(private readonly databaseModelFolder:string){
+  constructor(){
 
     this.sequelize = new Sequelize(process.env['DB']!,
                                    process.env['DB_USER']!,
@@ -29,7 +61,7 @@ export class ServerDatabase {
         dialect: "postgres",
         host: process.env['HOST']!,
         models: [
-          Article,
+          Article,                            // NOTE*** These are ModelCtor instances (new ():T => T)
           ArticleBannerLinkType,
           Chat,
           ChatCategory,
@@ -42,7 +74,10 @@ export class ServerDatabase {
           ChatRoomUserMap,
           File,
           PersonRoleType,
+          TableChangedView,
           User,
+          UserCredential,
+          UserJWT,
           UserRoleType
         ],
         schema: "public",
@@ -118,6 +153,32 @@ export class ServerDatabase {
         attributeBehavior?: "escape" | "throw" | "unsafe-legacy"
         */
       });
+
+    // Entity Caches:  Repository "Key" is just a unique string identifier. Chat repositories, for example, may be created at
+    //                 runtime - based on the user's needs. Keep this to be the entity name if possible; and the pattern, simple.
+    //
+    this.articles = new EntityCache<Article>('Article', 'Article', new EntityCacheSearch<Article>(new Article(), []), [], true);
+    this.articleBannerLinkTypes = new EntityCache<ArticleBannerLinkType>('ArticleBannerLinkType', 'ArticleBannerLinkType', new EntityCacheSearch<ArticleBannerLinkType>(new ArticleBannerLinkType(), []), [], true);
+    this.chats =  new EntityCache<Chat>('Chat', 'Chat', new EntityCacheSearch<Chat>(new Chat(), []), [], true);
+    this.chatCategories = new EntityCache<ChatCategory>('ChatCategory', 'ChatCategory', new EntityCacheSearch<ChatCategory>(new ChatCategory(), []), [], true);
+    this.chatCategoryGroupMaps = new EntityCache<ChatCategoryGroupMap>('ChatCategoryGroupMap', 'ChatCategoryGroupMap', new EntityCacheSearch<ChatCategoryGroupMap>(new ChatCategoryGroupMap(), []), [], true);
+    this.chatGroups =  new EntityCache<ChatGroup>('ChatGroup', 'ChatGroup', new EntityCacheSearch<ChatGroup>(new ChatGroup(), []), [], true);
+    this.chatGroupRoomMaps =  new EntityCache<ChatGroupRoomMap>('ChatGroupRoomMap', 'ChatGroupRoomMap', new EntityCacheSearch<ChatGroupRoomMap>(new ChatGroupRoomMap(), []), [], true);
+    this.chatRooms = new EntityCache<ChatRoom>('ChatRoom', 'ChatRoom', new EntityCacheSearch<ChatRoom>(new ChatRoom(), []), [], true);
+    this.chatRoomChatMap = new EntityCache<ChatRoomChatMap>('ChatRoomChatMap', 'ChatRoomChatMap', new EntityCacheSearch<ChatRoomChatMap>(new ChatRoomChatMap(), []), [], true);
+    this.chatRoomSecurityRules = new EntityCache<ChatRoomSecurityRule>('ChatRoomSecurityRule', 'ChatRoomSecurityRule', new EntityCacheSearch<ChatRoomSecurityRule>(new ChatRoomSecurityRule(), []), [], true);
+    this.chatRoomUserMaps = new EntityCache<ChatRoomUserMap>('ChatRoomUserMap', 'ChatRoomUserMap', new EntityCacheSearch<ChatRoomUserMap>(new ChatRoomUserMap(), []), [], true);
+    this.files = new EntityCache<File>('File', 'File', new EntityCacheSearch<File>(new File(), []), [], true);
+    this.personRoleTypes = new EntityCache<PersonRoleType>('PersonRoleType', 'PersonRoleType', new EntityCacheSearch<PersonRoleType>(new PersonRoleType(), []), [], true);
+    this.tableChangedViews = new EntityCache<TableChangedView>('TableChangedView', 'TableChangedView', new EntityCacheSearch<TableChangedView>(new TableChangedView(), []), [], true);
+    this.users = new EntityCache<User>('User', 'User', new EntityCacheSearch<User>(new User(), []), [], true);
+    this.userCredentials = new EntityCache<UserCredential>('UserCredential', 'UserCredential', new EntityCacheSearch<UserCredential>(new UserCredential(), []), [], true);
+    this.userJWTs = new EntityCache<UserJWT>('UserJWT', 'UserJWT', new EntityCacheSearch<UserJWT>(new UserJWT(), []), [], true);
+    this.userRoleTypes = new EntityCache<UserRoleType>('UserRoleType', 'UserRoleType', new EntityCacheSearch<UserRoleType>(new UserRoleType(), []), [], true);
+
+    // Entity Views:  Do not have Id (PRIMARY KEY). So, we must remove the "id" attribute from the Model. Overwriting it with our "Id"
+    //                property must not have entirely worked because of the non-primary key entity.
+    this.sequelize.model(TableChangedView).removeAttribute("id");
   }
 
   // Authenticates with the database
@@ -180,7 +241,18 @@ export class ServerDatabase {
         this.sequelize.model(PersonRoleType).findAll({ raw: true }).then(values => {
           console.log(values);
         });
+        this.sequelize.model(TableChangedView).findAll({
+          raw: true,
+        }).then(values => {
+          console.log(values);
+        });
         this.sequelize.model(User).findAll({ raw: true }).then(values => {
+          console.log(values);
+        });
+        this.sequelize.model(UserCredential).findAll({ raw: true }).then(values => {
+          console.log(values);
+        });
+        this.sequelize.model(UserJWT).findAll({ raw: true }).then(values => {
           console.log(values);
         });
         this.sequelize.model(UserRoleType).findAll({ raw: true }).then(values => {

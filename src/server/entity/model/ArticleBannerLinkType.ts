@@ -1,19 +1,22 @@
-import {Column, DataType, Model, Table} from "sequelize-typescript";
+import {Column, DataType, Model, Table} from 'sequelize-typescript';
 
 @Table({
-  modelName: 'ChatCategory',
-  tableName: 'ChatCategory',
+  modelName: 'ArticleBannerLinkType',
+  tableName: 'ArticleBannerLinkType',
   freezeTableName: true,
   timestamps: false
 })
-export class ChatCategory extends Model {
+export class ArticleBannerLinkType extends Model {
 
   public constructor() {
     super();
 
     this.Id = 0;
     this.Name = '';
-    this.Description = '';
+  }
+
+  public ctor() {
+    return new ArticleBannerLinkType();
   }
 
   @Column({
@@ -32,11 +35,4 @@ export class ChatCategory extends Model {
   })
   get Name():string { return this.getDataValue('Name'); }
   set Name(value: string) { this.setDataValue('Name', value); }
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  get Description():string { return this.getDataValue('Description'); }
-  set Description(value: string) { this.setDataValue('Description', value); }
 }

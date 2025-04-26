@@ -1,5 +1,5 @@
 import {Table, Column, Model, HasMany, DataType, AllowNull, PrimaryKey, AutoIncrement} from 'sequelize-typescript';
-import { IRepositoryEntity } from './IRepositoryEntity';
+import { Constructor, IRepositoryEntity} from './IRepositoryEntity';
 
 @Table({
   modelName: 'Article',
@@ -7,7 +7,7 @@ import { IRepositoryEntity } from './IRepositoryEntity';
   freezeTableName: true,
   timestamps: false
 })
-export class Article extends Model implements IRepositoryEntity {
+export class Article extends Model implements IRepositoryEntity<Article> {
 
   public constructor() {
     super();
@@ -21,6 +21,10 @@ export class Article extends Model implements IRepositoryEntity {
     this.BannerImageUrl = undefined;
     this.BannerYoutubeSourceId = undefined;
     this.BannerLinkTypeId = 0;
+  }
+
+  public ctor() {
+    return new Article();
   }
 
   /*

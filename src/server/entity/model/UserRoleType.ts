@@ -1,19 +1,23 @@
-import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table} from "sequelize-typescript";
+import {ModelAttributeColumnOptions} from 'sequelize';
 
 @Table({
-  modelName: 'ChatGroup',
-  tableName: 'ChatGroup',
+  modelName: 'UserRoleType',
+  tableName: 'UserRoleType',
   freezeTableName: true,
   timestamps: false
 })
-export class ChatGroup extends Model {
+export class UserRoleType extends Model {
 
   public constructor() {
     super();
 
     this.Id = 0;
     this.Name = '';
-    this.Description = '';
+  }
+
+  public ctor() {
+    return new UserRoleType();
   }
 
   @Column({
@@ -32,11 +36,4 @@ export class ChatGroup extends Model {
   })
   get Name():string { return this.getDataValue('Name'); }
   set Name(value: string) { this.setDataValue('Name', value); }
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  get Description():string { return this.getDataValue('Description'); }
-  set Description(value: string) { this.setDataValue('Description', value); }
-};
+}

@@ -12,6 +12,10 @@ export class User extends Model {
     super();
   }
 
+  public ctor() {
+    return new User();
+  }
+
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,

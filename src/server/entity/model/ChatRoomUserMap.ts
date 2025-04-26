@@ -1,15 +1,19 @@
 import {Column, DataType, Model, Table} from 'sequelize-typescript';
 
 @Table({
-  modelName: 'File',
-  tableName: 'File',
+  modelName: 'ChatRoomUserMap',
+  tableName: 'ChatRoomUserMap',
   freezeTableName: true,
   timestamps: false
 })
-export class File extends Model {
+export class ChatRoomUserMap extends Model {
 
   constructor(){
     super();
+  }
+
+  public ctor() {
+    return new ChatRoomUserMap();
   }
 
   @Column({
@@ -23,16 +27,16 @@ export class File extends Model {
   set Id(value: number) { this.setDataValue('Id', value); }
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.INTEGER,
     allowNull: false
   })
-  get Name():string { return this.getDataValue('Name'); }
-  set Name(value: string) { this.setDataValue('Name', value); }
+  get ChatRoomId():number { return this.getDataValue('ChatRoomId'); }
+  set ChatRoomId(value: number) { this.setDataValue('ChatRoomId', value); }
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.INTEGER,
     allowNull: false,
   })
-  get Path():string { return this.getDataValue('Path'); }
-  set Path(value:string) { this.setDataValue('Path', value); }
+  get UserId():number { return this.getDataValue('UserId'); }
+  set UserId(value:number) { this.setDataValue('UserId', value); }
 }

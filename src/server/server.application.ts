@@ -39,7 +39,7 @@ import {ChatGroupController} from './controller/chat-group.controller';
 import {ChatCategoryController} from './controller/chat-category.controller';
 import {ChatCategoryGroupMapController} from './controller/chat-category-group-map.controller';
 import {ChatGroupRoomMapController} from './controller/chat-group-room-map.controller';
-import {ServerDatabase} from './database/server.database';
+import {EntityController} from './entity/entity-controller';
 
 // Application Instances
 //
@@ -74,14 +74,13 @@ export class ServerApplication {
   // (pre-startup)
   private readonly serverDistFolder = dirname(fileURLToPath(import.meta.url));
   private readonly browserDistFolder = resolve(this.serverDistFolder, '../browser');
-  private readonly databaseModelFolder = resolve(this.serverDistFolder, '../database/model');
 
   // NodeJS / Express
   private readonly app = express();
   private readonly angularApp = new AngularNodeAppEngine();
 
   // Begin (our) Data
-  private readonly database:ServerDatabase = new ServerDatabase(this.databaseModelFolder);
+  private readonly database:EntityController = new EntityController();
   private readonly serverDb;
   //const jwt = require('jsonwebtoken');
   //const PUBLIC_KEY:string = fs.readFileSync('public.key', 'utf-8');

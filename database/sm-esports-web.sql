@@ -5,7 +5,7 @@
 -- Dumped from database version 17.4
 -- Dumped by pg_dump version 17.4
 
--- Started on 2025-04-25 16:41:30
+-- Started on 2025-04-26 17:52:12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -30,7 +30,7 @@ CREATE SCHEMA public;
 ALTER SCHEMA public OWNER TO pg_database_owner;
 
 --
--- TOC entry 5003 (class 0 OID 0)
+-- TOC entry 5048 (class 0 OID 0)
 -- Dependencies: 4
 -- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
 --
@@ -338,6 +338,29 @@ CREATE TABLE public."PersonRoleType" (
 ALTER TABLE public."PersonRoleType" OWNER TO postgres;
 
 --
+-- TOC entry 242 (class 1259 OID 16752)
+-- Name: TableChangedView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."TableChangedView" AS
+ SELECT relid AS "Id",
+    relname AS "TableName",
+    last_seq_scan AS "Timestamp"
+   FROM pg_stat_user_tables;
+
+
+ALTER VIEW public."TableChangedView" OWNER TO postgres;
+
+--
+-- TOC entry 5049 (class 0 OID 0)
+-- Dependencies: 242
+-- Name: VIEW "TableChangedView"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON VIEW public."TableChangedView" IS 'Tracks table changes using last_seq_scan from pg_catalog.pg_stat_user_tables';
+
+
+--
 -- TOC entry 219 (class 1259 OID 16565)
 -- Name: User; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -359,6 +382,69 @@ CREATE TABLE public."User" (
 ALTER TABLE public."User" OWNER TO postgres;
 
 --
+-- TOC entry 240 (class 1259 OID 16729)
+-- Name: UserCredential; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."UserCredential" (
+    "Id" integer NOT NULL,
+    "UserId" integer NOT NULL,
+    "Password" character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public."UserCredential" OWNER TO postgres;
+
+--
+-- TOC entry 5050 (class 0 OID 0)
+-- Dependencies: 240
+-- Name: TABLE "UserCredential"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public."UserCredential" IS 'This may be offloaded to auth server for PROD (TBD)';
+
+
+--
+-- TOC entry 239 (class 1259 OID 16728)
+-- Name: UserCredential_Id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."UserCredential" ALTER COLUMN "Id" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."UserCredential_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 241 (class 1259 OID 16739)
+-- Name: UserJWT; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."UserJWT" (
+    "Id" integer NOT NULL,
+    "Token" text NOT NULL,
+    "UserId" integer NOT NULL,
+    "LoginTime" timestamp with time zone NOT NULL,
+    "ExpirationTime" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."UserJWT" OWNER TO postgres;
+
+--
+-- TOC entry 5051 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: TABLE "UserJWT"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public."UserJWT" IS 'May be offloaded to auth server for PROD. (TBD)';
+
+
+--
 -- TOC entry 217 (class 1259 OID 16553)
 -- Name: UserRoleType; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -372,7 +458,254 @@ CREATE TABLE public."UserRoleType" (
 ALTER TABLE public."UserRoleType" OWNER TO postgres;
 
 --
--- TOC entry 4837 (class 2606 OID 16718)
+-- TOC entry 5038 (class 0 OID 16707)
+-- Dependencies: 237
+-- Data for Name: Article; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Article" ("Id", "UserId", "Date", "Title", "Description", "Body", "BannerImageUrl", "BannerYoutubeSourceId", "BannerLinkTypeId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5039 (class 0 OID 16714)
+-- Dependencies: 238
+-- Data for Name: ArticleBannerLinkType; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ArticleBannerLinkType" ("Id", "Name") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5030 (class 0 OID 16641)
+-- Dependencies: 229
+-- Data for Name: Chat; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Chat" ("Id", "UserId", "Text", "Date", "Flagged", "FlaggedComments") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5024 (class 0 OID 16589)
+-- Dependencies: 223
+-- Data for Name: ChatCategory; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatCategory" ("Id", "Name", "Description") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5026 (class 0 OID 16595)
+-- Dependencies: 225
+-- Data for Name: ChatCategoryGroupMap; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatCategoryGroupMap" ("Id", "ChatCategoryId", "ChatGroupId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5023 (class 0 OID 16584)
+-- Dependencies: 222
+-- Data for Name: ChatGroup; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatGroup" ("Id", "Name", "Description") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5028 (class 0 OID 16601)
+-- Dependencies: 227
+-- Data for Name: ChatGroupRoomMap; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatGroupRoomMap" ("Id", "ChatGroupId", "ChatRoomId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5022 (class 0 OID 16579)
+-- Dependencies: 221
+-- Data for Name: ChatRoom; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatRoom" ("Id", "Name", "Description") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5032 (class 0 OID 16654)
+-- Dependencies: 231
+-- Data for Name: ChatRoomChatMap; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatRoomChatMap" ("Id", "ChatRoomId", "ChatId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5036 (class 0 OID 16686)
+-- Dependencies: 235
+-- Data for Name: ChatRoomSecurityRule; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatRoomSecurityRule" ("Id", "ChatRoomId", "UserRoleId", "PersonRoleId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5034 (class 0 OID 16670)
+-- Dependencies: 233
+-- Data for Name: ChatRoomUserMap; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."ChatRoomUserMap" ("Id", "ChatRoomId", "UserId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5021 (class 0 OID 16572)
+-- Dependencies: 220
+-- Data for Name: File; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."File" ("Id", "Name", "Path") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5019 (class 0 OID 16558)
+-- Dependencies: 218
+-- Data for Name: PersonRoleType; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."PersonRoleType" ("Id", "Name") FROM stdin;
+0	General User
+1	Board Member
+\.
+
+
+--
+-- TOC entry 5020 (class 0 OID 16565)
+-- Dependencies: 219
+-- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."User" ("Id", "Name", "Email", "EmailVisible", "CreatedDate", "PictureUrl", "ShortDescription", "LongDescription", "PersonRoleId", "UserRoleId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5041 (class 0 OID 16729)
+-- Dependencies: 240
+-- Data for Name: UserCredential; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."UserCredential" ("Id", "UserId", "Password") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5042 (class 0 OID 16739)
+-- Dependencies: 241
+-- Data for Name: UserJWT; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."UserJWT" ("Id", "Token", "UserId", "LoginTime", "ExpirationTime") FROM stdin;
+\.
+
+
+--
+-- TOC entry 5018 (class 0 OID 16553)
+-- Dependencies: 217
+-- Data for Name: UserRoleType; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."UserRoleType" ("Id", "Name") FROM stdin;
+0	General
+1	Editor
+2	Admin
+\.
+
+
+--
+-- TOC entry 5052 (class 0 OID 0)
+-- Dependencies: 236
+-- Name: Article_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Article_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 5053 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: ChatCategoryGroupMap_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ChatCategoryGroupMap_Id_seq"', 0, false);
+
+
+--
+-- TOC entry 5054 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: ChatGroupRoomMap_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ChatGroupRoomMap_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 5055 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: ChatRoomChatMap_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ChatRoomChatMap_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 5056 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: ChatRoomSecurityRule_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ChatRoomSecurityRule_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 5057 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: ChatRoomUserMap_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ChatRoomUserMap_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 5058 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: Chat_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Chat_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 5059 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: UserCredential_Id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."UserCredential_Id_seq"', 1, false);
+
+
+--
+-- TOC entry 4850 (class 2606 OID 16718)
 -- Name: ArticleBannerLinkType ArticleBannerLinkType_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -381,7 +714,7 @@ ALTER TABLE ONLY public."ArticleBannerLinkType"
 
 
 --
--- TOC entry 4835 (class 2606 OID 16713)
+-- TOC entry 4848 (class 2606 OID 16713)
 -- Name: Article Article_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -390,7 +723,7 @@ ALTER TABLE ONLY public."Article"
 
 
 --
--- TOC entry 4819 (class 2606 OID 16599)
+-- TOC entry 4832 (class 2606 OID 16599)
 -- Name: ChatCategoryGroupMap ChatCategoryGroupMap_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -399,7 +732,7 @@ ALTER TABLE ONLY public."ChatCategoryGroupMap"
 
 
 --
--- TOC entry 4817 (class 2606 OID 16593)
+-- TOC entry 4830 (class 2606 OID 16593)
 -- Name: ChatCategory ChatCategory_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -408,7 +741,7 @@ ALTER TABLE ONLY public."ChatCategory"
 
 
 --
--- TOC entry 4823 (class 2606 OID 16605)
+-- TOC entry 4836 (class 2606 OID 16605)
 -- Name: ChatGroupRoomMap ChatGroupRoomMap_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -417,7 +750,7 @@ ALTER TABLE ONLY public."ChatGroupRoomMap"
 
 
 --
--- TOC entry 4815 (class 2606 OID 16588)
+-- TOC entry 4828 (class 2606 OID 16588)
 -- Name: ChatGroup ChatGroup_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -426,7 +759,7 @@ ALTER TABLE ONLY public."ChatGroup"
 
 
 --
--- TOC entry 4829 (class 2606 OID 16658)
+-- TOC entry 4842 (class 2606 OID 16658)
 -- Name: ChatRoomChatMap ChatRoomChatMap_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -435,7 +768,7 @@ ALTER TABLE ONLY public."ChatRoomChatMap"
 
 
 --
--- TOC entry 4833 (class 2606 OID 16690)
+-- TOC entry 4846 (class 2606 OID 16690)
 -- Name: ChatRoomSecurityRule ChatRoomSecurityRule_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -444,7 +777,7 @@ ALTER TABLE ONLY public."ChatRoomSecurityRule"
 
 
 --
--- TOC entry 4831 (class 2606 OID 16674)
+-- TOC entry 4844 (class 2606 OID 16674)
 -- Name: ChatRoomUserMap ChatRoomUserMap_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -453,7 +786,7 @@ ALTER TABLE ONLY public."ChatRoomUserMap"
 
 
 --
--- TOC entry 4813 (class 2606 OID 16583)
+-- TOC entry 4826 (class 2606 OID 16583)
 -- Name: ChatRoom ChatRoom_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -462,7 +795,7 @@ ALTER TABLE ONLY public."ChatRoom"
 
 
 --
--- TOC entry 4827 (class 2606 OID 16647)
+-- TOC entry 4840 (class 2606 OID 16647)
 -- Name: Chat Chat_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -471,7 +804,7 @@ ALTER TABLE ONLY public."Chat"
 
 
 --
--- TOC entry 4811 (class 2606 OID 16578)
+-- TOC entry 4824 (class 2606 OID 16578)
 -- Name: File File_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -480,7 +813,7 @@ ALTER TABLE ONLY public."File"
 
 
 --
--- TOC entry 4807 (class 2606 OID 16564)
+-- TOC entry 4820 (class 2606 OID 16564)
 -- Name: PersonRoleType PersonRoleType_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -489,7 +822,25 @@ ALTER TABLE ONLY public."PersonRoleType"
 
 
 --
--- TOC entry 4805 (class 2606 OID 16557)
+-- TOC entry 4852 (class 2606 OID 16733)
+-- Name: UserCredential UserCredential_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserCredential"
+    ADD CONSTRAINT "UserCredential_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 4854 (class 2606 OID 16745)
+-- Name: UserJWT UserJWT_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserJWT"
+    ADD CONSTRAINT "UserJWT_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 4818 (class 2606 OID 16557)
 -- Name: UserRoleType UserRoleType_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -498,7 +849,7 @@ ALTER TABLE ONLY public."UserRoleType"
 
 
 --
--- TOC entry 4809 (class 2606 OID 16571)
+-- TOC entry 4822 (class 2606 OID 16571)
 -- Name: User User_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -507,7 +858,7 @@ ALTER TABLE ONLY public."User"
 
 
 --
--- TOC entry 4820 (class 1259 OID 16611)
+-- TOC entry 4833 (class 1259 OID 16611)
 -- Name: fki_ChatCategoryGroupMap_fkey_ChatCategory; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -515,7 +866,7 @@ CREATE INDEX "fki_ChatCategoryGroupMap_fkey_ChatCategory" ON public."ChatCategor
 
 
 --
--- TOC entry 4821 (class 1259 OID 16617)
+-- TOC entry 4834 (class 1259 OID 16617)
 -- Name: fki_ChatCategoryGroupMap_fkey_ChatGroup; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -523,7 +874,7 @@ CREATE INDEX "fki_ChatCategoryGroupMap_fkey_ChatGroup" ON public."ChatCategoryGr
 
 
 --
--- TOC entry 4824 (class 1259 OID 16623)
+-- TOC entry 4837 (class 1259 OID 16623)
 -- Name: fki_ChatGroupRoomMap_fkey_ChatGroup; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -531,7 +882,7 @@ CREATE INDEX "fki_ChatGroupRoomMap_fkey_ChatGroup" ON public."ChatGroupRoomMap" 
 
 
 --
--- TOC entry 4825 (class 1259 OID 16629)
+-- TOC entry 4838 (class 1259 OID 16629)
 -- Name: fki_ChatGroupRoomMap_fkey_ChatRoom; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -539,7 +890,7 @@ CREATE INDEX "fki_ChatGroupRoomMap_fkey_ChatRoom" ON public."ChatGroupRoomMap" U
 
 
 --
--- TOC entry 4852 (class 2606 OID 16719)
+-- TOC entry 4869 (class 2606 OID 16719)
 -- Name: Article Article_BannerLinkType_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -548,7 +899,7 @@ ALTER TABLE ONLY public."Article"
 
 
 --
--- TOC entry 4840 (class 2606 OID 16606)
+-- TOC entry 4857 (class 2606 OID 16606)
 -- Name: ChatCategoryGroupMap ChatCategoryGroupMap_fkey_ChatCategory; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -557,7 +908,7 @@ ALTER TABLE ONLY public."ChatCategoryGroupMap"
 
 
 --
--- TOC entry 4841 (class 2606 OID 16612)
+-- TOC entry 4858 (class 2606 OID 16612)
 -- Name: ChatCategoryGroupMap ChatCategoryGroupMap_fkey_ChatGroup; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -566,7 +917,7 @@ ALTER TABLE ONLY public."ChatCategoryGroupMap"
 
 
 --
--- TOC entry 4842 (class 2606 OID 16618)
+-- TOC entry 4859 (class 2606 OID 16618)
 -- Name: ChatGroupRoomMap ChatGroupRoomMap_fkey_ChatGroup; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -575,7 +926,7 @@ ALTER TABLE ONLY public."ChatGroupRoomMap"
 
 
 --
--- TOC entry 4843 (class 2606 OID 16624)
+-- TOC entry 4860 (class 2606 OID 16624)
 -- Name: ChatGroupRoomMap ChatGroupRoomMap_fkey_ChatRoom; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -584,7 +935,7 @@ ALTER TABLE ONLY public."ChatGroupRoomMap"
 
 
 --
--- TOC entry 4849 (class 2606 OID 16696)
+-- TOC entry 4866 (class 2606 OID 16696)
 -- Name: ChatRoomSecurityRule ChatRoomSecurityRule_ChatRoom_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -593,7 +944,7 @@ ALTER TABLE ONLY public."ChatRoomSecurityRule"
 
 
 --
--- TOC entry 4850 (class 2606 OID 16701)
+-- TOC entry 4867 (class 2606 OID 16701)
 -- Name: ChatRoomSecurityRule ChatRoomSecurityRule_PersonRole_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -602,7 +953,7 @@ ALTER TABLE ONLY public."ChatRoomSecurityRule"
 
 
 --
--- TOC entry 4851 (class 2606 OID 16691)
+-- TOC entry 4868 (class 2606 OID 16691)
 -- Name: ChatRoomSecurityRule ChatRoomSecurityRule_UserRole_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -611,7 +962,7 @@ ALTER TABLE ONLY public."ChatRoomSecurityRule"
 
 
 --
--- TOC entry 4847 (class 2606 OID 16675)
+-- TOC entry 4864 (class 2606 OID 16675)
 -- Name: ChatRoomUserMap ChatRoomUserMap_ChatRoom_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -620,7 +971,7 @@ ALTER TABLE ONLY public."ChatRoomUserMap"
 
 
 --
--- TOC entry 4848 (class 2606 OID 16680)
+-- TOC entry 4865 (class 2606 OID 16680)
 -- Name: ChatRoomUserMap ChatRoomUserMap_User_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -629,7 +980,7 @@ ALTER TABLE ONLY public."ChatRoomUserMap"
 
 
 --
--- TOC entry 4845 (class 2606 OID 16659)
+-- TOC entry 4862 (class 2606 OID 16659)
 -- Name: ChatRoomChatMap ChatRoom_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -638,7 +989,7 @@ ALTER TABLE ONLY public."ChatRoomChatMap"
 
 
 --
--- TOC entry 4844 (class 2606 OID 16648)
+-- TOC entry 4861 (class 2606 OID 16648)
 -- Name: Chat Chat_User_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -647,7 +998,7 @@ ALTER TABLE ONLY public."Chat"
 
 
 --
--- TOC entry 4846 (class 2606 OID 16664)
+-- TOC entry 4863 (class 2606 OID 16664)
 -- Name: ChatRoomChatMap Chat_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -656,7 +1007,7 @@ ALTER TABLE ONLY public."ChatRoomChatMap"
 
 
 --
--- TOC entry 4838 (class 2606 OID 16630)
+-- TOC entry 4855 (class 2606 OID 16630)
 -- Name: User PersonRoleId_PersonRoleType; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -665,7 +1016,25 @@ ALTER TABLE ONLY public."User"
 
 
 --
--- TOC entry 4839 (class 2606 OID 16635)
+-- TOC entry 4870 (class 2606 OID 16734)
+-- Name: UserCredential UserCredential_User_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserCredential"
+    ADD CONSTRAINT "UserCredential_User_fkey" FOREIGN KEY ("UserId") REFERENCES public."User"("Id");
+
+
+--
+-- TOC entry 4871 (class 2606 OID 16746)
+-- Name: UserJWT UserJWT_User_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserJWT"
+    ADD CONSTRAINT "UserJWT_User_fkey" FOREIGN KEY ("UserId") REFERENCES public."User"("Id");
+
+
+--
+-- TOC entry 4856 (class 2606 OID 16635)
 -- Name: User UserRoleId_UserRoleType; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -673,7 +1042,7 @@ ALTER TABLE ONLY public."User"
     ADD CONSTRAINT "UserRoleId_UserRoleType" FOREIGN KEY ("UserRoleId") REFERENCES public."UserRoleType"("Id");
 
 
--- Completed on 2025-04-25 16:41:30
+-- Completed on 2025-04-26 17:52:12
 
 --
 -- PostgreSQL database dump complete
