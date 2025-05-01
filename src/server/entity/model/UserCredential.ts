@@ -1,4 +1,6 @@
-import {Column, DataType, Model, Table} from "sequelize-typescript";
+import {BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table} from "sequelize-typescript";
+import {Entity} from './Entity';
+import {User} from './User';
 
 @Table({
   modelName: 'UserCredential',
@@ -6,7 +8,7 @@ import {Column, DataType, Model, Table} from "sequelize-typescript";
   freezeTableName: true,
   timestamps: false
 })
-export class UserCredential extends Model {
+export class UserCredential extends Entity<UserCredential> {
 
   public constructor() {
     super();
@@ -20,6 +22,17 @@ export class UserCredential extends Model {
   public ctor() {
     return new UserCredential();
   }
+
+  public static fromLogon(userName:string, password:string) {
+    let result: UserCredential = new UserCredential();
+    result.User = new User();
+    result.User.Name = userName;
+    result.Password = password;
+    return result;
+  }
+
+  @BelongsTo(() => User, "UserId")
+  User!:User;
 
   @Column({
     type: DataType.INTEGER,
@@ -35,6 +48,7 @@ export class UserCredential extends Model {
     type: DataType.INTEGER,
     allowNull: false,
   })
+  @ForeignKey(() => User)
   get UserId():number { return this.getDataValue('UserId'); }
   set UserId(value: number) { this.setDataValue('UserId', value); }
 

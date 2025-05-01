@@ -1,4 +1,6 @@
-import {Column, DataType, Model, Table} from "sequelize-typescript";
+import {Column, DataType, HasMany, Model, Table} from "sequelize-typescript";
+import {Entity} from './Entity';
+import { Chat } from "./Chat";
 
 @Table({
   modelName: 'User',
@@ -6,7 +8,7 @@ import {Column, DataType, Model, Table} from "sequelize-typescript";
   freezeTableName: true,
   timestamps: false
 })
-export class User extends Model {
+export class User extends Entity<User> {
 
   constructor() {
     super();

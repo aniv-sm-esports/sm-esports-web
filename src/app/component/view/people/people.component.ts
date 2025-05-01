@@ -5,7 +5,7 @@ import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgIf, NgStyle} from '@angular/common';
 import {PagerComponent} from '../../control/primitive/pager.component';
-import {PageInfo} from '../../../model/service/page.model';
+import {PageData} from '../../../../server/model/page-data.model';
 
 @Component({
   selector: 'people',
@@ -69,7 +69,7 @@ export class PeopleComponent {
   }
 
   onPageChanged(pageNumber:number) {
-    this.userService.get(new PageInfo(this.pageNumber, this.pageSize));
+    this.userService.get(new PageData(this.pageNumber, this.pageSize));
   }
 
   getContainerHeight() {

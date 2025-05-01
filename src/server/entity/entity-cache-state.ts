@@ -1,9 +1,9 @@
-import {IRepositoryEntity} from './model/IRepositoryEntity';
 import { EntityCacheStateData } from './entity-cache-state-data';
 import {EntityCacheSearch} from './entity-cache-search';
 import {EntityCacheStateDiffer} from './entity-cache-state-differ';
+import { Entity } from './model/Entity';
 
-export class EntityCacheState<T extends IRepositoryEntity<T>> {
+export class EntityCacheState<T extends Entity<T>> {
 
   // Filters are applied globally for this repository instance. Spawn child repositories for filtering
   // parent ones from the database.
@@ -46,7 +46,7 @@ export class EntityCacheState<T extends IRepositoryEntity<T>> {
     });
   }
 
-  public static from<T extends IRepositoryEntity<T>>(data:EntityCacheStateData<T>) {
+  public static from<T extends Entity<T>>(data:EntityCacheStateData<T>) {
     return new EntityCacheState<T>(
       data.repositoryKey,
       data.entityName,

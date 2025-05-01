@@ -1,4 +1,11 @@
 import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import { Entity } from './Entity';
+
+export enum ArticleBannerLinkTypeEnum {
+  None = 0,
+  Image = 1,
+  YoutubeVideo
+}
 
 @Table({
   modelName: 'ArticleBannerLinkType',
@@ -6,7 +13,7 @@ import {Column, DataType, Model, Table} from 'sequelize-typescript';
   freezeTableName: true,
   timestamps: false
 })
-export class ArticleBannerLinkType extends Model {
+export class ArticleBannerLinkType extends Entity<ArticleBannerLinkType> {
 
   public constructor() {
     super();

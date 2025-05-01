@@ -77,14 +77,14 @@
 
     <div class="people-item"
          *ngFor="let person of this.peopleDataSource"
-         [ngClass]="{'board-member': person.personRole == PersonRoleType.BoardMember}">
+         [ngClass]="{'board-member': person.PersonRoleId == PersonRoleTypeEnum.BoardMember}">
       <div class="people-item-content">
         <div class="people-item-avatar-container">
           <sm-esports-avatar [size]="AvatarSize.Medium" [user]="person" />
         </div>
         <div class="people-item-text-container">
-          <h5>{{person.name}}<fa-icon [icon]="faCircle"></fa-icon></h5>
-          <h5>({{person.personRole}})</h5>
+          <h5>{{person.Name}}<fa-icon [icon]="faCircle"></fa-icon></h5>
+          <h5>({{person.PersonRoleId}})</h5>
         </div>
       </div>
     </div>

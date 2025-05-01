@@ -145,11 +145,11 @@
 
         <div class="user-banner">
           <h3 class="russo-one-regular">
-            <span class="user-descr-short">{{user.shortDescription}}</span>
+            <span class="user-descr-short">{{user.ShortDescription}}</span>
             <img src="metroid/metroid-angle-right.png"
                  alt="metroid/metroid-angle-right.png"
                  width="36" height="36" />
-            <span class="user-name">{{user.name}}</span>
+            <span class="user-name">{{user.Name}}</span>
             <div class="clear-fix"></div>
           </h3>
         </div>
@@ -159,11 +159,11 @@
             <div class="user-avatar">
               <sm-esports-avatar [user]="user" [size]="AvatarSize.Large" />
             </div>
-            <h5 class="person-role">{{user.personRole}}</h5>
-            <h5 class="user-email">{{user.email}}</h5>
+            <h5 class="person-role">{{user.PersonRoleId}}</h5>
+            <h5 class="user-email">{{user.Email}}</h5>
           </li>
           <li class="user-descr-long">
-            <p>{{user.longDescription}}</p>
+            <p>{{user.LongDescription}}</p>
           </li>
         </ul>
       }
@@ -174,22 +174,22 @@
             <img src="metroid/metroid-angle-left.png"
                  alt="metroid/metroid-angle-left.png"
                  width="36" height="36" />
-            <span class="user-name">{{user.name}}</span>
-            <span class="user-descr-short">{{user.shortDescription}}</span>
+            <span class="user-name">{{user.Name}}</span>
+            <span class="user-descr-short">{{user.ShortDescription}}</span>
             <div class="clear-fix"></div>
           </h3>
         </div>
 
         <ul class="user-content">
           <li class="user-descr-long">
-            <p>{{user.longDescription}}</p>
+            <p>{{user.LongDescription}}</p>
           </li>
           <li class="user-info">
             <div class="user-avatar">
               <sm-esports-avatar [user]="user" [size]="AvatarSize.Large" />
             </div>
-            <h5 class="person-role">{{user.personRole}}</h5>
-            <h5 class="user-email">{{user.email}}</h5>
+            <h5 class="person-role">{{user.PersonRoleId}}</h5>
+            <h5 class="user-email">{{user.Email}}</h5>
           </li>
         </ul>
       }

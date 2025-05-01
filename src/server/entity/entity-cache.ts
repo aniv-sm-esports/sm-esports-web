@@ -1,177 +1,93 @@
-import { IRepositoryEntity } from "./model/IRepositoryEntity";
-import {Callback, Predicate} from '../../app/model/service/handler.model';
-import {PageData} from '../../app/model/service/page.model';
-import {RepositoryPageAvailability} from '../../app/model/repository/repository.model';
 import {EntityCacheSearch, ServerSearchModelFilter} from './entity-cache-search';
 import {EntityCacheState} from './entity-cache-state';
 import {EntityCacheStateData} from './entity-cache-state-data';
+import { Entity } from './model/Entity';
+import {PageData} from '../model/page-data.model';
 
-export class EntityCache<T extends IRepositoryEntity<T>> {
+export enum EntityCachePageAvailability {
+  Invalid = 0,
+  None = 1,
+  Partial = 2,
+  Full = 3
+}
 
-  protected readonly entities:Array<T> = new Array<T>();
-  protected readonly entityMap:Map<number, T> = new Map();
-
-  protected lastModified: Date | undefined;
+// Design:  This component will serve as a base for either client / server entity transparent caching.
+//          Use the protected methods to handle the private cache.
+//
+export abstract class EntityCache<T extends Entity<T>> {
 
   protected state:EntityCacheState<T>;
+  private readonly entities:T[];
+  private readonly entityMap:Map<number, T>;
 
-  constructor(repositoryKey:string, entityName:string, search:EntityCacheSearch<T>, entities:Array<T>, isPrimary:boolean) {
-
-    // Load the repository with all filters applied
-    this.entities.forEach(entity => {
-      if (ServerSearchModelFilter.apply(entity, search)) {
-        this.entities.push(entity);
-        this.entityMap.set(entity.Id, entity);
-      }
-    });
+  protected constructor(repositoryKey:string, entityName:string, search:EntityCacheSearch<T>, isPrimary:boolean) {
+    this.entities = [];
+    this.entityMap = new Map<number, T>();
 
     // Initialize State
-    this.state = new EntityCacheState<T>(repositoryKey, entityName, isPrimary, this.entities.length, entities.length, search);
+    this.state = new EntityCacheState<T>(repositoryKey, entityName, isPrimary, 0, 0, search);
   }
 
+  // Returns an enum to indicate whether a full, partial, or (empty) page is
+  // currently available in a (valid) cache state. Returning Invalid implies
+  // that the page data request was not properly formed.
+  public abstract containsPage(pageData:PageData):EntityCachePageAvailability;
+
   // Returns a clone of the current state of the repository
-  cloneState() {
+  public cloneState() {
     return EntityCacheStateData.from<T>(this.state);
   }
 
-  getRecordCount() {
-    return this.entities.length;
-  }
-
-  // Returns true if this repository is out of date
-  getInvalid() {
+  public getInvalid() {
     return this.state.getInvalid();
   }
 
-  get(id:number) {
-
+  protected getCache() {
     if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
-    }
-
-    return this.entityMap.get(id);
-  }
-
-  getAll() {
-    if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return [];
+      throw new Error(`Error:  Trying to use EntityCache in an invalid state ${this.state.getEntityName()}`);
     }
 
     return this.entities;
   }
 
-  has(id:number) {
-
+  protected getCacheMap() {
     if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
+      throw new Error(`Error:  Trying to use EntityCache in an invalid state ${this.state.getEntityName()}`);
     }
 
-    return this.entityMap.has(id);
+    return this.entityMap;
   }
 
-  forEach(callback:Callback<T>){
+  protected cacheAppend(entity:T) {
     if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
+      throw new Error(`Error:  Trying to use EntityCache in an invalid state ${this.state.getEntityName()}`);
     }
 
-    return this.entities.forEach(callback);
+    if (this.entityMap.has(entity.Id)) {
+      throw new Error(`Error:  Trying to append duplicate entity ${this.state.getEntityName()}`);
+    }
+
+    this.entities.push(entity);
+    this.entityMap.set(entity.Id, entity);
   }
-
-  any(callback:Predicate<T>) {
-
+  protected cacheEvict(entity:T) {
     if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
+      throw new Error(`Error:  Trying to use EntityCache in an invalid state ${this.state.getEntityName()}`);
     }
 
-    return this.entities.some((item:T) => callback(item));
+    if (!this.entityMap.has(entity.Id)) {
+      throw new Error(`Error:  Trying to evice non-existent entity ${this.state.getEntityName()}`);
+    }
+
+    this.entities.filter(entity => entity.Id !== entity.Id);
+    this.entityMap.delete(entity.Id);
   }
-
-  first(callback:Predicate<T>) {
-
+  protected cacheClear() {
     if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
+      throw new Error(`Error:  Trying to use EntityCache in an invalid state ${this.state.getEntityName()}`);
     }
 
-    let filtered = this.entities.filter((item:T) => callback(item));
-
-    if (filtered && filtered.length > 0) {
-      return filtered[0];
-    }
-    else
-      return undefined;
+    this.entities.length = 0;
+    this.entityMap.clear();
   }
-
-  where(callback:Predicate<T>) {
-
-    if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
-    }
-
-    return this.entities.filter((item:T) => callback(item)) || [];
-  }
-
-  // Returns the availability of the repository for the requested page (given its last update)
-  contains(pageData:PageData) {
-
-    if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
-    }
-
-    let startIndex = (pageData.pageNumber - 1) * pageData.pageSize;
-    let endIndex = pageData.pageNumber * pageData.pageSize;
-
-    if (endIndex <= startIndex ||
-      endIndex < 0 ||
-      startIndex < 0) {
-      return RepositoryPageAvailability.Invalid;
-    }
-
-    if (this.entities.length - 1 < startIndex)
-      return RepositoryPageAvailability.None;
-
-    else if (this.entities.length - 1 < endIndex) {
-      return RepositoryPageAvailability.Partial;
-    }
-    else
-      return RepositoryPageAvailability.Full;
-  }
-
-  // Returns a page of entities corresponding to the requested page; and validates against
-  // the RepositoryState (missing id's + other state information)
-  //
-  getPage(pageData:PageData) {
-
-    let result:Array<T> = [];
-
-    if (this.state.getInvalid()) {
-      console.log(`Error: Trying to use repository when it is invalid (${this.state.getKey()})`);
-      return;
-    }
-
-    if (this.contains(pageData) === RepositoryPageAvailability.None ||
-      this.contains(pageData) === RepositoryPageAvailability.Invalid) {
-      console.log(`Error: Page data is not available in repository. Please query the server for update:  ${this.state.getKey()}`);
-      return;
-    }
-
-    let startIndex = (pageData.pageNumber - 1) * pageData.pageSize;
-    let endIndex = pageData.pageNumber * pageData.pageSize;
-
-    // Fulfill Request (may be partial)
-    //
-    for (let index= startIndex; (index < endIndex) && (index < this.entities.length); index++) {
-      result.push(this.entities[index]);
-    }
-
-    return result;
-  }
-
 }

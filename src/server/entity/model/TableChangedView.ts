@@ -1,5 +1,5 @@
 import {Column, DataType, Model, Table} from "sequelize-typescript";
-import {IRepositoryEntity} from './IRepositoryEntity';
+import {Entity} from './Entity';
 
 @Table({
   modelName: 'TableChangedView',
@@ -7,7 +7,7 @@ import {IRepositoryEntity} from './IRepositoryEntity';
   freezeTableName: true,
   timestamps: false
 })
-export class TableChangedView extends Model implements IRepositoryEntity<TableChangedView> {
+export class TableChangedView extends Entity<TableChangedView> {
 
   public constructor() {
     super();

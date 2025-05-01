@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../service/user.service';
-import {User} from '../../model/repository/entity/user.model';
 import {NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../service/app.service';
 import {ActivatedRoute, RouterLink, RouterLinkActive} from '@angular/router';
 import {ChatBoxComponent} from '../control/chatbox.component';
+import {User} from '../../../server/entity/model/User';
 
 @Component({
   selector: 'personal',
@@ -29,8 +29,8 @@ export class PersonalComponent {
 
     activatedRoute.params.subscribe(params => {
 
-      userService.getBy(user => user.name === params['userName']).then(users => {
-        this.person = users.find(user => user.name === params['userName']);
+      userService.getBy(user => user.Name === params['userName']).then(users => {
+        this.person = users.find(user => user.Name === params['userName']);
       });
     });
   }

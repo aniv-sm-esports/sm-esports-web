@@ -1,23 +1,23 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {Article} from '../model/repository/entity/article.model';
-import {RepositoryService} from './repository.service';
+import {EntityService} from './entity.service';
+import { Article } from '../../server/entity/model/Article';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NewsService extends RepositoryService<Article> {
+export class NewsService extends EntityService<Article> {
 
   // ALL POST ENDPOINTS
-  private readonly urlGet = "/api/news/get";
-  private readonly urlGetAll = "/api/news/getAll";
-  private readonly urlCreate = "/api/news/create";
-  private readonly urlGetRepositoryState = "/api/repository/news/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/news/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/news/setState";
+  private readonly urlGet = "/api/entity/article/get";
+  private readonly urlGetAll = "/api/entity/article/getAll";
+  private readonly urlCreate = "/api/entity/article/create";
+  private readonly urlGetRepositoryState = "/api/entity/article/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/article/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/article/setState";
 
   constructor(protected httpClient: HttpClient) {
-    super('Article', 'Article', httpClient, Article.default(), []);
+    super('Article', 'Article', httpClient, new Article(), []);
   }
 
   protected getEntityName(): string {

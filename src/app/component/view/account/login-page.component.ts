@@ -3,7 +3,7 @@ import {Location} from "@angular/common";
 import {Router} from '@angular/router';
 import {AppService} from '../../../service/app.service';
 import {LoginComponent} from '../../control/login.component';
-import {UserJWT} from '../../../model/service/user-logon.model';
+import {UserJWTClientDTO} from '../../../model/client-dto/UserJWTClientDTO';
 
 @Component({
   selector: 'login-page',
@@ -19,7 +19,7 @@ export class LoginPageComponent {
               protected readonly appService:AppService) {
   }
 
-  onLoginSubmit(userJWT:UserJWT) {
+  onLoginSubmit(userJWT:UserJWTClientDTO) {
     if (this.location) {
       this.location.back();
     }

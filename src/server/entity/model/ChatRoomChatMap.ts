@@ -1,4 +1,5 @@
 import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import {Entity} from './Entity';
 
 @Table({
   modelName: 'ChatRoomChatMap',
@@ -6,7 +7,7 @@ import {Column, DataType, Model, Table} from 'sequelize-typescript';
   freezeTableName: true,
   timestamps: false
 })
-export class ChatRoomChatMap extends Model {
+export class ChatRoomChatMap extends Entity<ChatRoomChatMap> {
 
   constructor(){
     super();

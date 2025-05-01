@@ -1,20 +1,22 @@
-import {ServerLocals} from '../server.application';
-import {NextFunction, Request, Response} from 'express-serve-static-core';
-import {AuthControllerName} from '../service/controller-const';
-import {AuthController} from '../controller/auth.controller';
-import { ControllerManagerService } from '../service/controller-manager.service';
-import {HttpMethod, MiddlewareBase} from './base.middleware';
+import {NextFunction, ParamsDictionary, Request, Response} from 'express-serve-static-core';
+import {HttpMethod} from './entity/entity.middleware';
+import {ServerExpressEntityRequest, ServerExpressEntityResponse, ServerExpressRequest, ServerExpressResponse} from '../server.definitions';
+import { ServerLogger } from '../server.logger';
 
-export class LoggerMiddleware extends MiddlewareBase {
+export class LoggerMiddleware {
 
-  constructor(controllerManagerService: ControllerManagerService, route:string, method:HttpMethod) {
-    super(controllerManagerService, route, method);
+  constructor(private readonly logger: ServerLogger) {
   }
 
-  public override apply(request: Request, response: Response, next:NextFunction) {
+  public logRequest(request: ServerExpressRequest<any, ParamsDictionary>, response: ServerExpressResponse<any>, next:NextFunction) {
 
-    console.log("Server Request:  " + request.url.toString());
+    this.logger.log("Server Request:  " + request.url.toString());
+    next();
+  }
 
+  public logEntityRequest(request: ServerExpressEntityRequest<any, ParamsDictionary>, response: ServerExpressEntityResponse<any>, next:NextFunction) {
+
+    this.logger.log("Server Request:  " + request.url.toString());
     next();
   }
 }

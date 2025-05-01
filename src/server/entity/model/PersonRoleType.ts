@@ -1,5 +1,11 @@
 import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table} from "sequelize-typescript";
 import {ModelAttributeColumnOptions} from 'sequelize';
+import {Entity} from './Entity';
+
+export enum PersonRoleTypeEnum {
+  GeneralUser = 0,
+  BoardMember = 1
+}
 
 @Table({
   modelName: 'PersonRoleType',
@@ -7,7 +13,7 @@ import {ModelAttributeColumnOptions} from 'sequelize';
   freezeTableName: true,
   timestamps: false
 })
-export class PersonRoleType extends Model {
+export class PersonRoleType extends Entity<PersonRoleType> {
 
   public constructor() {
     super();

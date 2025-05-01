@@ -1,6 +1,5 @@
 import {afterNextRender, Component, DestroyRef, HostListener, inject} from '@angular/core';
 import {UserService} from '../service/user.service';
-import {ApiResponseType, Size} from '../model/service/app.model';
 import {AppService} from '../service/app.service';
 import moment from 'moment';
 import {faBars, faCircle, faEnvelope} from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +16,7 @@ import {
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {concatAll, filter, map, switchMap, takeLast} from 'rxjs';
 import {Tab} from '../model/view/tab.model';
+import {Size} from '../model/utility/size.model';
 
 @Component({
   selector: 'app-root',

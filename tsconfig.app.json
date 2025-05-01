@@ -3,14 +3,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
+    "outDir": ".dist/sm-esports-web",
     "types": [
       "node"
     ]
   },
   "files": [
     "src/main.ts",
-    "src/main.server.ts",
     "src/server.ts"
   ],
   "include": [

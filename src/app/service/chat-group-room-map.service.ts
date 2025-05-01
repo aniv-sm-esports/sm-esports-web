@@ -1,26 +1,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ChatRoom} from '../model/repository/entity/chat-room.model';
-import {RepositoryService} from './repository.service';
-import {ActivatedRoute} from '@angular/router';
-import {ChatGroupRoomMap} from '../model/repository/entity/chat-group-room-map.model';
+import {EntityService} from './entity.service';
+import {ChatGroupRoomMap} from '../../server/entity/model/ChatGroupRoomMap';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatGroupRoomMapService extends RepositoryService<ChatGroupRoomMap> {
+export class ChatGroupRoomMapService extends EntityService<ChatGroupRoomMap> {
 
   // Chat API
   //
-  private readonly urlGet = "/api/chatGroupRoomMap/get";
-  private readonly urlGetAll = "/api/chatGroupRoomMap/getAll";
-  private readonly urlCreate = "/api/chatGroupRoomMap/create";
-  private readonly urlGetRepositoryState = "/api/repository/chatGroupRoomMap/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/chatGroupRoomMap/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/chatGroupRoomMap/setState";
+  private readonly urlGet = "/api/entity/chatGroupRoomMap/get";
+  private readonly urlGetAll = "/api/entity/chatGroupRoomMap/getAll";
+  private readonly urlCreate = "/api/entity/chatGroupRoomMap/create";
+  private readonly urlGetRepositoryState = "/api/entity/chatGroupRoomMap/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/chatGroupRoomMap/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/chatGroupRoomMap/setState";
 
   constructor(http: HttpClient) {
-    super('ChatGroupRoomMap', 'ChatGroupRoomMap', http, ChatGroupRoomMap.default(), []);
+    super('ChatGroupRoomMap', 'ChatGroupRoomMap', http, new ChatGroupRoomMap(), []);
   }
 
   protected getEntityName(): string {

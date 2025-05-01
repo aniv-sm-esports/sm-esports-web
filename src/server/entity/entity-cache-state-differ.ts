@@ -1,15 +1,15 @@
 import lodash from 'lodash';
 import moment from 'moment';
-import {IRepositoryEntity} from './model/IRepositoryEntity';
 import {EntityCacheSearch} from './entity-cache-search';
 import {EntityCacheState} from './entity-cache-state';
 import {EntityCacheStateData} from './entity-cache-state-data';
+import {Entity} from './model/Entity';
 
-export class EntityCacheStateDiffer<T extends IRepositoryEntity<T>> {
+export class EntityCacheStateDiffer<T extends Entity<T>> {
 
   // TODO: Get package component or use decorators for DTO classes
   //
-  public static objectDiff<T extends IRepositoryEntity<T>>(object1: T, object2: T): boolean {
+  public static objectDiff<T extends Entity<T>>(object1: T, object2: T): boolean {
 
     // CRITICAL*** Type is deceptive! The object prototype will show differences! So, most
     //             well written diff tools will catch them; and we just need property or
@@ -42,7 +42,7 @@ export class EntityCacheStateDiffer<T extends IRepositoryEntity<T>> {
   }
 
   // Diffs two filters - aware of JSON serialization incompleteness.
-  public static filterDiff<T extends IRepositoryEntity<T>>(filter:EntityCacheSearch<T>, otherFilter:EntityCacheSearch<T>){
+  public static filterDiff<T extends Entity<T>>(filter:EntityCacheSearch<T>, otherFilter:EntityCacheSearch<T>){
 
     let mapDiffers = false;
 
@@ -58,7 +58,7 @@ export class EntityCacheStateDiffer<T extends IRepositoryEntity<T>> {
   }
 
   // Diffs two filters - aware of JSON serialization incompleteness.
-  public static filterDataDiff<T extends IRepositoryEntity<T>>(filterSearch:T,
+  public static filterDataDiff<T extends Entity<T>>(filterSearch:T,
                                                            filterSearchSettings: string[],
                                                            otherFilterSearch:T,
                                                            otherFilterSearchSettings:string[]){
@@ -81,7 +81,7 @@ export class EntityCacheStateDiffer<T extends IRepositoryEntity<T>> {
 
   // Returns true if repository states differ; and must be matched before updating
   // data.
-  public static stateDiff<T extends IRepositoryEntity<T>>(state:EntityCacheState<T>, otherState:EntityCacheState<T>) {
+  public static stateDiff<T extends Entity<T>>(state:EntityCacheState<T>, otherState:EntityCacheState<T>) {
     return state.getKey() !== otherState.getKey() ||
       state.getEntityName() !== otherState.getEntityName() ||
       state.getUnFilteredRecordCapacity() !== otherState.getUnFilteredRecordCapacity() ||
@@ -91,7 +91,7 @@ export class EntityCacheStateDiffer<T extends IRepositoryEntity<T>> {
 
   // Returns true if repository states differ; and must be matched before updating
   // data.
-  public static stateDataDiff<T extends IRepositoryEntity<T>>(serverState:EntityCacheStateData<T>, clientState:EntityCacheStateData<T>) {
+  public static stateDataDiff<T extends Entity<T>>(serverState:EntityCacheStateData<T>, clientState:EntityCacheStateData<T>) {
 
     return serverState.repositoryKey !== clientState.repositoryKey ||
       serverState.entityName !== clientState.entityName ||

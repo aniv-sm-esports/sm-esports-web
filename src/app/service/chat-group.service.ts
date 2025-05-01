@@ -1,25 +1,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {RepositoryService} from './repository.service';
-import {ActivatedRoute} from '@angular/router';
-import {ChatGroup} from '../model/repository/entity/chat-group.model';
+import {EntityService} from './entity.service';
+import {ChatGroup} from '../../server/entity/model/ChatGroup';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatGroupService extends RepositoryService<ChatGroup> {
+export class ChatGroupService extends EntityService<ChatGroup> {
 
   // Chat API
   //
-  private readonly urlGet = "/api/chatGroup/get";
-  private readonly urlGetAll = "/api/chatGroup/getAll";
-  private readonly urlCreate = "/api/chatGroup/create";
-  private readonly urlGetRepositoryState = "/api/repository/chatGroup/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/chatGroup/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/chatGroup/setState";
+  private readonly urlGet = "/api/entity/chatGroup/get";
+  private readonly urlGetAll = "/api/entity/chatGroup/getAll";
+  private readonly urlCreate = "/api/entity/chatGroup/create";
+  private readonly urlGetRepositoryState = "/api/entity/chatGroup/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/chatGroup/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/chatGroup/setState";
 
   constructor(http: HttpClient) {
-    super('ChatGroup', 'ChatGroup', http, ChatGroup.default(), []);
+    super('ChatGroup', 'ChatGroup', http, new ChatGroup(), []);
   }
 
   protected getEntityName(): string {

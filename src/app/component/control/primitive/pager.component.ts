@@ -1,11 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {RepositoryState} from '../../../model/repository/repository-state.model';
-import { RepositoryEntity } from '../../../model/repository/repository-entity';
-import { PageInfo } from '../../../model/service/page.model';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 import {faAnglesLeft, faAngleLeft, faAngleRight, faAnglesRight} from '@fortawesome/free-solid-svg-icons';
-import {RepositoryStateData} from '../../../model/repository/repository-state-data.model';
 import {FormsModule} from '@angular/forms';
+import {Entity} from '../../../../server/entity/model/Entity';
 
 @Component({
   selector: "pager",
@@ -15,7 +12,7 @@ import {FormsModule} from '@angular/forms';
   ],
   templateUrl: "../../template/control/primitive/pager.component.html"
 })
-export class PagerComponent<T extends RepositoryEntity> {
+export class PagerComponent<T extends Entity<T>> {
 
   @Input('page-number') pageNumber!: number;
   @Input('page-number-last') pageNumberLast!: number;

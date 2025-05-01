@@ -1,12 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {RepositoryEntity} from '../model/repository/repository-entity';
-import lodash from 'lodash';
+import {Entity} from '../../server/entity/model/Entity';
 
 @Pipe({
   name: 'select',
   pure: false
 })
-export class SelectPipe<T extends RepositoryEntity, TResult> implements PipeTransform {
+export class SelectPipe<T extends Entity<T>, TResult> implements PipeTransform {
 
   transform(items: T[], key:keyof T) : TResult[] {
     if (!items) {

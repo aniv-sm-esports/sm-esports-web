@@ -1,16 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {SearchModel, SearchModelFilter} from '../model/repository/search.model'
-import {RepositoryEntity} from '../model/repository/repository-entity';
+import {Entity} from '../../server/entity/model/Entity';
+import {EntityCacheSearch, ServerSearchModelFilter} from '../../server/entity/entity-cache-search';
 
 @Pipe({
   name: 'userSearch',
   pure: false
 })
-export class UserSearchPipe<T extends RepositoryEntity> implements PipeTransform {
+export class UserSearchPipe<T extends Entity<T>> implements PipeTransform {
 
   private propertyNames: string[] = [];
 
-  transform(items: T[], filter: SearchModel<T>): any {
+  transform(items: T[], filter: EntityCacheSearch<T>): any {
     if (!items || !filter) {
       return items;
     }
@@ -18,7 +18,7 @@ export class UserSearchPipe<T extends RepositoryEntity> implements PipeTransform
     // filter items array, items which match and return true will be
     // kept, false will be filtered out
     return items.filter(item => {
-      return SearchModelFilter.apply(item, filter as SearchModel<T>);
+      return ServerSearchModelFilter.apply(item, filter as EntityCacheSearch<T>);
     });
   }
 }

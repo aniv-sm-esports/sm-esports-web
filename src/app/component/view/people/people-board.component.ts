@@ -1,13 +1,12 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {PersonRoleType, User} from '../../../model/repository/entity/user.model';
 import {NgForOf, NgIf, NgOptimizedImage, NgStyle} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
-import {PageData} from '../../../model/service/page.model';
-import {SearchModel} from '../../../model/repository/search.model';
 import {UserSearchPipe} from '../../../pipe/user-search.pipe';
+import {User} from '../../../../server/entity/model/User';
+import {PersonRoleTypeEnum} from '../../../../server/entity/model/PersonRoleType';
 
 @Component({
   selector: 'people-board',
@@ -48,7 +47,7 @@ export class PeopleBoardComponent {
   }
 
   reload() {
-    this.userService.getBy(user => user.personRole === PersonRoleType.BoardMember)
+    this.userService.getBy(user => user.PersonRoleId === PersonRoleTypeEnum.BoardMember)
       .then(users => {
         this.people = users;
       });

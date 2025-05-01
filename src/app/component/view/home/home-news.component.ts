@@ -1,13 +1,12 @@
 import {afterNextRender, Component, inject} from '@angular/core';
-import {BannerLinkType, Article} from '../../../model/repository/entity/article.model';
 import {NewsService} from '../../../service/news.service';
 import {NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AppService} from '../../../service/app.service';
-import {Size} from '../../../model/service/app.model';
 import {YouTubePlayer} from '@angular/youtube-player';
-import {PageData} from '../../../model/service/page.model';
-import moment from 'moment';
+import {Article} from '../../../../server/entity/model/Article';
+import {Size} from '../../../model/utility/size.model';
+import {ArticleBannerLinkTypeEnum} from '../../../../server/entity/model/ArticleBannerLinkType';
 
 @Component({
   selector: 'news',
@@ -29,6 +28,8 @@ export class HomeNewsComponent {
   private readonly clientSizeBase: Size = Size.from(1200, 600)
   public readonly videoSizeBase: Size = Size.from(640, 320);
   public sizeMultiplier: number = 1;
+
+  protected readonly ArticleBannerLinkTypeEnum = ArticleBannerLinkTypeEnum;
 
   constructor(appService: AppService, newsService:NewsService) {
     this.appService = appService;
@@ -92,6 +93,4 @@ export class HomeNewsComponent {
       this.newsList.push(item);
     });
   }
-
-  protected readonly BannerLinkType = BannerLinkType;
 }

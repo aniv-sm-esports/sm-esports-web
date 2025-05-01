@@ -8,11 +8,11 @@
      [ngStyle]="{'width': this.getSize().width + 'px',
                  'height': this.getSize().height + 'px'}">
 
-    @if (!this.user.isMockAccount) {
+    @if (!!this.user.PictureUrl) {
       <img [width]="this.getSize().width"
            [height]="this.getSize().height"
-           [ngSrc]="this.user.pictureUrl"
-           [routerLink]="'/personal/' + this.user.name"/>
+           [ngSrc]="this.user.PictureUrl"
+           [routerLink]="'/personal/' + this.user.Name"/>
     }
     @else {
       <canvas waCanvas2d

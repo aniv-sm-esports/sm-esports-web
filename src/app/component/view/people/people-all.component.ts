@@ -1,20 +1,19 @@
 import {Component} from '@angular/core';
 import {UserService} from '../../../service/user.service';
-import {PersonRoleType, User} from '../../../model/repository/entity/user.model';
 import {NgClass, NgForOf, NgStyle, SlicePipe} from '@angular/common';
 import {AppService} from '../../../service/app.service';
 import {Router} from '@angular/router';
 import {AvatarComponent, AvatarSize} from '../../control/avatar.component';
-import {PageData, PageInfo} from '../../../model/service/page.model';
-import {SearchModel} from '../../../model/repository/search.model';
-import {ApiResponseType} from '../../../model/service/app.model';
 import {faCircle} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 import {UserSearchPipe} from '../../../pipe/user-search.pipe';
 import {SlicePipeTyped} from '../../../pipe/slice-typed.pipe';
-import {EntityDataSource} from '../../datasource/entity.datasource';
 import {CdkFixedSizeVirtualScroll, CdkVirtualForOf, ScrollingModule} from '@angular/cdk/scrolling';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {User} from '../../../../server/entity/model/User';
+import {EntityCacheSearch} from '../../../../server/entity/entity-cache-search';
+import {PageData} from '../../../../server/model/page-data.model';
+import {PersonRoleType, PersonRoleTypeEnum} from '../../../../server/entity/model/PersonRoleType';
 
 @Component({
   selector: 'people-all',
@@ -40,17 +39,17 @@ export class PeopleAllComponent {
 
   protected readonly faCircle = faCircle;
   protected readonly AvatarSize = AvatarSize;
-  protected readonly PersonRoleType = PersonRoleType;
+  protected readonly PersonRoleTypeEnum = PersonRoleTypeEnum;
 
-  protected peopleBoardSearch:SearchModel<User>;
-  protected peopleGeneralSearch:SearchModel<User>;
+  protected peopleBoardSearch:EntityCacheSearch<User>;
+  protected peopleGeneralSearch:EntityCacheSearch<User>;
 
   constructor(protected readonly appService:AppService,
               protected readonly userService:UserService,
               protected readonly router: Router) {
 
-    this.peopleBoardSearch = new SearchModel<User>({ "personRole": PersonRoleType.BoardMember } as User, ["personRole"]);
-    this.peopleGeneralSearch = new SearchModel<User>({ "personRole": PersonRoleType.GeneralUser } as User, ["personRole"]);
+    this.peopleBoardSearch = new EntityCacheSearch<User>({ "PersonRoleId": PersonRoleTypeEnum.BoardMember } as User, ["PersonRoleId"]);
+    this.peopleGeneralSearch = new EntityCacheSearch<User>({ "PersonRoleId": PersonRoleTypeEnum.GeneralUser } as User, ["PersonRoleId"]);
 
     //this.userService.resetSearch();
 
@@ -63,7 +62,7 @@ export class PeopleAllComponent {
   }
 
   reload() {
-    this.userService.get(PageInfo.first(50))
+    this.userService.get(new PageData(1, 50))
         .then(users => {
           this.peopleDataSource = users;
         });

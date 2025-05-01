@@ -1,25 +1,25 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ChatRoom} from '../model/repository/entity/chat-room.model';
-import {RepositoryService} from './repository.service';
+import {EntityService} from './entity.service';
 import {ActivatedRoute} from '@angular/router';
+import {ChatRoom} from '../../server/entity/model/ChatRoom';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatRoomService extends RepositoryService<ChatRoom> {
+export class ChatRoomService extends EntityService<ChatRoom> {
 
   // Chat API
   //
-  private readonly urlGet = "/api/chatRoom/get";
-  private readonly urlGetAll = "/api/chatRoom/getAll";
-  private readonly urlCreate = "/api/chatRoom/create";
-  private readonly urlGetRepositoryState = "/api/repository/chatRoom/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/chatRoom/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/chatRoom/setState";
+  private readonly urlGet = "/api/entity/chatRoom/get";
+  private readonly urlGetAll = "/api/entity/chatRoom/getAll";
+  private readonly urlCreate = "/api/entity/chatRoom/create";
+  private readonly urlGetRepositoryState = "/api/entity/chatRoom/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/chatRoom/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/chatRoom/setState";
 
   constructor(http: HttpClient, protected activatedRoute: ActivatedRoute) {
-    super('ChatRoom', 'ChatRoom', http, ChatRoom.default(), []);
+    super('ChatRoom', 'ChatRoom', http, new ChatRoom(), []);
   }
 
   protected getEntityName(): string {

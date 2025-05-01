@@ -1,15 +1,16 @@
-import { ChatCategory } from "../../../model/repository/entity/chat-category.model";
-import {ChatGroup} from '../../../model/repository/entity/chat-group.model';
-import {ChatRoom} from '../../../model/repository/entity/chat-room.model';
 
 // TEMPORARY VIEW OBJECT (flattened table object, TBD)
+import {ChatCategory} from '../../../../server/entity/model/ChatCategory';
+import {ChatGroup} from '../../../../server/entity/model/ChatGroup';
+import {ChatRoom} from '../../../../server/entity/model/ChatRoom';
+
 export class ChatComponentViewModel {
   chatCategories:ChatCategoryViewModel[] = [];
   selectedChatRoom:ChatRoomViewModel | undefined;
 }
 export class ChatCategoryViewModel {
 
-  category: ChatCategory = ChatCategory.default();
+  category: ChatCategory = new ChatCategory();
   groups: ChatGroupViewModel[] = [];
   expanded:boolean = false;
   selected:boolean = false;
@@ -21,7 +22,7 @@ export class ChatCategoryViewModel {
 }
 
 export class ChatGroupViewModel {
-  group: ChatGroup = ChatGroup.default();
+  group: ChatGroup = new ChatGroup();
   rooms: ChatRoomViewModel[] = [];
   expanded:boolean = false;
   selected: boolean = false;
@@ -33,7 +34,7 @@ export class ChatGroupViewModel {
 }
 
 export class ChatRoomViewModel {
-  room:ChatRoom = ChatRoom.default();
+  room:ChatRoom = new ChatRoom();
   selected:boolean = false;
 
   constructor(room:ChatRoom) {

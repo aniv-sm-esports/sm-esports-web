@@ -6,7 +6,9 @@ export const serverRoutes: ServerRoute[] = [
   { path:"home",  renderMode: RenderMode.Client },
   { path:"home/news",  renderMode: RenderMode.Client },
   { path:"people",  renderMode: RenderMode.Client },
-  { path:"personal/:userName",  renderMode: RenderMode.Client },
+  //{ path:"personal/:userName",  renderMode: RenderMode.Client, getPrerenderParams: () => {
+  //    return '';
+  //  }},
   { path:"chat",  renderMode: RenderMode.Client },
   { path:"chat/chatRooms", renderMode: RenderMode.Client },
   { path:"chat/management", renderMode: RenderMode.Client },

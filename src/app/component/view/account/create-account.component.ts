@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {UserJWT} from '../../../model/service/user-logon.model';
 import {AuthService} from '../../../service/auth.service';
 import {FormsModule} from '@angular/forms';
 import {BasicButtonComponent} from '../../control/primitive/button.component';
@@ -12,6 +11,7 @@ import {AuthHandler} from '../../../model/service/handler.model';
 import {UserCreation} from '../../../model/view/user-creation.model';
 import {NotifyComponent} from '../../control/notify.component';
 import {NotifySeverity, NotifyType} from '../../../model/service/notify.model';
+import {UserJWT} from '../../../../server/entity/model/UserJWT';
 
 @Component({
   selector: 'create-account',
@@ -89,19 +89,21 @@ export class CreateAccountComponent implements AuthHandler {
       .createUser(this.userCreation)    // Emitted value
       .subscribe(response => {
 
-        this.userCreation.update(response);
+        let creation = response.responseData.data[0] as UserCreation;
+
+        this.userCreation.update(creation);
 
         // Success
-        if (response.passwordInvalid ||
-            response.emailInvalid ||
-            response.userNameInvalid){
+        if (creation.passwordInvalid ||
+          creation.emailInvalid ||
+          creation.userNameInvalid){
           this.userCreationGeneralError = false;
           this.userCreationGeneralErrorMessage = '';
 
-          this.authService.logon(response.userName, response.password);
+          this.authService.logon(creation.userName, creation.password);
         }
         else {
-          this.userCreationGeneralError = !response.userNameInvalid && !response.passwordInvalid && !response.emailInvalid;
+          this.userCreationGeneralError = !creation.userNameInvalid && !creation.passwordInvalid && !creation.emailInvalid;
           this.userCreationGeneralErrorMessage = 'General Error: Please contact admin';
         }
       });

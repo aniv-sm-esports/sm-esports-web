@@ -1,26 +1,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ChatRoom} from '../model/repository/entity/chat-room.model';
-import {RepositoryService} from './repository.service';
-import {ActivatedRoute} from '@angular/router';
-import {ChatCategoryGroupMap} from '../model/repository/entity/chat-category-group-map.model';
+import {EntityService} from './entity.service';
+import {ChatCategoryGroupMap} from '../../server/entity/model/ChatCategoryGroupMap';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatCategoryGroupMapService extends RepositoryService<ChatCategoryGroupMap> {
+export class ChatCategoryGroupMapService extends EntityService<ChatCategoryGroupMap> {
 
   // Chat API
   //
-  private readonly urlGet = "/api/chatCategoryGroupMap/get";
-  private readonly urlGetAll = "/api/chatCategoryGroupMap/getAll";
-  private readonly urlCreate = "/api/chatCategoryGroupMap/create";
-  private readonly urlGetRepositoryState = "/api/repository/chatCategoryGroupMap/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/chatCategoryGroupMap/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/chatCategoryGroupMap/setState";
+  private readonly urlGet = "/api/entity/chatCategoryGroupMap/get";
+  private readonly urlGetAll = "/api/entity/chatCategoryGroupMap/getAll";
+  private readonly urlCreate = "/api/entity/chatCategoryGroupMap/create";
+  private readonly urlGetRepositoryState = "/api/entity/chatCategoryGroupMap/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/chatCategoryGroupMap/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/chatCategoryGroupMap/setState";
 
   constructor(http: HttpClient) {
-    super('ChatCategoryGroupMap', 'ChatCategoryGroupMap', http, ChatCategoryGroupMap.default(), []);
+    super('ChatCategoryGroupMap', 'ChatCategoryGroupMap', http, new ChatCategoryGroupMap(), []);
   }
 
   protected getEntityName(): string {

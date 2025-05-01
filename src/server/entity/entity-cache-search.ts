@@ -1,8 +1,8 @@
 import lodash from 'lodash';
 import {BehaviorSubject} from 'rxjs';
-import {IRepositoryEntity} from './model/IRepositoryEntity';
+import { Entity } from './model/Entity';
 
-export class EntityCacheSearch<T extends IRepositoryEntity<T>> {
+export class EntityCacheSearch<T extends {}> {
 
   public searchSettings: Map<string, boolean>;
   public search: T;
@@ -81,9 +81,9 @@ export class EntityCacheSearch<T extends IRepositoryEntity<T>> {
 }
 
 // TODO: Move this to a global object extension
-export class ServerSearchModelFilter<T extends IRepositoryEntity<T>> {
+export class ServerSearchModelFilter<T extends Entity<T>> {
 
-  public static apply<T extends IRepositoryEntity<T>>(entity:T, filter:EntityCacheSearch<T>) {
+  public static apply<T extends Entity<T>>(entity:T, filter:EntityCacheSearch<T>) {
 
     let success = true;
 

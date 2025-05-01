@@ -1,5 +1,5 @@
-import {UserJWT} from './user-logon.model';
 import {Moment} from 'moment';
+import {UserJWT} from '../../../server/entity/model/UserJWT';
 
 export interface AuthHandler {
   onLoginChanged: (value: UserJWT) => void  //defining the callback

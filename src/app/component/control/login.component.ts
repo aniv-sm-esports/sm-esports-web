@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {UserCredentials, UserJWT} from '../../model/service/user-logon.model';
 import {AuthService} from '../../service/auth.service';
-import {UserService} from '../../service/user.service';
 import {FormsModule} from '@angular/forms';
 import {BasicButtonComponent} from './primitive/button.component';
 import {AppService} from '../../service/app.service';
 import {Router, RouterLink} from '@angular/router';
 import {noop} from 'rxjs';
 import {AuthHandler} from '../../model/service/handler.model';
-import {UserCreation} from '../../model/view/user-creation.model';
+import {UserCredentialClientDTO} from '../../model/client-dto/UserCredentialClientDTO';
+import {UserJWTClientDTO} from '../../model/client-dto/UserJWTClientDTO';
+import {UserJWT} from '../../../server/entity/model/UserJWT';
 
 @Component({
   selector: 'login',
@@ -21,11 +21,11 @@ import {UserCreation} from '../../model/view/user-creation.model';
 })
 export class LoginComponent implements AuthHandler {
 
-  @Output('formFinished') formFinished: EventEmitter<UserJWT> = new EventEmitter();
+  @Output('formFinished') formFinished: EventEmitter<UserJWTClientDTO> = new EventEmitter();
 
   protected readonly noop = noop;
 
-  public userLogon:UserCredentials = new UserCredentials();
+  public userLogon:UserCredentialClientDTO = new UserCredentialClientDTO();
   public userFormValid: boolean = false;
 
   constructor(protected readonly appService:AppService,
@@ -35,22 +35,18 @@ export class LoginComponent implements AuthHandler {
     this.authService.subscribeLogonChanged(this);
   }
 
+  // Server Subscription
   onLoginChanged(value:UserJWT) {
-
-    if (value) {
-      // Notify Listener(s)
-      this.formFinished.emit(value);
-    }
-    else {
-      return;
-    }
+    // Nothing to do. Other listeners will handle navigation
   }
 
   login(){
 
     // Already Logged On
-    if (this.appService.primaryUserLoggedOn)
-      this.formFinished.emit(this.appService.primaryUserLogon);
+    if (this.appService.primaryUserLoggedOn) {
+      console.log("User Already Logged On");
+      return;
+    }
 
     // Logon Mode + User Form Valid -> Logon
     //

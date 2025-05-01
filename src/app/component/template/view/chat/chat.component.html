@@ -119,20 +119,20 @@
     <div class="chat-category-item"
          *ngFor="let category of this.viewModel.chatCategories">
 
-      <h3 (click)="category.expanded = !category.expanded">{{category.category.name}}<span class="chat-tree-expander"
+      <h3 (click)="category.expanded = !category.expanded">{{category.category.Name}}<span class="chat-tree-expander"
                                           [textContent]="!category.expanded ? '+' : '-'"></span></h3>
 
       @if (category.expanded) {
         <div class="chat-group-item"
              *ngFor="let group of category.groups">
-          <h4 (click)="group.expanded = !group.expanded">{{group.group.name}}<span class="chat-tree-expander"
+          <h4 (click)="group.expanded = !group.expanded">{{group.group.Name}}<span class="chat-tree-expander"
                                                                                    [textContent]="!group.expanded ? '+' : '-'"></span></h4>
 
           @if(group.expanded) {
             <div class="chat-room-item"
                  *ngFor="let room of group.rooms">
               <h5 (click)="this.selectChatRoom(room.room.id)"
-                  [ngClass]="{'selected': room.room.id === this.viewModel.selectedChatRoom?.room?.id}">{{room.room.name}}</h5>
+                  [ngClass]="{'selected': room.room.id === this.viewModel.selectedChatRoom?.room?.id}">{{room.room.Name}}</h5>
             </div>
           }
 

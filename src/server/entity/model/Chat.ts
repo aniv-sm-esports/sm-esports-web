@@ -1,4 +1,6 @@
-import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import {BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table} from 'sequelize-typescript';
+import {Entity} from './Entity';
+import {User} from './User';
 
 @Table({
   modelName: 'Chat',
@@ -6,7 +8,7 @@ import {Column, DataType, Model, Table} from 'sequelize-typescript';
   freezeTableName: true,
   timestamps: false
 })
-export class Chat extends Model {
+export class Chat extends Entity<Chat> {
 
   constructor() {
     super();
@@ -15,6 +17,9 @@ export class Chat extends Model {
   public ctor() {
     return new Chat();
   }
+
+  @BelongsTo(() => User, "UserId")
+  User!:User;
 
   @Column({
     type: DataType.INTEGER,
@@ -30,6 +35,7 @@ export class Chat extends Model {
     type: DataType.NUMBER,
     allowNull: false,
   })
+  @ForeignKey(() => User)
   get UserId():number { return this.getDataValue('UserId'); }
   set UserId(value: number) { this.setDataValue('UserId', value); }
 
@@ -44,8 +50,8 @@ export class Chat extends Model {
     type: DataType.DATE,
     allowNull: false
   })
-  get Date():number { return this.getDataValue('Date'); }
-  set Date(value: number) { this.setDataValue('Date', value); }
+  get Date():Date { return this.getDataValue('Date'); }
+  set Date(value: Date) { this.setDataValue('Date', value); }
 
   @Column({
     type: DataType.BOOLEAN,

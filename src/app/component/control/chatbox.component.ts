@@ -1,15 +1,15 @@
 import {Component, Input, SimpleChanges} from '@angular/core';
 import {ChatService} from '../../service/chat.service';
-import {ChatRoom} from '../../model/repository/entity/chat-room.model';
 import {FormsModule} from '@angular/forms';
 import {formatDate, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
-import {Chat} from '../../model/repository/entity/chat.model';
 import {noop} from 'rxjs';
 import {BasicButtonComponent} from './primitive/button.component';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import {ChatRoomService} from '../../service/chat-room.service';
 import {AppService} from '../../service/app.service';
+import {ChatRoom} from '../../../server/entity/model/ChatRoom';
+import {Chat} from '../../../server/entity/model/Chat';
 
 @Component({
   selector: 'chatbox',
@@ -51,7 +51,7 @@ export class ChatBoxComponent {
     this.chatServiceLoaded = false;
 
     // Must retrieve data from server
-    this.chatRoom = ChatRoom.default();
+    this.chatRoom = new ChatRoom();
   }
 
   // Lifecycle Hook:  Check for chatRoomId
@@ -90,7 +90,7 @@ export class ChatBoxComponent {
     }
   }
 
-  submitChat() {
+  public async submitChat() {
 
     if (!this.chatInput ||
         !this.chatServiceLoaded ||
@@ -98,12 +98,19 @@ export class ChatBoxComponent {
       return;
     }
 
-    this.chatService?.create(Chat.fromUserJWT(this.appService.primaryUserLogon, this.chatInput))
-        .then(response => {
-            this.chatInput = '';
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    let chat = new Chat();
+    chat.Date = new Date();
+    chat.UserId = this.appService.primaryUserLogon.UserId;
+    chat.Text = this.chatInput;
+    chat.Flagged = false;
+    chat.FlaggedComments = '';
+
+    await this.chatService?.create(chat)
+              .then(response => {
+                  this.chatInput = '';
+              })
+              .catch(error => {
+                console.log(error);
+              });
   }
 }

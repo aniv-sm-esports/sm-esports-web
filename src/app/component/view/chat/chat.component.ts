@@ -8,13 +8,9 @@ import {ChatCategoryViewModel, ChatComponentViewModel, ChatGroupViewModel, ChatR
 import {ChatBoxComponent} from '../../control/chatbox.component';
 import {NgClass, NgForOf, NgStyle} from '@angular/common';
 import {GroupByFirstPipe} from '../../../pipe/group-by-first.pipe';
-import {Selector} from '../../../model/service/handler.model';
 import { AppService } from '../../../service/app.service';
-import {ChatCategory} from '../../../model/repository/entity/chat-category.model';
-import {ChatRoom} from '../../../model/repository/entity/chat-room.model';
 import {GroupByGroupPipe} from '../../../pipe/group-by-group';
 import {WherePipe} from '../../../pipe/where';
-import {ChatGroup} from '../../../model/repository/entity/chat-group.model';
 import {RouterLink} from '@angular/router';
 import lodash from 'lodash';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
@@ -58,17 +54,17 @@ export class ChatComponent {
               rooms.forEach(room => {
                 groupRooms
                   .filter(map => {
-                    return map.chatRoomId == room.id;
+                    return map.ChatRoomId == room.Id;
                   })
                   .forEach(map => {
                     categoryGroups
                       .filter(categoryMap => {
-                        return categoryMap.chatGroupId == map.chatGroupId
+                        return categoryMap.ChatGroupId == map.ChatGroupId
                       })
                       .forEach(categoryMap => {
 
-                        let category = categories.find(x => x.id === categoryMap.chatCategoryId);
-                        let group = groups.find(x => x.id === categoryMap.chatGroupId);
+                        let category = categories.find(x => x.id === categoryMap.ChatCategoryId);
+                        let group = groups.find(x => x.id === categoryMap.ChatGroupId);
 
                         if (!room || !group || !category) {
                           console.log("Error: Mismatched chat data!");

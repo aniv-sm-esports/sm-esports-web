@@ -79,25 +79,25 @@
          *ngFor="let news of newsList;index as i">
 
       <div class="news-article-header">
-        <h3 class="russo-one-regular">{{news.title}}</h3>
-        <h4>{{news.date.toString()}}</h4>
+        <h3 class="russo-one-regular">{{news.Title}}</h3>
+        <h4>{{news.Date.toString()}}</h4>
 
         <div class="clear-fix"></div>
       </div>
 
       <!-- Article (Plain) -->
-      <div class="news-article-content" *ngIf="news.bannerLinkType == BannerLinkType.None">
+      <div class="news-article-content" *ngIf="news.BannerLinkTypeId == ArticleBannerLinkTypeEnum.None">
 
           <div class="news-article-description">
-            <h4>{{news.description}}</h4>
+            <h4>{{news.Description}}</h4>
           </div>
 
-          <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+          <div class="news-article-body" [innerHTML]="news.Body"></div>
 
       </div>
 
       <!-- Article + Img -->
-      <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.Img">
+      <div class="news-article-content-flex" *ngIf="news.BannerLinkTypeId == ArticleBannerLinkTypeEnum.Image">
 
         <div class="news-article-left">
           <img />
@@ -105,19 +105,19 @@
 
         <div class="news-article-right">
           <div class="news-article-description">
-            <h4>{{news.description}}</h4>
+            <h4>{{news.Description}}</h4>
           </div>
-          <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+          <div class="news-article-body" [innerHTML]="news.Body"></div>
         </div>
 
         <div class="clear-fix"></div>
       </div>
 
       <!-- Article + Youtube Video -->
-      <div class="news-article-content-flex" *ngIf="news.bannerLinkType == BannerLinkType.YoutubeVideo">
+      <div class="news-article-content-flex" *ngIf="news.BannerLinkTypeId == ArticleBannerLinkTypeEnum.YoutubeVideo">
 
         <div class="news-article-left">
-          <youtube-player [videoId]="news.bannerLinkYoutubeSourceId"
+          <youtube-player [videoId]="news.BannerYoutubeSourceId"
                           [width]="(videoSizeBase.width * this.sizeMultiplier) || videoSizeBase.width"
                           [height]="(videoSizeBase.height * this.sizeMultiplier) || videoSizeBase.height"
                           (ready)="refreshYoutube()">
@@ -126,9 +126,9 @@
 
         <div class="news-article-right">
           <div class="news-article-description">
-            <h4>{{news.description}}</h4>
+            <h4>{{news.Description}}</h4>
           </div>
-          <div class="news-article-body" [innerHTML]="news.bodyHtml"></div>
+          <div class="news-article-body" [innerHTML]="news.Body"></div>
         </div>
 
         <div class="clear-fix"></div>

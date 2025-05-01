@@ -124,11 +124,11 @@
 
       <tbody [ngStyle]="{'height': this.appService.getBodySize().height + 'px'}">
         <tr *ngFor="let entity of this.dataSource;">
-          <td><fa-icon [icon]="faCircle"></fa-icon>{{entity.name}}</td>
-          <td>{{entity.email}}</td>
-          <td>{{entity.shortDescription}}</td>
-          <td><div [ngStyle]="{'color': entity.personRole === PersonRoleType.BoardMember ? 'rgb(134,134,255)' : '#AAA'}"> {{entity.personRole}}</div></td>
-          <td>{{entity.userRole}}</td>
+          <td><fa-icon [icon]="faCircle"></fa-icon>{{entity.Name}}</td>
+          <td>{{entity.Email}}</td>
+          <td>{{entity.ShortDescription}}</td>
+          <td><div [ngStyle]="{'color': entity.PersonRoleId === PersonRoleTypeEnum.BoardMember ? 'rgb(134,134,255)' : '#AAA'}"> {{entity.PersonRoleId}}</div></td>
+          <td>{{entity.UserRoleId}}</td>
         </tr>
       </tbody>
 

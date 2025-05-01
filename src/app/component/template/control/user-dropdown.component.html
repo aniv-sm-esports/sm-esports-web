@@ -84,8 +84,8 @@
 
       <!-- Primary UserLogon -->
       <div class="primary-user-logon" *ngIf="this.appService.primaryUserLoggedOn">
-        <h5>Logged on as <span class="primary-user-name link" [routerLink]="'/personal/' + this.appService.primaryUserLogon.userName">{{this.appService.primaryUserLogon.userName}}</span></h5>
-        <h5>{{moment(this.appService.primaryUserLogon.loggedinAt).format('YYYY-MM-DD h:mm:ss a')}}</h5>
+        <h5>Logged on as <span class="primary-user-name link" [routerLink]="'/personal/' + this.appService.primaryUserLogon.User.Name">{{this.appService.primaryUserLogon.User.Name}}</span></h5>
+        <h5>{{moment(this.appService.primaryUserLogon.LoginTime).format('YYYY-MM-DD h:mm:ss a')}}</h5>
       </div>
 
       <login *ngIf="!this.appService.primaryUserLoggedOn" (formFinished)="this.showDropdown = false" />

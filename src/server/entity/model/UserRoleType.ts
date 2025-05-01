@@ -1,5 +1,5 @@
 import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table} from "sequelize-typescript";
-import {ModelAttributeColumnOptions} from 'sequelize';
+import {Entity} from './Entity';
 
 @Table({
   modelName: 'UserRoleType',
@@ -7,7 +7,7 @@ import {ModelAttributeColumnOptions} from 'sequelize';
   freezeTableName: true,
   timestamps: false
 })
-export class UserRoleType extends Model {
+export class UserRoleType extends Entity<UserRoleType> {
 
   public constructor() {
     super();

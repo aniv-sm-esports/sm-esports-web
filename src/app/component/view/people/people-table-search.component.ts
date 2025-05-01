@@ -1,11 +1,11 @@
 import {Component, Input, QueryList, ViewChildren, ViewContainerRef} from '@angular/core';
 import {AppService} from '../../../service/app.service';
 import {CommonModule, NgForOf, NgTemplateOutlet} from '@angular/common';
-import { PageInfo } from '../../../model/service/page.model';
-import {PersonRoleType, User} from '../../../model/repository/entity/user.model';
 import {UserService} from '../../../service/user.service';
 import {faCircle} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
+import {User} from '../../../../server/entity/model/User';
+import {PersonRoleTypeEnum} from '../../../../server/entity/model/PersonRoleType';
 
 @Component({
   selector: 'people-table-search',
@@ -22,7 +22,7 @@ export class PeopleTableSearchComponent {
   protected dataSource:Array<User>;
 
   protected readonly faCircle = faCircle;
-  protected readonly PersonRoleType = PersonRoleType;
+  protected readonly PersonRoleTypeEnum = PersonRoleTypeEnum;
 
   constructor(protected readonly appService:AppService,
               protected readonly userService: UserService) {

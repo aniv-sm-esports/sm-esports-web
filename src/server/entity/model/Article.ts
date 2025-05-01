@@ -1,5 +1,5 @@
 import {Table, Column, Model, HasMany, DataType, AllowNull, PrimaryKey, AutoIncrement} from 'sequelize-typescript';
-import { Constructor, IRepositoryEntity} from './IRepositoryEntity';
+import {Entity} from './Entity';
 
 @Table({
   modelName: 'Article',
@@ -7,7 +7,8 @@ import { Constructor, IRepositoryEntity} from './IRepositoryEntity';
   freezeTableName: true,
   timestamps: false
 })
-export class Article extends Model implements IRepositoryEntity<Article> {
+export class Article extends Entity<Article> {
+
 
   public constructor() {
     super();

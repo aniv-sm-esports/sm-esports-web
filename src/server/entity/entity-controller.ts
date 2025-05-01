@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
-import { Article } from "./model/Article";
+import {Article} from "./model/Article";
 import { PersonRoleType } from './model/PersonRoleType';
 import { File }  from "./model/File";
 import {ChatCategory} from './model/ChatCategory';
@@ -19,6 +19,9 @@ import { EntityCacheSearch } from "./entity-cache-search";
 import {UserCredential} from './model/UserCredential';
 import { TableChangedView } from "./model/TableChangedView";
 import { UserJWT } from "./model/UserJWT";
+import { EntityCacheServer } from "./entity-cache-server";
+import {EntityTestData} from './entity-test-data';
+import { ServerLogger } from "../server.logger";
 
 
 export class EntityController {
@@ -27,24 +30,24 @@ export class EntityController {
   private readonly sequelize:Sequelize;
 
   // Entity Caches (by Table <-> Typescript Model)
-  public articles: EntityCache<Article>;
-  public articleBannerLinkTypes: EntityCache<ArticleBannerLinkType>;
-  public chats: EntityCache<Chat>;
-  public chatCategories: EntityCache<ChatCategory>;
-  public chatCategoryGroupMaps: EntityCache<ChatCategoryGroupMap>;
-  public chatGroups: EntityCache<ChatGroup>;
-  public chatGroupRoomMaps: EntityCache<ChatGroupRoomMap>;
-  public chatRooms: EntityCache<ChatRoom>;
-  public chatRoomChatMap: EntityCache<ChatRoomChatMap>;
-  public chatRoomSecurityRules: EntityCache<ChatRoomSecurityRule>;
-  public chatRoomUserMaps: EntityCache<ChatRoomUserMap>;
-  public files: EntityCache<File>;
-  public personRoleTypes: EntityCache<PersonRoleType>;
-  public tableChangedViews: EntityCache<TableChangedView>;
-  public users: EntityCache<User>;
-  public userCredentials: EntityCache<UserCredential>;
-  public userJWTs: EntityCache<UserJWT>;
-  public userRoleTypes: EntityCache<UserRoleType>;
+  public articles: EntityCacheServer<Article>;
+  public articleBannerLinkTypes: EntityCacheServer<ArticleBannerLinkType>;
+  public chats: EntityCacheServer<Chat>;
+  public chatCategories: EntityCacheServer<ChatCategory>;
+  public chatCategoryGroupMaps: EntityCacheServer<ChatCategoryGroupMap>;
+  public chatGroups: EntityCacheServer<ChatGroup>;
+  public chatGroupRoomMaps: EntityCacheServer<ChatGroupRoomMap>;
+  public chatRooms: EntityCacheServer<ChatRoom>;
+  public chatRoomChatMap: EntityCacheServer<ChatRoomChatMap>;
+  public chatRoomSecurityRules: EntityCacheServer<ChatRoomSecurityRule>;
+  public chatRoomUserMaps: EntityCacheServer<ChatRoomUserMap>;
+  public files: EntityCacheServer<File>;
+  public personRoleTypes: EntityCacheServer<PersonRoleType>;
+  public tableChangedViews: EntityCacheServer<TableChangedView>;
+  public users: EntityCacheServer<User>;
+  public userCredentials: EntityCacheServer<UserCredential>;
+  public userJWTs: EntityCacheServer<UserJWT>;
+  public userRoleTypes: EntityCacheServer<UserRoleType>;
 
   /*
 
@@ -53,7 +56,7 @@ export class EntityController {
   tokenMap: Map<string, UserJWTPayload>;
 */
   // Creates an instance of the server database using environment variable settings [USER, PASSWORD, HOST, DB])
-  constructor(){
+  constructor(private readonly logger:ServerLogger){
 
     this.sequelize = new Sequelize(process.env['DB']!,
                                    process.env['DB_USER']!,
@@ -157,24 +160,24 @@ export class EntityController {
     // Entity Caches:  Repository "Key" is just a unique string identifier. Chat repositories, for example, may be created at
     //                 runtime - based on the user's needs. Keep this to be the entity name if possible; and the pattern, simple.
     //
-    this.articles = new EntityCache<Article>('Article', 'Article', new EntityCacheSearch<Article>(new Article(), []), [], true);
-    this.articleBannerLinkTypes = new EntityCache<ArticleBannerLinkType>('ArticleBannerLinkType', 'ArticleBannerLinkType', new EntityCacheSearch<ArticleBannerLinkType>(new ArticleBannerLinkType(), []), [], true);
-    this.chats =  new EntityCache<Chat>('Chat', 'Chat', new EntityCacheSearch<Chat>(new Chat(), []), [], true);
-    this.chatCategories = new EntityCache<ChatCategory>('ChatCategory', 'ChatCategory', new EntityCacheSearch<ChatCategory>(new ChatCategory(), []), [], true);
-    this.chatCategoryGroupMaps = new EntityCache<ChatCategoryGroupMap>('ChatCategoryGroupMap', 'ChatCategoryGroupMap', new EntityCacheSearch<ChatCategoryGroupMap>(new ChatCategoryGroupMap(), []), [], true);
-    this.chatGroups =  new EntityCache<ChatGroup>('ChatGroup', 'ChatGroup', new EntityCacheSearch<ChatGroup>(new ChatGroup(), []), [], true);
-    this.chatGroupRoomMaps =  new EntityCache<ChatGroupRoomMap>('ChatGroupRoomMap', 'ChatGroupRoomMap', new EntityCacheSearch<ChatGroupRoomMap>(new ChatGroupRoomMap(), []), [], true);
-    this.chatRooms = new EntityCache<ChatRoom>('ChatRoom', 'ChatRoom', new EntityCacheSearch<ChatRoom>(new ChatRoom(), []), [], true);
-    this.chatRoomChatMap = new EntityCache<ChatRoomChatMap>('ChatRoomChatMap', 'ChatRoomChatMap', new EntityCacheSearch<ChatRoomChatMap>(new ChatRoomChatMap(), []), [], true);
-    this.chatRoomSecurityRules = new EntityCache<ChatRoomSecurityRule>('ChatRoomSecurityRule', 'ChatRoomSecurityRule', new EntityCacheSearch<ChatRoomSecurityRule>(new ChatRoomSecurityRule(), []), [], true);
-    this.chatRoomUserMaps = new EntityCache<ChatRoomUserMap>('ChatRoomUserMap', 'ChatRoomUserMap', new EntityCacheSearch<ChatRoomUserMap>(new ChatRoomUserMap(), []), [], true);
-    this.files = new EntityCache<File>('File', 'File', new EntityCacheSearch<File>(new File(), []), [], true);
-    this.personRoleTypes = new EntityCache<PersonRoleType>('PersonRoleType', 'PersonRoleType', new EntityCacheSearch<PersonRoleType>(new PersonRoleType(), []), [], true);
-    this.tableChangedViews = new EntityCache<TableChangedView>('TableChangedView', 'TableChangedView', new EntityCacheSearch<TableChangedView>(new TableChangedView(), []), [], true);
-    this.users = new EntityCache<User>('User', 'User', new EntityCacheSearch<User>(new User(), []), [], true);
-    this.userCredentials = new EntityCache<UserCredential>('UserCredential', 'UserCredential', new EntityCacheSearch<UserCredential>(new UserCredential(), []), [], true);
-    this.userJWTs = new EntityCache<UserJWT>('UserJWT', 'UserJWT', new EntityCacheSearch<UserJWT>(new UserJWT(), []), [], true);
-    this.userRoleTypes = new EntityCache<UserRoleType>('UserRoleType', 'UserRoleType', new EntityCacheSearch<UserRoleType>(new UserRoleType(), []), [], true);
+    this.articles = new EntityCacheServer<Article>(this.sequelize, 'Article', 'Article', new EntityCacheSearch<Article>(new Article(), []), true);
+    this.articleBannerLinkTypes = new EntityCacheServer<ArticleBannerLinkType>(this.sequelize, 'ArticleBannerLinkType', 'ArticleBannerLinkType', new EntityCacheSearch<ArticleBannerLinkType>(new ArticleBannerLinkType(), []), true);
+    this.chats =  new EntityCacheServer<Chat>(this.sequelize, 'Chat', 'Chat', new EntityCacheSearch<Chat>(new Chat(), []), true);
+    this.chatCategories = new EntityCacheServer<ChatCategory>(this.sequelize, 'ChatCategory', 'ChatCategory', new EntityCacheSearch<ChatCategory>(new ChatCategory(), []), true);
+    this.chatCategoryGroupMaps = new EntityCacheServer<ChatCategoryGroupMap>(this.sequelize, 'ChatCategoryGroupMap', 'ChatCategoryGroupMap', new EntityCacheSearch<ChatCategoryGroupMap>(new ChatCategoryGroupMap(), []), true);
+    this.chatGroups =  new EntityCacheServer<ChatGroup>(this.sequelize, 'ChatGroup', 'ChatGroup', new EntityCacheSearch<ChatGroup>(new ChatGroup(), []), true);
+    this.chatGroupRoomMaps =  new EntityCacheServer<ChatGroupRoomMap>(this.sequelize, 'ChatGroupRoomMap', 'ChatGroupRoomMap', new EntityCacheSearch<ChatGroupRoomMap>(new ChatGroupRoomMap(), []), true);
+    this.chatRooms = new EntityCacheServer<ChatRoom>(this.sequelize, 'ChatRoom', 'ChatRoom', new EntityCacheSearch<ChatRoom>(new ChatRoom(), []), true);
+    this.chatRoomChatMap = new EntityCacheServer<ChatRoomChatMap>(this.sequelize, 'ChatRoomChatMap', 'ChatRoomChatMap', new EntityCacheSearch<ChatRoomChatMap>(new ChatRoomChatMap(), []), true);
+    this.chatRoomSecurityRules = new EntityCacheServer<ChatRoomSecurityRule>(this.sequelize, 'ChatRoomSecurityRule', 'ChatRoomSecurityRule', new EntityCacheSearch<ChatRoomSecurityRule>(new ChatRoomSecurityRule(), []), true);
+    this.chatRoomUserMaps = new EntityCacheServer<ChatRoomUserMap>(this.sequelize, 'ChatRoomUserMap', 'ChatRoomUserMap', new EntityCacheSearch<ChatRoomUserMap>(new ChatRoomUserMap(), []), true);
+    this.files = new EntityCacheServer<File>(this.sequelize, 'File', 'File', new EntityCacheSearch<File>(new File(), []), true);
+    this.personRoleTypes = new EntityCacheServer<PersonRoleType>(this.sequelize, 'PersonRoleType', 'PersonRoleType', new EntityCacheSearch<PersonRoleType>(new PersonRoleType(), []), true);
+    this.tableChangedViews = new EntityCacheServer<TableChangedView>(this.sequelize, 'TableChangedView', 'TableChangedView', new EntityCacheSearch<TableChangedView>(new TableChangedView(), []), true);
+    this.users = new EntityCacheServer<User>(this.sequelize, 'User', 'User', new EntityCacheSearch<User>(new User(), []), true);
+    this.userCredentials = new EntityCacheServer<UserCredential>(this.sequelize, 'UserCredential', 'UserCredential', new EntityCacheSearch<UserCredential>(new UserCredential(), []), true);
+    this.userJWTs = new EntityCacheServer<UserJWT>(this.sequelize, 'UserJWT', 'UserJWT', new EntityCacheSearch<UserJWT>(new UserJWT(), []), true);
+    this.userRoleTypes = new EntityCacheServer<UserRoleType>(this.sequelize, 'UserRoleType', 'UserRoleType', new EntityCacheSearch<UserRoleType>(new UserRoleType(), []), true);
 
     // Entity Views:  Do not have Id (PRIMARY KEY). So, we must remove the "id" attribute from the Model. Overwriting it with our "Id"
     //                property must not have entirely worked because of the non-primary key entity.
@@ -184,12 +187,12 @@ export class EntityController {
   // Authenticates with the database
   public async authenticate() {
     try {
-      console.log(this.sequelize.options);
+      this.logger.log(this.sequelize.options);
 
       await this.sequelize.authenticate();
-      console.log('Connection has been established successfully.');
+      this.logger.log('Connection has been established successfully.');
     } catch (error) {
-      console.error('Unable to connect to the database:', error);
+      this.logger.logError('Unable to connect to the database:', error);
     }
   }
 
@@ -197,71 +200,79 @@ export class EntityController {
     await this.sequelize.close();
   }
 
-  public async test() {
+  public async createTestData() {
+    try {
+      await EntityTestData.create(this);
+    } catch (error:any) {
+      this.logger.logError(error);
+    }
+  }
+
+  public async testConnectQuery() {
 
     try {
 
       await this.sequelize.authenticate().then(() =>{
-        console.log("Connection has been established successfully.");
-        console.log("Querying Entities from Database");
+        this.logger.log("Connection has been established successfully.");
+        this.logger.log("Querying Entities from Database");
 
         this.sequelize.model(Article).findAll({ raw: true }).then(values => {
-            console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ArticleBannerLinkType).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(Chat).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatCategory).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatCategoryGroupMap).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatGroup).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatGroupRoomMap).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatRoom).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatRoomChatMap).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(ChatRoomSecurityRule).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(File).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(PersonRoleType).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(TableChangedView).findAll({
           raw: true,
         }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(User).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(UserCredential).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(UserJWT).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
         this.sequelize.model(UserRoleType).findAll({ raw: true }).then(values => {
-          console.log(values);
+          this.logger.log(values);
         });
       });
     }
-    catch(error) {
-      console.error('Error querying users:', error);
+    catch(error:any) {
+      this.logger.logError('Error querying users:', error);
     }
   }
 }

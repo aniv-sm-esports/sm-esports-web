@@ -1,5 +1,3 @@
-import {RepositoryEntity} from '../repository/repository-entity';
-
 export class UserCreation  {
 
   userName: string;

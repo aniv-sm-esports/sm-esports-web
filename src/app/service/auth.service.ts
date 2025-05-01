@@ -1,10 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ApiResponse, ApiResponseType} from '../model/service/app.model';
-import {UserCredentials, UserJWT} from '../model/service/user-logon.model';
 import {AuthHandler} from '../model/service/handler.model'
 import { UserCreation } from '../model/view/user-creation.model';
+import { UserJWT } from '../../server/entity/model/UserJWT';
+import { UserCredential } from '../../server/entity/model/UserCredential';
+import { ServerExpressResponse } from '../../server/server.definitions';
+import {ServerRequest} from '../../server/model/server-request.model';
+import {ServerResponse} from '../../server/model/server-response.model';
+import {PageData} from '../../server/model/page-data.model';
+import {ServerData} from '../../server/model/server-entity-data';
+import {UserCredentialClientDTO} from '../model/client-dto/UserCredentialClientDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -29,14 +35,14 @@ export class AuthService {
   }
 
   logon(userName:string, password:string) {
-    return this.http.post<UserJWT>(this.urlLogon, UserCredentials.fromLogon(userName, password))
+    return this.http.post<ServerResponse<UserJWT>>(this.urlLogon, new ServerRequest<UserCredentialClientDTO>(new ServerData([UserCredentialClientDTO.fromLogon(userName, password)]), PageData.default()))
                     .subscribe(response => {
-                        this.setSession(UserJWT.from(response));
+                        this.setSession(response.responseData.data[0]);
                     });
   }
 
   createUser(userCreation:UserCreation) {
-    return this.http.post<UserCreation>(this.urlCreate, userCreation);
+    return this.http.post<ServerResponse<UserCreation>>(this.urlCreate, new ServerRequest<UserCreation>(new ServerData([userCreation]), PageData.default()));
   }
 
   logout() {
@@ -61,8 +67,8 @@ export class AuthService {
     }
 
     // Set local storage
-    localStorage.setItem(this.localIdKey, authResult.token);
-    localStorage.setItem(this.localExpiresAtKey, JSON.stringify(authResult.expiresAt));
+    localStorage.setItem(this.localIdKey, authResult.Token);
+    localStorage.setItem(this.localExpiresAtKey, JSON.stringify(authResult.ExpirationTime));
 
     // Update Observable
     this.loggedInSubject.next(authResult);
@@ -87,10 +93,10 @@ export class AuthService {
   //
   public refreshSession(){
 
-    return this.http.get<UserJWT>(this.urlGetSession)
+    return this.http.post<ServerResponse<UserJWT>>(this.urlGetSession, new ServerRequest<UserJWT>(ServerData.default(), PageData.default()))
                     .subscribe(response =>
                     {
-                      this.setSession(UserJWT.from(response));
+                      this.setSession(response.responseData.data[0]);
                     });
   }
 }

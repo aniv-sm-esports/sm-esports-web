@@ -1,8 +1,8 @@
-import {IRepositoryEntity} from './model/IRepositoryEntity';
 import { EntityCacheState } from './entity-cache-state';
+import {Entity} from './model/Entity';
 
 // Class for data transport for RepositoryState<T>
-export class EntityCacheStateData<T extends IRepositoryEntity<T>> {
+export class EntityCacheStateData<T extends Entity<T>> {
   public repositoryKey:string;
   public entityName:string;
   public isPrimary: boolean;
@@ -23,7 +23,7 @@ export class EntityCacheStateData<T extends IRepositoryEntity<T>> {
     this.invalid = false;
   }
 
-  public static from<T extends IRepositoryEntity<T>>(state:EntityCacheState<T>): EntityCacheStateData<T> {
+  public static from<T extends Entity<T>>(state:EntityCacheState<T>): EntityCacheStateData<T> {
     let result = new EntityCacheStateData<T>();
     result.entityName = state.getEntityName();
     result.repositoryKey = state.getKey();

@@ -1,4 +1,7 @@
-import {Column, DataType, Model, Table} from "sequelize-typescript";
+import {BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table} from "sequelize-typescript";
+import {Entity} from './Entity';
+import { User } from "./User";
+import lodash from 'lodash';
 
 @Table({
   modelName: 'UserJWT',
@@ -6,7 +9,7 @@ import {Column, DataType, Model, Table} from "sequelize-typescript";
   freezeTableName: true,
   timestamps: false
 })
-export class UserJWT extends Model {
+export class UserJWT extends Entity<UserJWT> {
 
   public constructor() {
     super();
@@ -15,6 +18,20 @@ export class UserJWT extends Model {
   public ctor() {
     return new UserJWT();
   }
+
+  // Couple methods were used on the client (TODO)
+  public static default() {
+    return new UserJWT();
+  }
+
+  // Couple methods were used on the client (TODO)
+  public isDefault() {
+    return lodash.isEqual(this, UserJWT.default());
+  }
+
+  // Relationships
+  @BelongsTo(() => User, "UserId")
+  User!:User;
 
   @Column({
     type: DataType.INTEGER,
@@ -37,6 +54,7 @@ export class UserJWT extends Model {
     type: DataType.INTEGER,
     allowNull: false,
   })
+  @ForeignKey(() => User)
   get UserId():number { return this.getDataValue('UserId'); }
   set UserId(value: number) { this.setDataValue('UserId', value); }
 

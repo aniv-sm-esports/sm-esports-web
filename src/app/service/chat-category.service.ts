@@ -1,26 +1,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ChatRoom} from '../model/repository/entity/chat-room.model';
-import {RepositoryService} from './repository.service';
-import {ActivatedRoute} from '@angular/router';
-import {ChatCategory} from '../model/repository/entity/chat-category.model';
+import {EntityService} from './entity.service';
+import {ChatCategory} from '../../server/entity/model/ChatCategory';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatCategoryService extends RepositoryService<ChatCategory> {
+export class ChatCategoryService extends EntityService<ChatCategory> {
 
   // Chat API
   //
-  private readonly urlGet = "/api/chatCategory/get";
-  private readonly urlGetAll = "/api/chatCategory/getAll";
-  private readonly urlCreate = "/api/chatCategory/create";
-  private readonly urlGetRepositoryState = "/api/repository/chatCategory/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/chatCategory/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/chatCategory/setState";
+  private readonly urlGet = "/api/entity/chatCategory/get";
+  private readonly urlGetAll = "/api/entity/chatCategory/getAll";
+  private readonly urlCreate = "/api/entity/chatCategory/create";
+  private readonly urlGetRepositoryState = "/api/entity/chatCategory/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/chatCategory/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/chatCategory/setState";
 
   constructor(http: HttpClient) {
-    super('ChatCategory', 'ChatCategory', http, ChatCategory.default(), []);
+    super('ChatCategory', 'ChatCategory', http, new ChatCategory(), []);
   }
 
   protected getEntityName(): string {

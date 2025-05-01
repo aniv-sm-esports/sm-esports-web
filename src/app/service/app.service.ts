@@ -1,9 +1,9 @@
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Size} from '../model/service/app.model';
 import {Injectable} from '@angular/core';
 import {AuthService} from './auth.service';
 import {AuthHandler} from '../model/service/handler.model';
-import {UserJWT} from '../model/service/user-logon.model';
+import {Size} from '../model/utility/size.model';
+import {UserJWT} from '../../server/entity/model/UserJWT';
 
 @Injectable({
   providedIn: 'root',

@@ -121,7 +121,7 @@
      [ngStyle]="{'height': this.height + 'px', 'grid-template-rows': '42px ' + (this.height - 25).toString() + 'px 50px'}">
 
   <div class="header">
-    <h2>{{chatRoom?.name}}</h2>
+    <h2>{{chatRoom?.Name}}</h2>
   </div>
 
   @if(!this.appService.primaryUserLoggedOn) {
@@ -137,8 +137,8 @@
     <div class="chat-container">
       <div class="chat-item"
            *ngFor="let chat of this.chats;index as i">
-        <span class="chat-user">{{chat.userName}}</span>
-        <p class="chat-body">{{chat.text}}</p>
+        <span class="chat-user">{{chat.User.Name}}</span>
+        <p class="chat-body">{{chat.Text}}</p>
         <!--span class="chat-date">{{formatDate(chat.date, 'h:mm:ss:a (z)', 'en-US')}}</span-->
       </div>
     </div>

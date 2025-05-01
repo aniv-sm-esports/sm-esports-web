@@ -1,23 +1,22 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Chat} from '../model/repository/entity/chat.model';
-import {RepositoryService} from './repository.service';
-import { Injectable } from '@angular/core';
+import {EntityService} from './entity.service';
+import {Chat} from '../../server/entity/model/Chat';
 
-export class ChatService extends RepositoryService<Chat> {
+export class ChatService extends EntityService<Chat> {
 
   private readonly chatRoomId:number;
 
   // Chat API
   //
-  private readonly urlGet = "/api/chat/get/:chatRoomId";
-  private readonly urlGetAll = "/api/chat/getAll/:chatRoomId";
-  private readonly urlCreate = "/api/chat/create/:chatRoomId";
-  private readonly urlGetRepositoryState = "/api/repository/chat/getState/:chatRoomId";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/chat/checkState/:chatRoomId";
-  private readonly urlPostRepositoryClientState = "/api/repository/chat/setState/:chatRoomId";
+  private readonly urlGet = "/api/entity/chat/:chatRoomId/get";
+  private readonly urlGetAll = "/api/entity/chat/:chatRoomId/getAll";
+  private readonly urlCreate = "/api/entity/chat/:chatRoomId/create";
+  private readonly urlGetRepositoryState = "/api/entity/chat/:chatRoomId/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/chat/:chatRoomId/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/chat/:chatRoomId/setState";
 
   constructor(httpClient: HttpClient, chatRoomId:number) {
-    super("Chat (" + chatRoomId + ")", "Chat", httpClient, Chat.default(), []);
+    super("Chat (" + chatRoomId + ")", "Chat", httpClient, new Chat(), []);
     this.chatRoomId = chatRoomId;
   }
 

@@ -47,7 +47,6 @@ import {ChatGroupRoomMapService} from '../service/chat-group-room-map.service';
     CommonModule
   ],
   providers: [
-    provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,

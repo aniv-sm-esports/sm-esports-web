@@ -103,14 +103,14 @@
              width="36" height="36" />
       </li>
       <li>
-        <h3 class="russo-one-regular">{{person?.name}}</h3>
+        <h3 class="russo-one-regular">{{person?.Name}}</h3>
       </li>
     </ul>
 
     <ul class="button-panel">
-      <li [routerLink]="'personal/' + (person?.name || '') + '/bio'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Bio</h3></li>
-      <li [routerLink]="'personal/' + (person?.name || '') + '/schedule'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Schedule</h3></li>
-      <li [routerLink]="'personal/' + (person?.name || '') + '/links'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Links</h3></li>
+      <li [routerLink]="'personal/' + (person?.Name || '') + '/bio'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Bio</h3></li>
+      <li [routerLink]="'personal/' + (person?.Name || '') + '/schedule'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Schedule</h3></li>
+      <li [routerLink]="'personal/' + (person?.Name || '') + '/links'" [routerLinkActive]="'active'"><h3 class="russo-one-regular">Links</h3></li>
     </ul>
 
     <div class="clear-fix"></div>
@@ -123,9 +123,9 @@
       <img width="150"
            height="200"
            alt="metroid/metroid.png"
-           [ngSrc]="person?.pictureUrl || 'metroid.png'" />
-      <h5 class="person-role">{{person?.personRole}}</h5>
-      <h5 class="user-email">{{person?.email}}</h5>
+           [ngSrc]="person?.PictureUrl || 'metroid.png'" />
+      <h5 class="person-role">{{person?.PersonRoleId}}</h5>
+      <h5 class="user-email">{{person?.Email}}</h5>
     </div>
 
     <div class="content">

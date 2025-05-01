@@ -61,7 +61,7 @@ export const routes: Routes = [
       { path:"security",  component: ChatSecurityComponent, title: 'Chat (Security)'},
     ]},
 
-  { path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
+  //{ path:"personal/:userName",  component: PersonalComponent, title: 'Personal - :userName' },
   { path:"contact",  component: ContactComponent, title: 'Contact' },
   {
     path: '**', redirectTo: '/home/news'

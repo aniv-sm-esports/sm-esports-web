@@ -1,24 +1,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {FileModel} from '../model/repository/entity/file.model';
-import {RepositoryService} from './repository.service';
+import {EntityService} from './entity.service';
+import {File} from '../../server/entity/model/File';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FileService extends RepositoryService<FileModel> {
+export class FileService extends EntityService<File> {
 
   // File API: ALL POST ENDPOINTS
   //
-  private readonly urlGet = "/api/file/get";
-  private readonly urlGetAll = "/api/file/getAll";
-  private readonly urlCreate = "/api/file/create";
-  private readonly urlGetRepositoryState = "/api/repository/file/getState";
-  private readonly urlPostRepositoryClientCheck = "/api/repository/file/checkState";
-  private readonly urlPostRepositoryClientState = "/api/repository/file/setState";
+  private readonly urlGet = "/api/entity/file/get";
+  private readonly urlGetAll = "/api/entity/file/getAll";
+  private readonly urlCreate = "/api/entity/file/create";
+  private readonly urlGetRepositoryState = "/api/entity/file/getState";
+  private readonly urlPostRepositoryClientCheck = "/api/entity/file/checkState";
+  private readonly urlPostRepositoryClientState = "/api/entity/file/setState";
 
   constructor(private httpClient: HttpClient) {
-    super('File', 'File', httpClient, FileModel.default(), []);
+    super('File', 'File', httpClient, new File(), []);
   }
 
   protected getEntityName(): string {
